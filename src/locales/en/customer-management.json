@@ -1,0 +1,16 @@
+{
+  "title": "Customer Monitoring",
+  "description": "Monitor synchronized records in the RII_CUSTOMERS table and trigger a manual sync.",
+  "searchPlaceholder": "Search by customer code, customer name, tax number or phone",
+  "manualSync": "Manual Sync",
+  "syncing": "Sync in progress...",
+  "syncQueued": "Customer sync job was queued.",
+  "syncFailed": "Customer sync job could not be started.",
+  "customerCode": "Customer Code",
+  "customerName": "Customer Name",
+  "taxNumber": "Tax Number",
+  "city": "City",
+  "branchCode": "Branch Code",
+  "lastSyncDateUtc": "Last Sync Date",
+  "isErpIntegrated": "ERP Integrated"
+}

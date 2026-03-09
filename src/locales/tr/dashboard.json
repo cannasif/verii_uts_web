@@ -1,0 +1,13 @@
+{
+  "title": "Dashboard",
+  "description": "UTS admin panelinin baslangic ekrani. Kullanici, rol ve yetki modulleri bu iskelet uzerinden ilerler.",
+  "activeUser": "Aktif Kullanici",
+  "permissionCountLabel": "Izin Sayisi",
+  "apiStatus": "API Durumu",
+  "connected": "Bagli",
+  "initialConnections": "Ilk Baglantilar",
+  "authCardDescription": "Login, me, my-permissions ve logout akislari frontend storea baglandi.",
+  "usersCardDescription": "Body ile PagedRequest gonderip kullanici listesi cekiliyor.",
+  "createUserCardTitle": "Kullanici Ac",
+  "createUserCardDescription": "Rol ve yetki grubu secerek kullanici acma paneli hazir."
+}

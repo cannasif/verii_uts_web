@@ -1,0 +1,8 @@
+{
+  "profileDetails": "Profile Details",
+  "profileDetailsDescription": "The UTS equivalent of the CRM modal flow. Users land here from the modal and update profile fields.",
+  "roleInformation": "Role Information",
+  "editProfileDetails": "Profile Details",
+  "editProfileDescription": "Edit profile information and update personal fields.",
+  "updateProfile": "Update Profile"
+}

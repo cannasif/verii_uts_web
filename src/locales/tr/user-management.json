@@ -1,0 +1,7 @@
+{
+  "title": "Kullanici Yonetimi",
+  "description": "Frontend body icinde PagedRequest gonderir. Liste ve create akisi UTS API ile baglidir.",
+  "searchPlaceholder": "Ad, soyad veya e-posta ara",
+  "createUserDescription": "UTS API POST /api/users endpointine baglanir.",
+  "searchRole": "Rol ara"
+}

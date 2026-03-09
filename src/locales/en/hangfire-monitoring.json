@@ -1,0 +1,32 @@
+{
+  "menu": "Hangfire Monitoring",
+  "title": "Hangfire Monitoring",
+  "description": "Monitor background job health, failed records and the dead-letter queue.",
+  "refresh": "Refresh",
+  "stats": {
+    "enqueued": "Enqueued",
+    "processing": "Processing",
+    "scheduled": "Scheduled",
+    "succeeded": "Succeeded",
+    "failed": "Failed"
+  },
+  "failed": {
+    "title": "Failed Jobs",
+    "description": "Failed Hangfire records persisted into the SQL job log table.",
+    "total": "Total",
+    "empty": "No failed job records were found."
+  },
+  "deadLetter": {
+    "title": "Dead-Letter Queue",
+    "description": "Critical jobs moved to the dead-letter queue after the final retry.",
+    "enqueued": "Queued Records",
+    "empty": "No dead-letter records were found."
+  },
+  "table": {
+    "jobId": "Job Id",
+    "jobName": "Job Name",
+    "state": "State",
+    "time": "Time",
+    "reason": "Reason"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "title": "Stok Izleme",
+  "description": "RII_STOCK tablosundaki senkronize stok kayitlarini izleyin ve manuel sync baslatin.",
+  "searchPlaceholder": "Stok kodu, stok adi veya grup ara",
+  "manualSync": "Manuel Sync",
+  "syncing": "Sync calisiyor...",
+  "syncQueued": "Stok sync isi kuyruğa alindi.",
+  "syncFailed": "Stok sync isi baslatilamadi.",
+  "erpStockCode": "ERP Stok Kodu",
+  "stockName": "Stok Adi",
+  "unit": "Olcu Birimi",
+  "groupCode": "Grup Kodu",
+  "groupName": "Grup Adi",
+  "branchCode": "Sube Kodu"
+}

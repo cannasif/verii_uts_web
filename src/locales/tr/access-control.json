@@ -1,0 +1,23 @@
+{
+  "permissionGroupsTitle": "Yetki Gruplari",
+  "permissionGroupsDescription": "UTS API tarafindaki yetki gruplari ve izin sayilari burada gorunur.",
+  "searchPlaceholder": "Yetki grubu veya aciklama ara",
+  "groupName": "Grup Adi",
+  "descriptionColumn": "Aciklama",
+  "systemColumn": "Sistem",
+  "assignedUserCount": "Kullanici Sayisi",
+  "actions": "Islemler",
+  "newPermissionGroup": "Yeni Yetki Grubu",
+  "createPermissionGroup": "Yetki Grubu Olustur",
+  "createPermissionGroupDescription": "Yeni bir yetki grubu tanimlayin. Izinler sonraki adimda baglanabilir.",
+  "permissionDefinitionsTitle": "Sayfa ve Yetki Secimi",
+  "permissionSelectedCount": "izin secildi",
+  "selectModulePermissions": "Tumunu Sec",
+  "clearModulePermissions": "Secimi Temizle",
+  "noPermissionDefinitionsFound": "Secilebilir yetki tanimi bulunamadi.",
+  "delete": "Sil",
+  "deletePermissionGroupConfirm": "\"{{name}}\" yetki grubunu silmek istediginize emin misiniz?",
+  "permissionGroupInUseDeleteBlocked": "Bu yetki grubu bir kullaniciya atandigi icin silinemez.",
+  "systemPermissionGroupDeleteBlocked": "Sistem yetki gruplari silinemez.",
+  "validationMaxLength": "En fazla {{count}} karakter girilebilir."
+}

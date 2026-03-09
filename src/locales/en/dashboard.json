@@ -1,0 +1,13 @@
+{
+  "title": "Dashboard",
+  "description": "Landing screen of the UTS admin panel. User, role and permission modules will continue on top of this shell.",
+  "activeUser": "Active User",
+  "permissionCountLabel": "Permission Count",
+  "apiStatus": "API Status",
+  "connected": "Connected",
+  "initialConnections": "Initial Integrations",
+  "authCardDescription": "Login, me, my-permissions and logout flows are connected to the frontend store.",
+  "usersCardDescription": "The user list is fetched by sending PagedRequest in the body.",
+  "createUserCardTitle": "Create User",
+  "createUserCardDescription": "The user creation panel is ready with role and permission group selection."
+}

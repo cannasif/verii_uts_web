@@ -1,0 +1,15 @@
+{
+  "title": "Stock Monitoring",
+  "description": "Monitor synchronized records in the RII_STOCK table and trigger a manual sync.",
+  "searchPlaceholder": "Search by stock code, stock name or group",
+  "manualSync": "Manual Sync",
+  "syncing": "Sync in progress...",
+  "syncQueued": "Stock sync job was queued.",
+  "syncFailed": "Stock sync job could not be started.",
+  "erpStockCode": "ERP Stock Code",
+  "stockName": "Stock Name",
+  "unit": "Unit",
+  "groupCode": "Group Code",
+  "groupName": "Group Name",
+  "branchCode": "Branch Code"
+}

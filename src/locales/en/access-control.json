@@ -1,0 +1,23 @@
+{
+  "permissionGroupsTitle": "Permission Groups",
+  "permissionGroupsDescription": "Permission groups and their permission counts from the UTS API are displayed here.",
+  "searchPlaceholder": "Search permission group or description",
+  "groupName": "Group Name",
+  "descriptionColumn": "Description",
+  "systemColumn": "System",
+  "assignedUserCount": "Assigned Users",
+  "actions": "Actions",
+  "newPermissionGroup": "New Permission Group",
+  "createPermissionGroup": "Create Permission Group",
+  "createPermissionGroupDescription": "Define a new permission group. Permissions can be assigned in the next step.",
+  "permissionDefinitionsTitle": "Page and Permission Selection",
+  "permissionSelectedCount": "permissions selected",
+  "selectModulePermissions": "Select All",
+  "clearModulePermissions": "Clear Selection",
+  "noPermissionDefinitionsFound": "No selectable permission definitions were found.",
+  "delete": "Delete",
+  "deletePermissionGroupConfirm": "Are you sure you want to delete the \"{{name}}\" permission group?",
+  "permissionGroupInUseDeleteBlocked": "This permission group cannot be deleted because it is assigned to a user.",
+  "systemPermissionGroupDeleteBlocked": "System permission groups cannot be deleted.",
+  "validationMaxLength": "Maximum {{count}} characters are allowed."
+}

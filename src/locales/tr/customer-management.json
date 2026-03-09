@@ -1,0 +1,16 @@
+{
+  "title": "Cari Izleme",
+  "description": "RII_CUSTOMERS tablosundaki senkronize cari kayitlarini izleyin ve manuel sync baslatin.",
+  "searchPlaceholder": "Cari kodu, cari adi, vergi no veya telefon ara",
+  "manualSync": "Manuel Sync",
+  "syncing": "Sync calisiyor...",
+  "syncQueued": "Cari sync isi kuyruga alindi.",
+  "syncFailed": "Cari sync isi baslatilamadi.",
+  "customerCode": "Cari Kodu",
+  "customerName": "Cari Adi",
+  "taxNumber": "Vergi Numarasi",
+  "city": "Il",
+  "branchCode": "Sube Kodu",
+  "lastSyncDateUtc": "Son Sync Tarihi",
+  "isErpIntegrated": "ERP Entegre"
+}

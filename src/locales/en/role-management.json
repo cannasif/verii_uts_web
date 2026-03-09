@@ -1,0 +1,6 @@
+{
+  "title": "Roles",
+  "description": "Roles returned from POST /api/roles/search are listed here.",
+  "searchPlaceholder": "Search role or description",
+  "descriptionColumn": "Description"
+}

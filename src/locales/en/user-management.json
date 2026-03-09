@@ -1,0 +1,7 @@
+{
+  "title": "User Management",
+  "description": "Frontend sends PagedRequest in the body. List and create flow are connected to the UTS API.",
+  "searchPlaceholder": "Search by name, surname or email",
+  "createUserDescription": "Connected to the UTS API POST /api/users endpoint.",
+  "searchRole": "Search role"
+}

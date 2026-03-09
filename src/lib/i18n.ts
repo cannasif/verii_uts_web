@@ -1,0 +1,104 @@
+import i18next from 'i18next';
+import { initReactI18next } from 'react-i18next';
+
+const i18n = i18next.createInstance();
+
+type ResourceModule = { default: Record<string, unknown> };
+
+const modules = import.meta.glob('../locales/**/*.json');
+
+type LoaderMap = Record<string, Record<string, () => Promise<ResourceModule>>>;
+const loaders: LoaderMap = {};
+
+for (const [path, loader] of Object.entries(modules)) {
+  const match = path.match(/\.\.\/locales\/([a-z-]+)\/(.+)\.json$/);
+  if (!match) continue;
+  const lang = match[1];
+  const ns = match[2];
+  if (!loaders[lang]) loaders[lang] = {};
+  loaders[lang][ns] = loader as () => Promise<ResourceModule>;
+}
+
+const DEFAULT_LANG = 'tr';
+const fallbackLng = DEFAULT_LANG;
+const supportedLngs = Object.keys(loaders);
+
+const humanizeToken = (token: string): string => {
+  const normalized = token
+    .replace(/[_-]+/g, ' ')
+    .replace(/([a-z])([A-Z])/g, '$1 $2')
+    .trim();
+
+  if (!normalized) return token;
+  return normalized.charAt(0).toUpperCase() + normalized.slice(1);
+};
+
+const formatMissingKey = (rawKey: string): string => {
+  const withoutNs = rawKey.includes(':') ? rawKey.split(':').slice(1).join(':') : rawKey;
+  const parts = withoutNs.split('.').filter(Boolean);
+  const candidate = parts.length > 0 ? parts[parts.length - 1] : withoutNs;
+  return humanizeToken(candidate);
+};
+
+const normalizeLang = (lng?: string | null): string | undefined => {
+  if (!lng) return undefined;
+  const lower = lng.toLowerCase();
+  if (supportedLngs.includes(lower)) return lower;
+  const base = lower.split('-')[0];
+  if (supportedLngs.includes(base)) return base;
+  return lower;
+};
+
+const storedLng = typeof localStorage !== 'undefined' ? localStorage.getItem('verii_uts_lang') : null;
+const initialLng = storedLng ? (normalizeLang(storedLng) ?? DEFAULT_LANG) : DEFAULT_LANG;
+const resolvedLng = supportedLngs.includes(initialLng) ? initialLng : DEFAULT_LANG;
+
+export async function loadLanguage(lang: string): Promise<void> {
+  const target = normalizeLang(lang) ?? fallbackLng;
+  const langLoaders = loaders[target] || {};
+  const entries = Object.entries(langLoaders);
+
+  await Promise.all(
+    entries.map(async ([ns, loader]) => {
+      const mod = await loader();
+      i18n.addResourceBundle(target, ns, mod.default, true, true);
+    }),
+  );
+}
+
+const initPromise = (async () => {
+  const namespaces = Object.keys(loaders[fallbackLng] || {});
+  const defaultNS = namespaces.includes('common') ? 'common' : namespaces[0] ?? 'translation';
+
+  await i18n.use(initReactI18next).init({
+    lng: resolvedLng,
+    fallbackLng,
+    supportedLngs,
+    load: 'languageOnly',
+    nonExplicitSupportedLngs: true,
+    ns: namespaces.length > 0 ? namespaces : [defaultNS],
+    defaultNS,
+    resources: {},
+    interpolation: { escapeValue: false },
+    parseMissingKeyHandler: (key) => formatMissingKey(key),
+    returnEmptyString: false,
+  });
+
+  await loadLanguage(fallbackLng);
+  if (resolvedLng !== fallbackLng) {
+    await loadLanguage(resolvedLng);
+  }
+})();
+
+i18n.on('languageChanged', async (lng) => {
+  if (typeof localStorage !== 'undefined') {
+    localStorage.setItem('verii_uts_lang', lng);
+  }
+  await loadLanguage(lng);
+});
+
+export async function ensureI18nReady(): Promise<void> {
+  await initPromise;
+}
+
+export default i18n;

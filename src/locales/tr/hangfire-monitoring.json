@@ -1,0 +1,32 @@
+{
+  "menu": "Hangfire Izleme",
+  "title": "Hangfire Izleme",
+  "description": "Arka plan job sagligini, basarisiz kayitlari ve dead-letter kuyrugunu izleyin.",
+  "refresh": "Yenile",
+  "stats": {
+    "enqueued": "Kuyruktakiler",
+    "processing": "Calisanlar",
+    "scheduled": "Planlilar",
+    "succeeded": "Basarili",
+    "failed": "Basarisiz"
+  },
+  "failed": {
+    "title": "Basarisiz Joblar",
+    "description": "SQL job log tablosuna yazilan basarisiz Hangfire kayitlari.",
+    "total": "Toplam",
+    "empty": "Basarisiz job kaydi bulunamadi."
+  },
+  "deadLetter": {
+    "title": "Dead-Letter Kuyrugu",
+    "description": "Final retry sonrasi dead-letter kuyruguna dusen kritik joblar.",
+    "enqueued": "Kuyruktaki Kayit",
+    "empty": "Dead-letter kuyruunda kayit bulunamadi."
+  },
+  "table": {
+    "jobId": "Job Id",
+    "jobName": "Job Adi",
+    "state": "Durum",
+    "time": "Zaman",
+    "reason": "Neden"
+  }
+}

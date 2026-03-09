@@ -1,0 +1,5 @@
+export const DROPDOWN_MIN_CHARS = 2;
+export const DROPDOWN_DEBOUNCE_MS = 350;
+export const DROPDOWN_PAGE_SIZE = 25;
+export const DROPDOWN_SCROLL_THRESHOLD = 0.7;
+export const DROPDOWN_MAX_HEIGHT_PX = 280;
