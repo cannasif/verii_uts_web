@@ -1,7 +1,7 @@
 {
   "title": "Kullanici Yonetimi",
-  "description": "Frontend body icinde PagedRequest gonderir. Liste ve create akisi UTS API ile baglidir.",
+  "description": "Kullanici listesi sayfali olarak getirilir ve yeni kullanici olusturma akisi UTS API ile baglidir.",
   "searchPlaceholder": "Ad, soyad veya e-posta ara",
-  "createUserDescription": "UTS API POST /api/users endpointine baglanir.",
+  "createUserDescription": "Yeni kullanici olusturma formu UTS API ile baglidir.",
   "searchRole": "Rol ara"
 }

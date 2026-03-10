@@ -121,7 +121,7 @@ export function HangfireMonitoringPage() {
                         <tr key={`${item.jobId}-${item.failedAt ?? item.enqueuedAt ?? 'failed'}`}>
                           <td className="px-4 py-3 font-mono text-xs text-slate-600">{item.jobId}</td>
                           <td className="px-4 py-3 text-sm font-medium text-slate-900">{item.jobName}</td>
-                          <td className="px-4 py-3 text-sm text-rose-600">{item.state || 'Failed'}</td>
+                          <td className="px-4 py-3 text-sm text-rose-600">{item.state || t('table.failedState')}</td>
                           <td className="px-4 py-3 text-sm text-slate-600">{formatDate(item.failedAt)}</td>
                           <td className="max-w-[360px] truncate px-4 py-3 text-sm text-slate-600" title={item.reason}>
                             {item.reason || '-'}
@@ -179,7 +179,7 @@ export function HangfireMonitoringPage() {
                         <tr key={`${item.jobId}-${item.enqueuedAt ?? 'dead-letter'}`}>
                           <td className="px-4 py-3 font-mono text-xs text-slate-600">{item.jobId}</td>
                           <td className="px-4 py-3 text-sm font-medium text-slate-900">{item.jobName}</td>
-                          <td className="px-4 py-3 text-sm text-amber-600">{item.state || 'Enqueued'}</td>
+                          <td className="px-4 py-3 text-sm text-amber-600">{item.state || t('table.enqueuedState')}</td>
                           <td className="px-4 py-3 text-sm text-slate-600">{formatDate(item.enqueuedAt)}</td>
                           <td className="max-w-[360px] truncate px-4 py-3 text-sm text-slate-600" title={item.reason}>
                             {item.reason || '-'}

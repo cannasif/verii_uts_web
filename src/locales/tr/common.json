@@ -1,5 +1,5 @@
 {
-  "dashboard": "Dashboard",
+  "dashboard": "Ana Panel",
   "users": "Kullanicilar",
   "roles": "Roller",
   "customers": "Cariler",
@@ -9,7 +9,7 @@
   "general": "Genel",
   "accessManagement": "Erisim Yonetimi",
   "system": "Sistem",
-  "authInfrastructure": "Auth ve Yetki Omurgasi",
+  "authInfrastructure": "Kimlik ve Yetki Omurgasi",
   "utsModulesPreparation": "UTS Modulleri Hazirlik Fazinda",
   "utsPanel": "UTS Panel",
   "panel": "Panel",

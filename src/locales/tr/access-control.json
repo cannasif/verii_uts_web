@@ -1,6 +1,6 @@
 {
   "permissionGroupsTitle": "Yetki Gruplari",
-  "permissionGroupsDescription": "UTS API tarafindaki yetki gruplari ve izin sayilari burada gorunur.",
+  "permissionGroupsDescription": "UTS tarafindaki yetki gruplari ve izin sayilari burada gorunur.",
   "searchPlaceholder": "Yetki grubu veya aciklama ara",
   "groupName": "Grup Adi",
   "descriptionColumn": "Aciklama",

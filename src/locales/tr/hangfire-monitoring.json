@@ -1,7 +1,7 @@
 {
   "menu": "Hangfire Izleme",
   "title": "Hangfire Izleme",
-  "description": "Arka plan job sagligini, basarisiz kayitlari ve dead-letter kuyrugunu izleyin.",
+  "description": "Arka plan gorev sagligini, basarisiz kayitlari ve ayri bekletme kuyrugunu izleyin.",
   "refresh": "Yenile",
   "stats": {
     "enqueued": "Kuyruktakiler",
@@ -11,22 +11,24 @@
     "failed": "Basarisiz"
   },
   "failed": {
-    "title": "Basarisiz Joblar",
-    "description": "SQL job log tablosuna yazilan basarisiz Hangfire kayitlari.",
+    "title": "Basarisiz Gorevler",
+    "description": "SQL gorev log tablosuna yazilan basarisiz Hangfire kayitlari.",
     "total": "Toplam",
-    "empty": "Basarisiz job kaydi bulunamadi."
+    "empty": "Basarisiz gorev kaydi bulunamadi."
   },
   "deadLetter": {
-    "title": "Dead-Letter Kuyrugu",
-    "description": "Final retry sonrasi dead-letter kuyruguna dusen kritik joblar.",
+    "title": "Ayri Bekletme Kuyrugu",
+    "description": "Son deneme sonrasinda ayri bekletme kuyruguna dusen kritik gorevler.",
     "enqueued": "Kuyruktaki Kayit",
-    "empty": "Dead-letter kuyruunda kayit bulunamadi."
+    "empty": "Ayri bekletme kuyrugunda kayit bulunamadi."
   },
   "table": {
-    "jobId": "Job Id",
-    "jobName": "Job Adi",
+    "jobId": "Gorev Kimligi",
+    "jobName": "Gorev Adi",
     "state": "Durum",
     "time": "Zaman",
-    "reason": "Neden"
+    "reason": "Neden",
+    "failedState": "Basarisiz",
+    "enqueuedState": "Kuyrukta"
   }
 }

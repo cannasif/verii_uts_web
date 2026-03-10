@@ -1,16 +1,16 @@
 {
   "title": "Cari Izleme",
-  "description": "RII_CUSTOMERS tablosundaki senkronize cari kayitlarini izleyin ve manuel sync baslatin.",
+  "description": "RII_CUSTOMERS tablosundaki senkronize cari kayitlarini izleyin ve manuel senkronizasyon baslatin.",
   "searchPlaceholder": "Cari kodu, cari adi, vergi no veya telefon ara",
-  "manualSync": "Manuel Sync",
-  "syncing": "Sync calisiyor...",
-  "syncQueued": "Cari sync isi kuyruga alindi.",
-  "syncFailed": "Cari sync isi baslatilamadi.",
+  "manualSync": "Manuel Senkronizasyon",
+  "syncing": "Senkronizasyon calisiyor...",
+  "syncQueued": "Cari senkronizasyon gorevi kuyruga alindi.",
+  "syncFailed": "Cari senkronizasyon gorevi baslatilamadi.",
   "customerCode": "Cari Kodu",
   "customerName": "Cari Adi",
   "taxNumber": "Vergi Numarasi",
   "city": "Il",
   "branchCode": "Sube Kodu",
-  "lastSyncDateUtc": "Son Sync Tarihi",
+  "lastSyncDateUtc": "Son Senkronizasyon Tarihi",
   "isErpIntegrated": "ERP Entegre"
 }

@@ -40,11 +40,11 @@ export function DashboardPage() {
         <h3 className="text-lg font-semibold text-slate-900">{t('initialConnections', { ns: 'dashboard' })}</h3>
         <div className="mt-4 grid gap-4 md:grid-cols-3">
           <div className="rounded-3xl bg-slate-50 p-4">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-indigo-500">Auth</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-indigo-500">{t('authCardTitle', { ns: 'dashboard' })}</p>
             <p className="mt-2 text-sm text-slate-600">{t('authCardDescription', { ns: 'dashboard' })}</p>
           </div>
           <div className="rounded-3xl bg-slate-50 p-4">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-indigo-500">Users</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-indigo-500">{t('usersCardTitle', { ns: 'dashboard' })}</p>
             <p className="mt-2 text-sm text-slate-600">{t('usersCardDescription', { ns: 'dashboard' })}</p>
           </div>
           <div className="rounded-3xl bg-slate-50 p-4">

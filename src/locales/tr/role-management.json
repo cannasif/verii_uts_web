@@ -1,6 +1,6 @@
 {
   "title": "Roller",
-  "description": "POST /api/roles/search ile gelen roller burada listelenir.",
+  "description": "Rol listesi burada sayfali olarak goruntulenir.",
   "searchPlaceholder": "Rol veya aciklama ara",
   "descriptionColumn": "Aciklama"
 }
