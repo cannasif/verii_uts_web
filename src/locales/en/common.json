@@ -4,6 +4,7 @@
   "roles": "Roles",
   "customers": "Customers",
   "stocks": "Stocks",
+  "utsVermeList": "UTS Delivery List",
   "permissionGroups": "Permission Groups",
   "hangfireMonitoring": "Hangfire Monitoring",
   "general": "General",

@@ -15,12 +15,13 @@ const titles: Record<string, { eyebrow: string; title: string; titleNs?: string 
   '/permission-groups': { eyebrow: 'accessManagement', title: 'permissionGroupsTitle', titleNs: 'access-control' },
   '/customers': { eyebrow: 'system', title: 'title', titleNs: 'customer-management' },
   '/stocks': { eyebrow: 'system', title: 'title', titleNs: 'stock-management' },
+  '/uts-verme-list': { eyebrow: 'system', title: 'title', titleNs: 'uts-verme-list-management' },
   '/hangfire-monitoring': { eyebrow: 'system', title: 'title', titleNs: 'hangfire-monitoring' },
   '/profile': { eyebrow: 'general', title: 'profileDetails', titleNs: 'user-detail-management' },
 };
 
 export function Navbar() {
-  const { t } = useTranslation(['common', 'dashboard', 'user-management', 'role-management', 'access-control', 'user-detail-management']);
+  const { t } = useTranslation(['common', 'dashboard', 'user-management', 'role-management', 'access-control', 'user-detail-management', 'uts-verme-list-management']);
   const navigate = useNavigate();
   const location = useLocation();
   const user = useAuthStore((state) => state.user);

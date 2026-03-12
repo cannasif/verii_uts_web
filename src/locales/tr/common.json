@@ -4,6 +4,7 @@
   "roles": "Roller",
   "customers": "Cariler",
   "stocks": "Stoklar",
+  "utsVermeList": "UTS Verme Listesi",
   "permissionGroups": "Yetki Gruplari",
   "hangfireMonitoring": "Hangfire Izleme",
   "general": "Genel",

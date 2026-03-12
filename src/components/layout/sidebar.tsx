@@ -33,6 +33,7 @@ const items: NavItem[] = [
     children: [
       { title: 'customers', href: '/customers', icon: Building2 },
       { title: 'stocks', href: '/stocks' },
+      { title: 'utsVermeList', href: '/uts-verme-list' },
       { title: 'hangfireMonitoring', href: '/hangfire-monitoring' },
       { title: 'authInfrastructure' },
       { title: 'utsModulesPreparation' },
@@ -201,6 +202,8 @@ export function Sidebar() {
                                   ? t('customers')
                                 : child.href === '/stocks'
                                     ? t('stocks')
+                                  : child.href === '/uts-verme-list'
+                                    ? t('utsVermeList')
                                   : child.href === '/hangfire-monitoring'
                                     ? t('hangfireMonitoring')
                                     : t(child.title)}

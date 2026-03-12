@@ -10,6 +10,7 @@ import { ProfilePage } from '@/features/profile/pages/profile-page';
 import { HangfireMonitoringPage } from '@/features/hangfire-monitoring/pages/hangfire-monitoring-page';
 import { StocksPage } from '@/features/stocks/pages/stocks-page';
 import { CustomersPage } from '@/features/customers/pages/customers-page';
+import { UtsVermeListPage } from '@/features/uts-verme-list/pages/uts-verme-list-page';
 
 export function AppRoutes() {
   return (
@@ -23,6 +24,7 @@ export function AppRoutes() {
           <Route path="/hangfire-monitoring" element={<HangfireMonitoringPage />} />
           <Route path="/customers" element={<CustomersPage />} />
           <Route path="/stocks" element={<StocksPage />} />
+          <Route path="/uts-verme-list" element={<UtsVermeListPage />} />
           <Route path="/profile" element={<ProfilePage />} />
         </Route>
       </Route>
