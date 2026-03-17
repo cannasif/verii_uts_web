@@ -105,5 +105,7 @@
   "dropdown": {
     "noResults": "Sonuc bulunamadi.",
     "minCharsHint": "Arama icin en az {{count}} karakter girin."
-  }
+  },
+  "utsNotify": "UTS Bildir",
+  "utsNotifySuccess": "UTS bildirimi basariyla gerceklestirildi."
 }

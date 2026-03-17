@@ -63,6 +63,9 @@ interface AppDataGridProps<TRow> {
   sortBy?: string;
   sortDirection?: DataGridSortDirection;
   onSort?: (columnKey: string) => void;
+  selectableRows?: boolean;
+  selectedRowIds?: string[];
+  onSelectedRowIdsChange?: (ids: string[]) => void;
   isLoading?: boolean;
   isError?: boolean;
   errorText?: string;
@@ -119,6 +122,9 @@ export function AppDataGrid<TRow>({
   sortBy,
   sortDirection,
   onSort,
+  selectableRows = false,
+  selectedRowIds,
+  onSelectedRowIdsChange,
   isLoading = false,
   isError = false,
   errorText,
@@ -495,21 +501,41 @@ export function AppDataGrid<TRow>({
           ) : (
             rows.map((row, rowIndex) => {
               const baseKey = rowKey(row);
+              const selectionId = String(baseKey);
               const rowId = typeof baseKey === 'number' ? `${rowIndex}-${baseKey}` : `${rowIndex}-${baseKey}`;
+              const isSelected = selectedRowIds?.includes(selectionId) ?? false;
               return (
-              <div key={rowId} className="rounded-[1.5rem] border border-slate-100 bg-white p-4 shadow-sm">
-                <div className="space-y-3">
-                  {visibleColumns.map((column) => (
-                    <div key={`${rowId}-${column.key}`} className="flex flex-col gap-1">
-                      <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">{column.label}</span>
-                      <div className={cn('text-sm text-slate-700 break-words', column.className)}>
-                        {column.render ? column.render(row) : String((row as Record<string, unknown>)[column.key] ?? '')}
+                <div key={rowId} className="rounded-[1.5rem] border border-slate-100 bg-white p-4 shadow-sm">
+                  <div className="space-y-3">
+                    {selectableRows ? (
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="checkbox"
+                          className="size-4 rounded border-slate-300 text-indigo-600"
+                          checked={isSelected}
+                          onChange={() => {
+                            if (!onSelectedRowIdsChange) return;
+                            const current = new Set(selectedRowIds ?? []);
+                            if (current.has(selectionId)) current.delete(selectionId);
+                            else current.add(selectionId);
+                            onSelectedRowIdsChange(Array.from(current));
+                          }}
+                        />
+                        <span className="text-xs text-slate-500">{t('select')}</span>
                       </div>
-                    </div>
-                  ))}
+                    ) : null}
+                    {visibleColumns.map((column) => (
+                      <div key={`${rowId}-${column.key}`} className="flex flex-col gap-1">
+                        <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">{column.label}</span>
+                        <div className={cn('text-sm text-slate-700 break-words', column.className)}>
+                          {column.render ? column.render(row) : String((row as Record<string, unknown>)[column.key] ?? '')}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            )})
+              );
+            })
           )}
         </div>
 
@@ -517,6 +543,28 @@ export function AppDataGrid<TRow>({
           <table className="min-w-full text-left text-sm">
             <thead className="bg-slate-50/90">
               <tr className="border-b border-slate-200 text-slate-500">
+                {selectableRows ? (
+                  <th className="w-10 px-4 py-3">
+                    <input
+                      type="checkbox"
+                      className="size-4 rounded border-slate-300 text-indigo-600"
+                      aria-label="select-all-rows"
+                      checked={
+                        rows.length > 0 &&
+                        rows.every((row) => selectedRowIds?.includes(String(rowKey(row))))
+                      }
+                      onChange={(event) => {
+                        if (!onSelectedRowIdsChange) return;
+                        if (event.target.checked) {
+                          const allIds = rows.map((row) => String(rowKey(row)));
+                          onSelectedRowIdsChange(allIds);
+                        } else {
+                          onSelectedRowIdsChange([]);
+                        }
+                      }}
+                    />
+                  </th>
+                ) : null}
                 {visibleColumns.map((column) => {
                   const isActiveSort = sortBy === column.key;
                   return (
@@ -563,16 +611,35 @@ export function AppDataGrid<TRow>({
               ) : (
                 rows.map((row, rowIndex) => {
                   const baseKey = rowKey(row);
+                  const selectionId = String(baseKey);
                   const rowId = typeof baseKey === 'number' ? `${rowIndex}-${baseKey}` : `${rowIndex}-${baseKey}`;
+                  const isSelected = selectedRowIds?.includes(selectionId) ?? false;
                   return (
-                  <tr key={rowId} className="border-b border-slate-100 last:border-b-0">
-                    {visibleColumns.map((column) => (
-                      <td key={`${rowId}-${column.key}`} className={cn('px-4 py-4 text-slate-700', column.className)}>
-                        {column.render ? column.render(row) : String((row as Record<string, unknown>)[column.key] ?? '')}
-                      </td>
-                    ))}
-                  </tr>
-                )})
+                    <tr key={rowId} className="border-b border-slate-100 last:border-b-0">
+                      {selectableRows ? (
+                        <td className="px-4 py-4">
+                          <input
+                            type="checkbox"
+                            className="size-4 rounded border-slate-300 text-indigo-600"
+                            checked={isSelected}
+                            onChange={() => {
+                              if (!onSelectedRowIdsChange) return;
+                              const current = new Set(selectedRowIds ?? []);
+                              if (current.has(selectionId)) current.delete(selectionId);
+                              else current.add(selectionId);
+                              onSelectedRowIdsChange(Array.from(current));
+                            }}
+                          />
+                        </td>
+                      ) : null}
+                      {visibleColumns.map((column) => (
+                        <td key={`${rowId}-${column.key}`} className={cn('px-4 py-4 text-slate-700', column.className)}>
+                          {column.render ? column.render(row) : String((row as Record<string, unknown>)[column.key] ?? '')}
+                        </td>
+                      ))}
+                    </tr>
+                  );
+                })
               )}
             </tbody>
           </table>

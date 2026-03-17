@@ -1,5 +1,8 @@
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 import { AppDataGrid, type DataGridColumn, type DataGridSortDirection } from '@/components/shared/data-grid';
+import { Button } from '@/components/ui/button';
 import { loadColumnPreferences, saveColumnPreferences } from '@/lib/column-preferences';
 
 interface UtsViewGridProps<TRow> {
@@ -33,6 +36,7 @@ export function UtsViewGrid<TRow>({
   isLoading = false,
   isError = false,
 }: UtsViewGridProps<TRow>) {
+  const { t } = useTranslation('common');
   const defaultColumnOrder = useMemo(() => columns.map((column) => column.key), [columns]);
   const defaultVisibleColumns = useMemo(() => columns.map((column) => column.key), [columns]);
   const [searchValue, setSearchValue] = useState('');
@@ -40,6 +44,7 @@ export function UtsViewGrid<TRow>({
   const [sortDirection, setSortDirection] = useState<DataGridSortDirection>('asc');
   const [visibleColumnKeys, setVisibleColumnKeys] = useState<string[]>(defaultVisibleColumns);
   const [columnOrder, setColumnOrder] = useState<string[]>(defaultColumnOrder);
+  const [selectedRowIds, setSelectedRowIds] = useState<string[]>([]);
 
   useEffect(() => {
     setVisibleColumnKeys(defaultVisibleColumns);
@@ -91,6 +96,17 @@ export function UtsViewGrid<TRow>({
       return record;
     }), [columns, filteredRows]);
 
+  const selectedRows = useMemo(
+    () => filteredRows.filter((row) => selectedRowIds.includes(String(rowKey(row)))),
+    [filteredRows, rowKey, selectedRowIds],
+  );
+
+  const handleUtsNotify = () => {
+    if (selectedRowIds.length === 0) return;
+    toast.success(t('utsNotifySuccess'));
+    setSelectedRowIds([]);
+  };
+
   return (
     <AppDataGrid
       pageKey={pageKey}
@@ -116,7 +132,17 @@ export function UtsViewGrid<TRow>({
       isError={isError}
       exportFileName={exportFileName}
       exportRows={exportRows}
-      headerAction={headerAction}
+      selectableRows
+      selectedRowIds={selectedRowIds}
+      onSelectedRowIdsChange={setSelectedRowIds}
+      headerAction={
+        <div className="flex items-center gap-2">
+          {headerAction}
+          <Button type="button" disabled={selectedRows.length === 0} onClick={handleUtsNotify}>
+            {t('utsNotify')}
+          </Button>
+        </div>
+      }
     />
   );
 }

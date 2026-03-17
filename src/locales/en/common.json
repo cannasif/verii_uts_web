@@ -105,5 +105,7 @@
   "dropdown": {
     "noResults": "No results found.",
     "minCharsHint": "Enter at least {{count}} characters to search."
-  }
+  },
+  "utsNotify": "Send UTS Notification",
+  "utsNotifySuccess": "UTS notification completed successfully."
 }
