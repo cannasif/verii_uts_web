@@ -1,5 +1,5 @@
 import { apiClient } from '@/lib/api-client';
-import type { PagedApiResponse, PagedRequest } from '@/types/api';
+import type { ApiResponse } from '@/types/api';
 
 export interface UtsVermeListItem {
   chk: number;
@@ -29,6 +29,6 @@ export interface UtsVermeListItem {
   uretimBildirimi: string;
 }
 
-export async function searchUtsVermeList(request: PagedRequest) {
-  return apiClient.post<never, PagedApiResponse<UtsVermeListItem>>('/api/uts-verme-list/search', request);
+export async function getAllUtsVermeList() {
+  return apiClient.get<never, ApiResponse<UtsVermeListItem[]>>('/api/uts-verme-list');
 }
