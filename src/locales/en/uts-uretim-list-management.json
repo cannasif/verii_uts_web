@@ -1,0 +1,20 @@
+{
+  "title": "UTS Production List",
+  "description": "Monitor and filter records from the VWLEGO_UTS_URETIM_LIST view.",
+  "searchPlaceholder": "Search by stock code, lot serial number or status",
+  "chk": "Check",
+  "siraNo": "Row No",
+  "bno": "Document No",
+  "sira": "Sequence",
+  "git": "GIT",
+  "uno": "UNO",
+  "lsNo": "Lot Serial No",
+  "adt": "Quantity",
+  "sinif": "Class",
+  "seriMiLotMu": "Serial Or Lot",
+  "stokKodu": "Stock Code",
+  "stokAdi": "Stock Name",
+  "urt": "Production Date",
+  "skt": "Expiration Date",
+  "utsDurum": "UTS Status"
+}

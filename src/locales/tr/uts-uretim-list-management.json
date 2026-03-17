@@ -1,0 +1,20 @@
+{
+  "title": "UTS Uretim Listesi",
+  "description": "VWLEGO_UTS_URETIM_LIST gorunumundeki kayitlari izleyin ve filtreleyin.",
+  "searchPlaceholder": "Stok kodu, lot seri no veya durum ara",
+  "chk": "Kontrol",
+  "siraNo": "Sira No",
+  "bno": "Belge No",
+  "sira": "Sira",
+  "git": "GIT",
+  "uno": "UNO",
+  "lsNo": "Lot Seri No",
+  "adt": "Adet",
+  "sinif": "Sinif",
+  "seriMiLotMu": "Seri mi Lot mu",
+  "stokKodu": "Stok Kodu",
+  "stokAdi": "Stok Adi",
+  "urt": "Uretim Tarihi",
+  "skt": "Son Kullanma Tarihi",
+  "utsDurum": "UTS Durumu"
+}
