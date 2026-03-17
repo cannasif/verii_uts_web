@@ -15,13 +15,20 @@ const titles: Record<string, { eyebrow: string; title: string; titleNs?: string 
   '/permission-groups': { eyebrow: 'accessManagement', title: 'permissionGroupsTitle', titleNs: 'access-control' },
   '/customers': { eyebrow: 'system', title: 'title', titleNs: 'customer-management' },
   '/stocks': { eyebrow: 'system', title: 'title', titleNs: 'stock-management' },
-  '/uts-verme-list': { eyebrow: 'system', title: 'title', titleNs: 'uts-verme-list-management' },
+  '/uts-uretim-list': { eyebrow: 'productionModule', title: 'title', titleNs: 'uts-uretim-list-management' },
+  '/uts-verme-list': { eyebrow: 'productionModule', title: 'title', titleNs: 'uts-verme-list-management' },
+  '/uts-tverme-list': { eyebrow: 'undefinedDeliveryModule', title: 'title', titleNs: 'uts-tverme-list-management' },
+  '/uts-tuketici-verme-list': { eyebrow: 'consumerDeliveryModule', title: 'title', titleNs: 'uts-tuketici-verme-list-management' },
+  '/uts-ithalat-list': { eyebrow: 'importModule', title: 'title', titleNs: 'uts-ithalat-list-management' },
+  '/uts-imha-list': { eyebrow: 'disposalModule', title: 'title', titleNs: 'uts-imha-list-management' },
+  '/uts-ihracat-list': { eyebrow: 'exportModule', title: 'title', titleNs: 'uts-ihracat-list-management' },
+  '/uts-alma-list': { eyebrow: 'receiptModule', title: 'title', titleNs: 'uts-alma-list-management' },
   '/hangfire-monitoring': { eyebrow: 'system', title: 'title', titleNs: 'hangfire-monitoring' },
   '/profile': { eyebrow: 'general', title: 'profileDetails', titleNs: 'user-detail-management' },
 };
 
 export function Navbar() {
-  const { t } = useTranslation(['common', 'dashboard', 'user-management', 'role-management', 'access-control', 'user-detail-management', 'uts-verme-list-management']);
+  const { t } = useTranslation(['common', 'dashboard', 'user-management', 'role-management', 'access-control', 'user-detail-management', 'uts-verme-list-management', 'uts-uretim-list-management', 'uts-tverme-list-management', 'uts-tuketici-verme-list-management', 'uts-ithalat-list-management', 'uts-imha-list-management', 'uts-ihracat-list-management', 'uts-alma-list-management']);
   const navigate = useNavigate();
   const location = useLocation();
   const user = useAuthStore((state) => state.user);

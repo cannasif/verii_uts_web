@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Building2, ChevronDown, ChevronRight, FileStack, LayoutDashboard, Menu, Shield, Users, X } from 'lucide-react';
+import { Building2, ChevronDown, ChevronRight, Factory, FileStack, LayoutDashboard, Shield, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
@@ -33,10 +33,23 @@ const items: NavItem[] = [
     children: [
       { title: 'customers', href: '/customers', icon: Building2 },
       { title: 'stocks', href: '/stocks' },
-      { title: 'utsVermeList', href: '/uts-verme-list' },
       { title: 'hangfireMonitoring', href: '/hangfire-monitoring' },
       { title: 'authInfrastructure' },
       { title: 'utsModulesPreparation' },
+    ],
+  },
+  {
+    title: 'utsModules',
+    icon: Factory,
+    children: [
+      { title: 'utsUretimList', href: '/uts-uretim-list' },
+      { title: 'utsVermeList', href: '/uts-verme-list' },
+      { title: 'utsTVermeList', href: '/uts-tverme-list' },
+      { title: 'utsTuketiciVermeList', href: '/uts-tuketici-verme-list' },
+      { title: 'utsIthalatList', href: '/uts-ithalat-list' },
+      { title: 'utsImhaList', href: '/uts-imha-list' },
+      { title: 'utsIhracatList', href: '/uts-ihracat-list' },
+      { title: 'utsAlmaList', href: '/uts-alma-list' },
     ],
   },
 ];
@@ -141,7 +154,7 @@ export function Sidebar() {
                   onClick={() => toggleGroup(item.title)}
                   className={cn(
                     'flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left transition-colors',
-                    hasActiveChild ? 'bg-purple-50' : 'hover:bg-slate-100 dark:hover:bg-white/5',
+                    hasActiveChild ? 'bg-purple-50 dark:bg-white/10' : 'hover:bg-slate-100 dark:hover:bg-white/5',
                   )}
                 >
                   <div
@@ -202,8 +215,22 @@ export function Sidebar() {
                                   ? t('customers')
                                 : child.href === '/stocks'
                                     ? t('stocks')
+                                  : child.href === '/uts-uretim-list'
+                                    ? t('utsUretimList')
                                   : child.href === '/uts-verme-list'
                                     ? t('utsVermeList')
+                                  : child.href === '/uts-tverme-list'
+                                    ? t('utsTVermeList')
+                                  : child.href === '/uts-tuketici-verme-list'
+                                    ? t('utsTuketiciVermeList')
+                                  : child.href === '/uts-ithalat-list'
+                                    ? t('utsIthalatList')
+                                  : child.href === '/uts-imha-list'
+                                    ? t('utsImhaList')
+                                  : child.href === '/uts-ihracat-list'
+                                    ? t('utsIhracatList')
+                                  : child.href === '/uts-alma-list'
+                                    ? t('utsAlmaList')
                                   : child.href === '/hangfire-monitoring'
                                     ? t('hangfireMonitoring')
                                     : t(child.title)}
