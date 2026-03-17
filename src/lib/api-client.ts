@@ -1,11 +1,10 @@
 import axios from 'axios';
 import i18n from '@/lib/i18n';
 import { useAuthStore } from '@/stores/auth-store';
-
-const apiBaseUrl = import.meta.env.VITE_API_BASE_URL?.trim() || 'http://localhost:5001';
+import { getApiBaseUrl } from '@/lib/app-config';
 
 export const apiClient = axios.create({
-  baseURL: apiBaseUrl,
+  baseURL: getApiBaseUrl(),
   headers: {
     'Content-Type': 'application/json',
     'x-language': 'tr',
@@ -25,6 +24,10 @@ apiClient.interceptors.request.use((config) => {
 
   return config;
 });
+
+export function setApiBaseUrl(url: string): void {
+  apiClient.defaults.baseURL = url;
+}
 
 apiClient.interceptors.response.use(
   (response) => response.data,

@@ -7,23 +7,30 @@ import { BrowserRouter } from 'react-router-dom';
 import { App } from '@/app/App';
 import { useAuthStore } from '@/stores/auth-store';
 import i18n, { ensureI18nReady } from '@/lib/i18n';
+import { loadConfig } from '@/lib/app-config';
+import { setApiBaseUrl } from '@/lib/api-client';
 import '@/index.css';
 
 const queryClient = new QueryClient();
 
-void ensureI18nReady().then(() => {
-  useAuthStore.getState().hydrate();
+void loadConfig()
+  .then((config) => {
+    setApiBaseUrl(config.apiBaseUrl);
+  })
+  .then(() => ensureI18nReady())
+  .then(() => {
+    useAuthStore.getState().hydrate();
 
-  createRoot(document.getElementById('root')!).render(
-    <StrictMode>
-      <I18nextProvider i18n={i18n}>
-        <QueryClientProvider client={queryClient}>
-          <BrowserRouter>
-            <App />
-            <Toaster position="top-right" richColors />
-          </BrowserRouter>
-        </QueryClientProvider>
-      </I18nextProvider>
-    </StrictMode>,
-  );
-});
+    createRoot(document.getElementById('root')!).render(
+      <StrictMode>
+        <I18nextProvider i18n={i18n}>
+          <QueryClientProvider client={queryClient}>
+            <BrowserRouter>
+              <App />
+              <Toaster position="top-right" richColors />
+            </BrowserRouter>
+          </QueryClientProvider>
+        </I18nextProvider>
+      </StrictMode>,
+    );
+  });
