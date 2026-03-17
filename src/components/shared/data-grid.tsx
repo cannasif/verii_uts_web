@@ -67,10 +67,11 @@ interface AppDataGridProps<TRow> {
   isError?: boolean;
   errorText?: string;
   emptyText?: string;
-  pagination: PaginationState;
-  onPageNumberChange: (pageNumber: number) => void;
-  onPageSizeChange: (pageSize: number) => void;
+  pagination?: PaginationState;
+  onPageNumberChange?: (pageNumber: number) => void;
+  onPageSizeChange?: (pageSize: number) => void;
   pageSizeOptions?: number[];
+  hidePagination?: boolean;
   exportFileName: string;
   exportColumns?: GridExportColumn[];
   exportRows?: Record<string, unknown>[];
@@ -126,6 +127,7 @@ export function AppDataGrid<TRow>({
   onPageNumberChange,
   onPageSizeChange,
   pageSizeOptions = [10, 20, 50, 100],
+  hidePagination = false,
   exportFileName,
   exportColumns,
   exportRows,
@@ -491,11 +493,14 @@ export function AppDataGrid<TRow>({
               {emptyText ?? t('gridEmpty')}
             </div>
           ) : (
-            rows.map((row) => (
-              <div key={rowKey(row)} className="rounded-[1.5rem] border border-slate-100 bg-white p-4 shadow-sm">
+            rows.map((row, rowIndex) => {
+              const baseKey = rowKey(row);
+              const rowId = typeof baseKey === 'number' ? `${rowIndex}-${baseKey}` : `${rowIndex}-${baseKey}`;
+              return (
+              <div key={rowId} className="rounded-[1.5rem] border border-slate-100 bg-white p-4 shadow-sm">
                 <div className="space-y-3">
                   {visibleColumns.map((column) => (
-                    <div key={`${rowKey(row)}-${column.key}`} className="flex flex-col gap-1">
+                    <div key={`${rowId}-${column.key}`} className="flex flex-col gap-1">
                       <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">{column.label}</span>
                       <div className={cn('text-sm text-slate-700 break-words', column.className)}>
                         {column.render ? column.render(row) : String((row as Record<string, unknown>)[column.key] ?? '')}
@@ -504,7 +509,7 @@ export function AppDataGrid<TRow>({
                   ))}
                 </div>
               </div>
-            ))
+            )})
           )}
         </div>
 
@@ -556,20 +561,24 @@ export function AppDataGrid<TRow>({
                   </td>
                 </tr>
               ) : (
-                rows.map((row) => (
-                  <tr key={rowKey(row)} className="border-b border-slate-100 last:border-b-0">
+                rows.map((row, rowIndex) => {
+                  const baseKey = rowKey(row);
+                  const rowId = typeof baseKey === 'number' ? `${rowIndex}-${baseKey}` : `${rowIndex}-${baseKey}`;
+                  return (
+                  <tr key={rowId} className="border-b border-slate-100 last:border-b-0">
                     {visibleColumns.map((column) => (
-                      <td key={`${rowKey(row)}-${column.key}`} className={cn('px-4 py-4 text-slate-700', column.className)}>
+                      <td key={`${rowId}-${column.key}`} className={cn('px-4 py-4 text-slate-700', column.className)}>
                         {column.render ? column.render(row) : String((row as Record<string, unknown>)[column.key] ?? '')}
                       </td>
                     ))}
                   </tr>
-                ))
+                )})
               )}
             </tbody>
           </table>
         </div>
 
+        {!hidePagination && pagination && onPageNumberChange && onPageSizeChange ? (
         <div className="flex flex-col gap-3 border-t border-slate-100 pt-4 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex flex-wrap items-center gap-3 text-sm text-slate-500">
             <span>
@@ -605,6 +614,7 @@ export function AppDataGrid<TRow>({
             </Button>
           </div>
         </div>
+        ) : null}
       </div>
     </Card>
   );
