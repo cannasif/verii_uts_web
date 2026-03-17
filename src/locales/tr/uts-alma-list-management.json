@@ -1,0 +1,23 @@
+{
+  "title": "UTS Alma Listesi",
+  "description": "VWLEGO_UTS_ALMA_LIST gorunumundeki kayitlari izleyin.",
+  "searchPlaceholder": "Alma listesinde ara...",
+  "chk": "Kontrol",
+  "siraNo": "Sira No",
+  "bno": "Belge No",
+  "sira": "Sira",
+  "git": "Git",
+  "kun": "Kun",
+  "uno": "Uno",
+  "lsNo": "Lot/Seri No",
+  "adt": "Adet",
+  "sinif": "Sinif",
+  "seriMiLotMu": "Seri Mi Lot Mu",
+  "cariKodu": "Cari Kodu",
+  "cariIsim": "Cari Isim",
+  "stokKodu": "Stok Kodu",
+  "stokAdi": "Stok Adi",
+  "acik16": "Aciklama",
+  "utsDurum": "UTS Durum",
+  "uretimLsNo": "Uretim LS No"
+}
