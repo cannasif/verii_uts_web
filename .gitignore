@@ -56,3 +56,7 @@ Thumbs.db
 .vercel
 coverage/
 *.tsbuildinfo
+
+# Emitted config (we use vite.config.ts only)
+vite.config.js
+vite.config.d.ts
