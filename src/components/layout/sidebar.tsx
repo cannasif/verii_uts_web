@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Building2, ChevronDown, ChevronRight, Factory, FileStack, LayoutDashboard, Shield, X } from 'lucide-react';
+import { Building2, ChevronDown, ChevronLeft, ChevronRight, Factory, FileStack, LayoutDashboard, Shield, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
@@ -68,7 +68,7 @@ const normalizeText = (value: string) =>
 export function Sidebar() {
   const { t } = useTranslation('common');
   const location = useLocation();
-  const { isSidebarOpen, toggleSidebar, setSidebarOpen, searchQuery, setSearchQuery } = useUiStore();
+  const { isSidebarOpen, toggleSidebar, setSidebarOpen, toggleSidebarCollapsed, searchQuery, setSearchQuery, theme, isSidebarCollapsed } = useUiStore();
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set(['general', 'accessManagement']));
 
   useEffect(() => {
@@ -124,24 +124,39 @@ export function Sidebar() {
       )}
       <aside
         className={cn(
-          'fixed left-0 top-0 z-40 flex h-screen w-[18rem] max-w-[88vw] flex-col overflow-hidden border-r border-slate-200 bg-white shadow-2xl transition-transform duration-300 dark:border-white/5 dark:bg-[#130822]/90',
-          isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0',
+          `fixed left-0 top-0 z-40 flex h-screen max-w-[88vw] flex-col overflow-hidden border-r shadow-2xl backdrop-blur-xl transition-all duration-300 ${theme === 'light' ? 'border-purple-200/30 bg-white/95 shadow-purple-500/5' : 'border-[#ff7a55]/16 bg-[#11061d]/90'}`,
+          isSidebarOpen ? 'w-[18rem] translate-x-0' : '-translate-x-full lg:translate-x-0',
+          isSidebarCollapsed && 'lg:w-20',
         )}
       >
-        <div className="flex h-24 items-center justify-between border-b border-slate-100 px-4 dark:border-white/5">
+        <div className={`flex h-24 items-center border-b px-4 ${theme === 'light' ? 'border-purple-200/30 bg-white/50' : 'border-[#ff7a55]/14 bg-[#170a28]/72'} ${isSidebarCollapsed ? 'lg:justify-center' : 'justify-between'}`}>
           <Link to="/" className="flex items-center gap-3">
-            <div className="flex size-11 items-center justify-center rounded-2xl bg-linear-to-r from-indigo-600 to-fuchsia-600 text-lg font-bold text-white">V</div>
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-400">Verii</p>
-              <p className="text-base font-semibold text-slate-900 dark:text-white">{t('utsPanel')}</p>
-            </div>
+            <div className={`flex size-11 items-center justify-center rounded-2xl text-lg font-bold text-white flex-shrink-0 ${theme === 'light' ? 'bg-linear-to-r from-purple-600 to-purple-500' : 'bg-linear-to-r from-[#ff2f92] via-[#ff5a63] to-[#ff7f2a]'}`}>V</div>
+            {!isSidebarCollapsed && (
+              <div>
+                <p className={`text-xs font-semibold uppercase tracking-[0.24em] ${theme === 'light' ? 'text-[#7C3AED]' : 'bg-linear-to-r from-[#ff8ac4] to-[#ffb067] bg-clip-text text-transparent'}`}>Verii</p>
+                <p className={`text-base font-semibold ${theme === 'light' ? 'text-[#2A2C31]' : 'bg-linear-to-r from-[#ffc4de] via-[#ff9f9f] to-[#ffc58e] bg-clip-text text-transparent'}`}>{t('utsPanel')}</p>
+              </div>
+            )}
           </Link>
-          <button onClick={() => setSidebarOpen(false)} className="rounded-xl p-2 text-slate-500 lg:hidden">
-            <X className="size-5" />
+          <button
+            type="button"
+            onClick={() => {
+              if (window.innerWidth < 1024) {
+                setSidebarOpen(false);
+                return;
+              }
+
+              toggleSidebarCollapsed();
+            }}
+            className={`rounded-xl p-2 ${theme === 'light' ? 'text-[#5E626D] hover:bg-purple-100/50 hover:text-[#7C3AED]' : 'text-[#c8b5d8] hover:bg-white/6 hover:text-[#ffd5bf]'}`}
+            aria-label={window.innerWidth < 1024 ? 'Close sidebar' : isSidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+          >
+            {window.innerWidth < 1024 ? <X className="size-5" /> : isSidebarCollapsed ? <ChevronRight className="size-5" /> : <ChevronLeft className="size-5" />}
           </button>
         </div>
 
-        <nav className="custom-scrollbar flex-1 overflow-y-auto px-3 py-6">
+        <nav className={`custom-scrollbar flex-1 overflow-y-auto px-3 py-6`}>
           {filteredItems.map((item) => {
             const Icon = item.icon ?? LayoutDashboard;
             const isExpanded = expandedGroups.has(item.title);
@@ -153,37 +168,59 @@ export function Sidebar() {
                   type="button"
                   onClick={() => toggleGroup(item.title)}
                   className={cn(
-                    'flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left transition-colors',
-                    hasActiveChild ? 'bg-purple-50 dark:bg-white/10' : 'hover:bg-slate-100 dark:hover:bg-white/5',
+                    'flex w-full items-center rounded-xl transition-colors',
+                    isSidebarCollapsed ? 'lg:justify-center' : 'gap-3',
+                    'px-3 py-2',
+                    hasActiveChild
+                      ? theme === 'light'
+                        ? 'bg-purple-100/50'
+                        : 'bg-pink-500/15'
+                      : theme === 'light'
+                        ? 'hover:bg-purple-50/60'
+                        : 'hover:bg-white/5',
                   )}
+                  title={isSidebarCollapsed ? t(item.title) : undefined}
                 >
                   <div
                     className={cn(
                       'flex size-9 items-center justify-center rounded-lg',
                       hasActiveChild
-                        ? 'bg-purple-100 text-purple-700 dark:bg-pink-500/20 dark:text-pink-400'
-                        : 'border border-slate-200 bg-white text-slate-500 dark:border-white/10 dark:bg-slate-900/40 dark:text-slate-400',
+                        ? theme === 'light'
+                          ? 'bg-purple-200/60 text-[#7C3AED]'
+                          : 'bg-pink-500/20 text-pink-300'
+                        : theme === 'light'
+                          ? 'border border-purple-200/40 bg-white/60 text-[#5E626D]'
+                          : 'border border-[#ff7a55]/14 bg-[#1a0d2a]/68 text-[#d7c5e5]',
                     )}
                   >
                     <Icon className="size-5" />
                   </div>
                   <span
                     className={cn(
-                      'flex-1 text-sm font-medium',
-                      hasActiveChild ? 'text-purple-900 dark:text-white' : 'text-slate-700 dark:text-slate-300',
+                      'text-sm font-semibold',
+                      isSidebarCollapsed ? 'hidden' : 'flex-1',
+                      hasActiveChild
+                        ? 'text-[#7C3AED]'
+                        : theme === 'light'
+                          ? 'text-[#2A2C31]'
+                          : 'text-[#d9c9e8]',
                     )}
                   >
                     {t(item.title)}
                   </span>
-                  {isExpanded ? (
-                    <ChevronDown className="size-4 text-slate-400" />
-                  ) : (
-                    <ChevronRight className="size-4 text-slate-400" />
+                  {!isSidebarCollapsed && (
+                    <>
+                      {isExpanded ? (
+                        <ChevronDown className={`size-4 ${theme === 'light' ? 'text-[#5E626D]' : 'text-[#c8b5d8]'}`} />
+                      ) : (
+                        <ChevronRight className={`size-4 ${theme === 'light' ? 'text-[#5E626D]' : 'text-[#c8b5d8]'}`} />
+                      )}
+                    </>
                   )}
                 </button>
 
-                {isExpanded && (
-                  <div className="ml-12 mt-2 space-y-1 border-l border-slate-200 pl-3 dark:border-white/10">
+                {isExpanded && !isSidebarCollapsed && (
+                  <div className={`ml-12 mt-2 space-y-1 border-l pl-3 ${theme === 'light' ? 'border-purple-200/40' : 'border-white/10'}`}>
                     {item.children?.map((child) =>
                       child.href ? (
                         <Link
@@ -192,8 +229,12 @@ export function Sidebar() {
                           className={cn(
                             'flex items-center justify-between rounded-lg px-3 py-2 text-sm transition-colors',
                             location.pathname === child.href
-                              ? 'bg-purple-50 font-semibold text-purple-700 dark:bg-white/10 dark:text-white'
-                              : 'text-slate-500 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-white/5',
+                              ? theme === 'light'
+                                ? 'bg-purple-100/60 text-[#7C3AED] font-semibold'
+                                : 'bg-pink-500/15 bg-linear-to-r from-[#ff8bc7] to-[#ffb16b] bg-clip-text font-semibold text-transparent'
+                              : theme === 'light'
+                                ? 'text-[#2A2C31] hover:bg-purple-50/60 hover:text-[#7C3AED]'
+                                  : 'text-[#cfbfde] hover:bg-white/6 hover:text-[#ffd2bb]',
                           )}
                           onClick={() => {
                             if (window.innerWidth < 1024) {
@@ -236,11 +277,11 @@ export function Sidebar() {
                                     : t(child.title)}
                           </span>
                           {location.pathname === child.href && (
-                            <span className="h-2 w-2 rounded-full bg-purple-600 dark:bg-pink-500" />
+                            <span className="h-2 w-2 rounded-full bg-[#ff8a3d]" />
                           )}
                         </Link>
                       ) : (
-                        <div key={child.title} className="rounded-lg px-3 py-2 text-sm text-slate-400 dark:text-slate-500">
+                        <div key={child.title} className={`rounded-lg px-3 py-2 text-sm font-medium ${theme === 'light' ? 'text-[#5E626D]/80' : 'text-[#bfaed0]'}`}>
                           {t(child.title)}
                         </div>
                       ),

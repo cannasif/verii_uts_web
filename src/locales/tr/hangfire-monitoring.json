@@ -1,7 +1,7 @@
 {
   "menu": "Hangfire Izleme",
   "title": "Hangfire Izleme",
-  "description": "Arka plan gorev sagligini, basarisiz kayitlari ve ayri bekletme kuyrugunu izleyin.",
+  "description": "Arka plan gorev sagligini, basarisiz kayıtlari ve ayri bekletme kuyrugunu izleyin.",
   "refresh": "Yenile",
   "stats": {
     "enqueued": "Kuyruktakiler",
@@ -12,15 +12,15 @@
   },
   "failed": {
     "title": "Basarisiz Gorevler",
-    "description": "SQL gorev log tablosuna yazilan basarisiz Hangfire kayitlari.",
+    "description": "SQL gorev log tablosuna yazilan basarisiz Hangfire kayıtlari.",
     "total": "Toplam",
-    "empty": "Basarisiz gorev kaydi bulunamadi."
+    "empty": "Basarisiz gorev kaydi bulunamadı."
   },
   "deadLetter": {
     "title": "Ayri Bekletme Kuyrugu",
     "description": "Son deneme sonrasinda ayri bekletme kuyruguna dusen kritik gorevler.",
-    "enqueued": "Kuyruktaki Kayit",
-    "empty": "Ayri bekletme kuyrugunda kayit bulunamadi."
+    "enqueued": "Kuyruktaki Kayıt",
+    "empty": "Ayri bekletme kuyrugunda kayıt bulunamadı."
   },
   "table": {
     "jobId": "Gorev Kimligi",

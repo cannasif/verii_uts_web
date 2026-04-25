@@ -10,9 +10,11 @@ import {
   Instagram,
   Mail,
   MessageCircle,
+  Moon,
+  Ban,
   Phone,
   Sparkles,
-  WifiOff,
+  Sun,
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -24,6 +26,7 @@ import { useAuthStore } from '@/stores/auth-store';
 import { useLoginMutation } from '@/features/auth/hooks/use-login-mutation';
 import { AuthBackground } from '@/features/auth/components/auth-background';
 import i18n from '@/lib/i18n';
+import { useUiStore } from '@/stores/ui-store';
 
 const schema = z.object({
   email: z.email(i18n.t('validationEmail', { ns: 'common' })),
@@ -38,8 +41,10 @@ export function LoginPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated());
+  const theme = useUiStore((state) => state.theme);
+  const toggleTheme = useUiStore((state) => state.toggleTheme);
   const loginMutation = useLoginMutation();
-  const [showAnimation, setShowAnimation] = useState(true);
+  const [showAnimation, setShowAnimation] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const {
     register,
@@ -76,73 +81,83 @@ export function LoginPage() {
   const requiredMark = <span className="ml-1 text-rose-400">*</span>;
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[#0f0518] px-3 py-6 text-white sm:px-4 sm:py-8">
+    <div className={`relative min-h-screen overflow-hidden px-3 py-6 sm:px-4 sm:py-8 ${theme === 'light' ? 'bg-[#f4ebff] text-slate-900' : 'bg-[#0f0518] text-white'}`}>
       <div
         className={`absolute inset-0 z-0 transition-opacity duration-1000 ${showAnimation ? 'opacity-0' : 'opacity-100'}`}
       >
-        <div className="absolute right-[-10%] top-[-10%] h-[60vw] w-[60vw] rounded-full bg-pink-900/20 blur-[120px]" />
-        <div className="absolute bottom-[-10%] left-[-10%] h-[60vw] w-[60vw] rounded-full bg-orange-900/10 blur-[120px]" />
-        <div className="absolute inset-0 bg-linear-to-b from-transparent via-[#0f0518]/50 to-[#0f0518]" />
+        <div className={`absolute right-[-10%] top-[-10%] h-[60vw] w-[60vw] rounded-full blur-[120px] ${theme === 'light' ? 'bg-pink-400/30' : 'bg-pink-900/20'}`} />
+        <div className={`absolute bottom-[-10%] left-[-10%] h-[60vw] w-[60vw] rounded-full blur-[120px] ${theme === 'light' ? 'bg-cyan-400/25' : 'bg-orange-900/10'}`} />
+        <div className={`absolute inset-0 bg-linear-to-b from-transparent ${theme === 'light' ? 'via-[#f4ebff]/45 to-[#f4ebff]' : 'via-[#0f0518]/50 to-[#0f0518]'}`} />
       </div>
 
       <AuthBackground isActive={showAnimation} />
 
-      <div className="fixed bottom-6 right-6 z-20">
+      <div className="fixed bottom-6 right-6 z-20 flex flex-col gap-2">
+        <button
+          type="button"
+          onClick={toggleTheme}
+          className={`flex h-12 w-12 items-center justify-center rounded-full border backdrop-blur-xl transition-all hover:scale-110 ${theme === 'light' ? 'border-fuchsia-300/70 bg-white/80 text-fuchsia-600 shadow-[0_0_20px_rgba(168,85,247,0.2)]' : 'border-cyan-400/30 bg-[#1a1129]/75 text-cyan-200 shadow-[0_0_20px_rgba(56,189,248,0.2)]'}`}
+          title={theme === 'light' ? 'Dark Mode' : 'Light Mode'}
+        >
+          {theme === 'light' ? <Moon className="size-5" /> : <Sun className="size-5" />}
+        </button>
         <button
           type="button"
           onClick={() => setShowAnimation((current) => !current)}
           className={`flex h-12 w-12 items-center justify-center rounded-full border backdrop-blur-xl transition-all hover:scale-110 ${
             showAnimation
               ? 'border-pink-500/50 bg-pink-500/20 text-pink-400 shadow-[0_0_20px_rgba(236,72,153,0.35)]'
-              : 'border-white/20 bg-zinc-900/80 text-slate-200'
+              : theme === 'light'
+                ? 'border-fuchsia-300/70 bg-white/80 text-fuchsia-600'
+                : 'border-white/20 bg-zinc-900/80 text-slate-200'
           }`}
           title={showAnimation ? t('animationOff', { ns: 'auth' }) : t('animationOn', { ns: 'auth' })}
         >
-          {showAnimation ? <Sparkles className="size-5" /> : <WifiOff className="size-5" />}
+          {showAnimation ? <Sparkles className="size-5" /> : <Ban className="size-5" />}
         </button>
       </div>
 
       <div className="relative z-10 flex min-h-[calc(100vh-4rem)] flex-col items-center justify-between">
         <div className="flex flex-1 items-center justify-center py-6 sm:py-8">
-          <Card className="w-full max-w-md rounded-[2rem] border border-white/10 bg-[#140a1e]/70 p-5 shadow-[0_20px_40px_rgba(0,0,0,0.4),inset_0_0_20px_rgba(255,255,255,0.05)] backdrop-blur-xl sm:p-8 md:p-10">
+          <Card className={`w-full max-w-md rounded-[2rem] p-5 backdrop-blur-xl sm:p-8 md:p-10 ${theme === 'light' ? 'border-fuchsia-300/60 bg-[#efe4ff]/85 shadow-[0_20px_40px_rgba(121,79,176,0.2),inset_0_0_16px_rgba(56,189,248,0.14)]' : 'border-white/10 bg-[#140a1e]/70 shadow-[0_20px_40px_rgba(0,0,0,0.4),inset_0_0_20px_rgba(255,255,255,0.05)]'}`}>
             <div className="text-center">
               <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-[2rem] bg-linear-to-br from-pink-600 via-orange-500 to-yellow-400 text-3xl font-black text-white shadow-[0_20px_40px_rgba(236,72,153,0.25)]">
                 V
               </div>
-              <p className="mt-5 text-xs font-semibold uppercase tracking-[0.24em] text-slate-400">{t('logoName', { ns: 'common' })}</p>
-              <h2 className="mt-3 text-2xl font-semibold text-white sm:text-3xl">{t('loginTitle', { ns: 'auth' })}</h2>
-              <p className="mt-3 text-sm text-slate-400">
-                {t('loginSubtitle', { ns: 'auth' })}
+              <p className={`mt-5 text-xs font-semibold uppercase tracking-[0.24em] ${theme === 'light' ? 'text-fuchsia-600' : 'text-slate-400'}`}>{t('logoName', { ns: 'common' })}</p>
+              <h2 className={`mt-3 text-2xl font-semibold sm:text-3xl ${theme === 'light' ? 'bg-linear-to-r from-pink-500 via-fuchsia-500 to-cyan-500 bg-clip-text text-transparent' : 'text-white'}`}>Ürün Takip Sistemi</h2>
+              <p className={`mt-3 text-sm ${theme === 'light' ? 'text-slate-600' : 'text-slate-400'}`}>
+                Hoşgeldiniz
               </p>
             </div>
 
             <form className="mt-8 space-y-5" onSubmit={onSubmit}>
               <div>
-                <label className="mb-2 block text-sm font-medium text-slate-200">
+                <label className={`mb-2 block text-sm font-medium ${theme === 'light' ? 'text-slate-700' : 'text-slate-200'}`}>
                   {t('email', { ns: 'common' })}{requiredMark}
                 </label>
                 <Input
                   {...register('email')}
-                  className="border-white/10 bg-black/30 text-white placeholder:text-slate-500 focus:border-pink-500 focus:bg-black/50 focus:ring-0"
+                  className={theme === 'light' ? 'border-fuchsia-200/70 bg-white/70 text-slate-800 placeholder:text-slate-400 focus:border-fuchsia-400 focus:bg-white focus:ring-0' : 'border-white/10 bg-black/30 text-white placeholder:text-slate-500 focus:border-pink-500 focus:bg-black/50 focus:ring-0'}
                   placeholder={t('exampleEmail', { ns: 'auth' })}
                 />
                 {errors.email && <p className="mt-2 text-sm text-rose-500">{errors.email.message}</p>}
               </div>
               <div>
-                <label className="mb-2 block text-sm font-medium text-slate-200">
+                <label className={`mb-2 block text-sm font-medium ${theme === 'light' ? 'text-slate-700' : 'text-slate-200'}`}>
                   {t('password', { ns: 'common' })}{requiredMark}
                 </label>
                 <div className="relative">
                   <Input
                     {...register('password')}
-                    className="border-white/10 bg-black/30 pr-12 text-white placeholder:text-slate-500 focus:border-pink-500 focus:bg-black/50 focus:ring-0"
+                    className={theme === 'light' ? 'border-fuchsia-200/70 bg-white/70 pr-12 text-slate-800 placeholder:text-slate-400 focus:border-fuchsia-400 focus:bg-white focus:ring-0' : 'border-white/10 bg-black/30 pr-12 text-white placeholder:text-slate-500 focus:border-pink-500 focus:bg-black/50 focus:ring-0'}
                     placeholder="••••••••"
                     type={isPasswordVisible ? 'text' : 'password'}
                   />
                   <button
                     type="button"
                     onClick={() => setIsPasswordVisible((current) => !current)}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 transition hover:text-white"
+                    className={`absolute right-4 top-1/2 -translate-y-1/2 transition ${theme === 'light' ? 'text-slate-500 hover:text-fuchsia-600' : 'text-slate-400 hover:text-white'}`}
                   >
                     {isPasswordVisible ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
                   </button>
@@ -150,16 +165,16 @@ export function LoginPage() {
                 {errors.password && <p className="mt-2 text-sm text-rose-500">{errors.password.message}</p>}
               </div>
 
-              <div className="flex items-center justify-between px-1 text-sm text-slate-400">
-                <label className="flex items-center gap-2 transition hover:text-pink-400">
+              <div className={`flex items-center justify-between px-1 text-sm ${theme === 'light' ? 'text-slate-600' : 'text-slate-400'}`}>
+                <label className={`flex items-center gap-2 transition ${theme === 'light' ? 'hover:text-fuchsia-600' : 'hover:text-pink-400'}`}>
                   <input
                     type="checkbox"
-                    className="h-4 w-4 rounded accent-pink-500"
+                    className={`h-4 w-4 rounded ${theme === 'light' ? 'accent-fuchsia-500' : 'accent-pink-500'}`}
                     {...register('rememberMe')}
                   />
                   {t('rememberMe', { ns: 'common' })}
                 </label>
-                <span className="text-xs text-slate-500">{t('shortcutHint', { ns: 'common' })}</span>
+                <span className={`text-xs ${theme === 'light' ? 'text-slate-500' : 'text-slate-500'}`}>{t('shortcutHint', { ns: 'common' })}</span>
               </div>
 
               <Button
@@ -172,11 +187,12 @@ export function LoginPage() {
               </Button>
             </form>
 
-            <p className="mt-8 text-center text-xs uppercase tracking-[0.2em] text-slate-500">
-              {t('loginFooter', { ns: 'auth' })}
-            </p>
           </Card>
         </div>
+
+        <p className={`mt-1 text-center text-[11px] font-medium uppercase tracking-[0.28em] sm:text-xs sm:tracking-[0.34em] ${theme === 'light' ? 'text-slate-600/80' : 'text-slate-300/70'}`}>
+          "İŞİNİZİ TAHMİNLERLE DEĞİL, <span className="text-[#f6a56b]">V3RII</span>'YLE YÖNETİN."
+        </p>
 
         <div className="w-full max-w-4xl pb-6 pt-4">
           <div className="flex flex-wrap items-center justify-center gap-4 px-4">

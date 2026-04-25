@@ -6,6 +6,7 @@ import { Toaster } from 'sonner';
 import { BrowserRouter } from 'react-router-dom';
 import { App } from '@/app/App';
 import { useAuthStore } from '@/stores/auth-store';
+import { useUiStore } from '@/stores/ui-store';
 import i18n, { ensureI18nReady } from '@/lib/i18n';
 import { loadConfig } from '@/lib/app-config';
 import { setApiBaseUrl } from '@/lib/api-client';
@@ -20,6 +21,7 @@ void loadConfig()
   .then(() => ensureI18nReady())
   .then(() => {
     useAuthStore.getState().hydrate();
+    useUiStore.getState().initializeTheme();
 
     createRoot(document.getElementById('root')!).render(
       <StrictMode>

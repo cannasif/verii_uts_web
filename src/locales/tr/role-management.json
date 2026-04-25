@@ -1,6 +1,10 @@
 {
   "title": "Roller",
-  "description": "Rol listesi burada sayfali olarak goruntulenir.",
-  "searchPlaceholder": "Rol veya aciklama ara",
-  "descriptionColumn": "Aciklama"
+  "description": "Rol listesi burada sayfalı olarak görüntülenir.",
+  "searchPlaceholder": "Rol veya açıklama ara",
+  "descriptionColumn": "Açıklama",
+  "memberCount": "Üye Sayısı",
+  "managePermissions": "Yetkileri Yönet",
+  "createRole": "Yeni Rol Oluştur",
+  "createRoleSoon": "Yeni rol oluşturma akışı yakında eklenecek."
 }

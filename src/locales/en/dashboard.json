@@ -9,5 +9,6 @@
   "authCardDescription": "Login, me, my-permissions and logout flows are connected to the frontend store.",
   "usersCardDescription": "The user list is fetched by sending PagedRequest in the body.",
   "createUserCardTitle": "Create User",
-  "createUserCardDescription": "The user creation panel is ready with role and permission group selection."
+  "createUserCardDescription": "The user creation panel is ready with role and permission group selection.",
+  "detailAction": "Details"
 }

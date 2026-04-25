@@ -22,6 +22,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
+import { useUiStore } from '@/stores/ui-store';
 import type { FilterColumnConfig, FilterRow } from '@/lib/advanced-filter';
 import { createFilterRow, getDefaultOperatorForColumn, getOperatorsForColumn } from '@/lib/advanced-filter';
 import { exportGridToExcel, exportGridToPdf, type GridExportColumn } from '@/lib/grid-export';
@@ -86,6 +87,8 @@ interface AppDataGridProps<TRow> {
   onClearFilters?: () => void;
   appliedFilterCount?: number;
   headerAction?: ReactNode;
+  subheaderContent?: ReactNode;
+  emptyStateContent?: ReactNode;
 }
 
 function useOutsideClose<T extends HTMLElement>(onClose: () => void) {
@@ -145,8 +148,12 @@ export function AppDataGrid<TRow>({
   onClearFilters,
   appliedFilterCount = 0,
   headerAction,
+  subheaderContent,
+  emptyStateContent,
 }: AppDataGridProps<TRow>) {
   const { t } = useTranslation('common');
+  const theme = useUiStore((state) => state.theme);
+  const isLight = theme === 'light';
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [columnsOpen, setColumnsOpen] = useState(false);
   const [exportOpen, setExportOpen] = useState(false);
@@ -208,9 +215,16 @@ export function AppDataGrid<TRow>({
   };
 
   return (
-    <Card className="overflow-hidden p-3 sm:p-5">
-      <div className="flex flex-col gap-4">
-        <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+    <Card
+      className={cn(
+        'cyber-grid overflow-hidden border backdrop-blur-2xl',
+        isLight
+          ? 'border-slate-200/70 bg-white/85 p-3 shadow-[0_14px_34px_rgba(15,23,42,0.08)] sm:p-4'
+          : 'border-transparent bg-[#120b1f]/50 p-2.5 shadow-[0_14px_34px_rgba(2,4,14,0.26)] sm:p-3',
+      )}
+    >
+      <div className={cn('flex flex-col', isLight ? 'gap-4' : 'gap-3')}>
+        <div className={cn('flex flex-col xl:flex-row xl:items-center xl:justify-between', isLight ? 'gap-4' : 'gap-3')}>
           <div className="flex flex-1 flex-col gap-3 sm:flex-row sm:items-center">
             <div className="relative w-full max-w-xl">
               <Search className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
@@ -221,7 +235,7 @@ export function AppDataGrid<TRow>({
                 onChange={(event) => onSearchValueChange(event.target.value)}
               />
             </div>
-            {title ? <p className="text-sm font-medium text-slate-500">{title}</p> : null}
+            {title ? <p className="bg-linear-to-r from-[#ffb1d8] to-[#ffc58e] bg-clip-text text-sm font-medium text-transparent">{title}</p> : null}
           </div>
 
           <div className="flex flex-wrap items-center gap-2 max-sm:w-full">
@@ -247,9 +261,14 @@ export function AppDataGrid<TRow>({
                 </Button>
 
                 {filtersOpen ? (
-                <div className="absolute right-0 z-40 mt-2 w-[min(680px,92vw)] max-sm:left-0 max-sm:right-auto rounded-[1.75rem] border border-slate-200 bg-white p-4 shadow-[0_30px_70px_rgba(15,23,42,0.18)]">
+                  <div className={cn(
+                    'absolute right-0 z-40 mt-2 w-[min(680px,92vw)] max-sm:left-0 max-sm:right-auto rounded-[1.75rem] border p-4 backdrop-blur-2xl',
+                    isLight
+                      ? 'border-slate-200/75 bg-white/95 shadow-[0_20px_45px_rgba(15,23,42,0.14)]'
+                      : 'border-white/14 bg-[#160f26]/72 shadow-[0_30px_70px_rgba(2,4,14,0.55),inset_0_1px_0_rgba(255,255,255,0.08)]',
+                  )}>
                     <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                      <h3 className="text-sm font-semibold text-slate-900">{t('advancedFilterTitle')}</h3>
+                      <h3 className="bg-linear-to-r from-[#ffb1d8] to-[#ffc58e] bg-clip-text text-sm font-semibold text-transparent">{t('advancedFilterTitle')}</h3>
                       <div className="flex flex-wrap gap-2">
                         <Button
                           type="button"
@@ -281,7 +300,12 @@ export function AppDataGrid<TRow>({
 
                     <div className="space-y-3">
                       {draftFilterRows.length === 0 ? (
-                        <div className="rounded-2xl border border-dashed border-slate-200 px-4 py-6 text-center text-sm text-slate-500">
+                        <div className={cn(
+                          'rounded-2xl border border-dashed px-4 py-6 text-center text-sm backdrop-blur-xl',
+                          isLight
+                            ? 'border-slate-300/70 bg-slate-50/85 text-slate-600'
+                            : 'border-white/25 bg-[#120b1f]/38 text-slate-300',
+                        )}>
                           {t('noFiltersAdded')}
                         </div>
                       ) : null}
@@ -292,9 +316,19 @@ export function AppDataGrid<TRow>({
                         const inputType = config?.type === 'number' ? 'number' : config?.type === 'date' ? 'date' : 'text';
 
                         return (
-                          <div key={row.id} className="grid gap-3 rounded-2xl border border-slate-100 bg-slate-50/70 p-3 lg:grid-cols-[1.2fr_0.8fr_1fr_auto]">
+                          <div className={cn(
+                            'grid gap-3 rounded-2xl border p-3 backdrop-blur-xl lg:grid-cols-[1.2fr_0.8fr_1fr_auto]',
+                            isLight
+                              ? 'border-slate-200/80 bg-white/90 shadow-[inset_0_1px_0_rgba(148,163,184,0.12)]'
+                              : 'border-white/14 bg-[#120b1f]/52 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]',
+                          )} key={row.id}>
                             <select
-                              className="h-12 rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-900 outline-none"
+                              className={cn(
+                                'h-12 rounded-2xl border px-4 text-sm outline-none backdrop-blur-xl',
+                                isLight
+                                  ? 'border-slate-200 bg-white text-slate-700'
+                                  : 'border-white/14 bg-[#181029]/82 text-slate-100',
+                              )}
                               value={row.column}
                               onChange={(event) => {
                                 const nextColumn = event.target.value;
@@ -314,7 +348,12 @@ export function AppDataGrid<TRow>({
                             </select>
 
                             <select
-                              className="h-12 rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-900 outline-none"
+                              className={cn(
+                                'h-12 rounded-2xl border px-4 text-sm outline-none backdrop-blur-xl',
+                                isLight
+                                  ? 'border-slate-200 bg-white text-slate-700'
+                                  : 'border-white/14 bg-[#181029]/82 text-slate-100',
+                              )}
                               value={row.operator}
                               onChange={(event) =>
                                 onDraftFilterRowsChange(
@@ -333,7 +372,12 @@ export function AppDataGrid<TRow>({
 
                             {config?.type === 'boolean' ? (
                               <select
-                                className="h-12 rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-900 outline-none"
+                                className={cn(
+                                  'h-12 rounded-2xl border px-4 text-sm outline-none backdrop-blur-xl',
+                                  isLight
+                                    ? 'border-slate-200 bg-white text-slate-700'
+                                    : 'border-white/14 bg-[#181029]/82 text-slate-100',
+                                )}
                                 value={row.value}
                                 onChange={(event) =>
                                   onDraftFilterRowsChange(
@@ -394,29 +438,34 @@ export function AppDataGrid<TRow>({
               </Button>
 
               {columnsOpen ? (
-                <div className="absolute right-0 z-40 mt-2 w-80 max-w-[92vw] rounded-[1.5rem] border border-slate-200 bg-white p-3 shadow-[0_30px_70px_rgba(15,23,42,0.18)]">
-                  <div className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">{t('visibleColumns')}</div>
+                <div className={cn(
+                  'absolute right-0 z-40 mt-2 w-80 max-w-[92vw] rounded-[1.5rem] border p-3 backdrop-blur-2xl',
+                  isLight
+                    ? 'border-slate-200/75 bg-white/95 shadow-[0_20px_45px_rgba(15,23,42,0.14)]'
+                    : 'border-white/14 bg-[#160f26]/72 shadow-[0_30px_70px_rgba(2,4,14,0.55),inset_0_1px_0_rgba(255,255,255,0.08)]',
+                )}>
+                  <div className={cn('mb-2 text-xs font-semibold uppercase tracking-[0.18em]', isLight ? 'text-slate-600' : 'text-sky-300')}>{t('visibleColumns')}</div>
                   <div className="space-y-1">
                     {orderedColumns.map((column, index) => {
                       const isVisible = visibleColumnKeys.includes(column.key);
                       return (
-                        <div key={column.key} className="flex items-center gap-2 rounded-2xl px-2 py-2 hover:bg-slate-50">
+                        <div key={column.key} className={cn('flex items-center gap-2 rounded-2xl px-2 py-2', isLight ? 'hover:bg-slate-100' : 'hover:bg-white/10')}>
                           <div className="flex flex-1 items-center gap-2">
-                            <button type="button" className="rounded-lg p-1 hover:bg-slate-100" onClick={() => moveColumn(column.key, 'up')} disabled={index === 0}>
-                              <ArrowUp className="size-3.5 text-slate-500" />
+                            <button type="button" className={cn('rounded-lg p-1', isLight ? 'hover:bg-slate-100' : 'hover:bg-white/10')} onClick={() => moveColumn(column.key, 'up')} disabled={index === 0}>
+                              <ArrowUp className={cn('size-3.5', isLight ? 'text-slate-500' : 'text-slate-300')} />
                             </button>
                             <button
                               type="button"
-                              className="rounded-lg p-1 hover:bg-slate-100"
+                              className={cn('rounded-lg p-1', isLight ? 'hover:bg-slate-100' : 'hover:bg-white/10')}
                               onClick={() => moveColumn(column.key, 'down')}
                               disabled={index === orderedColumns.length - 1}
                             >
-                              <ArrowDown className="size-3.5 text-slate-500" />
+                              <ArrowDown className={cn('size-3.5', isLight ? 'text-slate-500' : 'text-slate-300')} />
                             </button>
-                            <span className="truncate text-sm text-slate-700">{column.label}</span>
+                            <span className={cn('truncate text-sm', isLight ? 'text-slate-700' : 'text-slate-200')}>{column.label}</span>
                           </div>
-                          <button type="button" className="rounded-lg p-1 hover:bg-slate-100" onClick={() => toggleColumn(column.key)}>
-                            {isVisible ? <EyeOff className="size-4 text-slate-500" /> : <Eye className="size-4 text-slate-500" />}
+                          <button type="button" className={cn('rounded-lg p-1', isLight ? 'hover:bg-slate-100' : 'hover:bg-white/10')} onClick={() => toggleColumn(column.key)}>
+                            {isVisible ? <EyeOff className={cn('size-4', isLight ? 'text-slate-500' : 'text-slate-300')} /> : <Eye className={cn('size-4', isLight ? 'text-slate-500' : 'text-slate-300')} />}
                           </button>
                         </div>
                       );
@@ -441,10 +490,18 @@ export function AppDataGrid<TRow>({
               </Button>
 
               {exportOpen ? (
-                <div className="absolute right-0 z-40 mt-2 w-48 max-w-[92vw] rounded-[1.5rem] border border-slate-200 bg-white p-2 shadow-[0_30px_70px_rgba(15,23,42,0.18)]">
+                <div className={cn(
+                  'absolute right-0 z-40 mt-2 w-48 max-w-[92vw] rounded-[1.5rem] border p-2 backdrop-blur-2xl',
+                  isLight
+                    ? 'border-slate-200/75 bg-white/95 shadow-[0_20px_45px_rgba(15,23,42,0.14)]'
+                    : 'border-white/14 bg-[#160f26]/72 shadow-[0_30px_70px_rgba(2,4,14,0.55),inset_0_1px_0_rgba(255,255,255,0.08)]',
+                )}>
                   <button
                     type="button"
-                    className="flex w-full items-center gap-3 rounded-2xl px-3 py-3 text-left text-sm text-slate-700 transition hover:bg-slate-50 disabled:opacity-50"
+                    className={cn(
+                      'flex w-full items-center gap-3 rounded-2xl px-3 py-3 text-left text-sm transition disabled:opacity-50',
+                      isLight ? 'text-slate-700 hover:bg-slate-100' : 'text-slate-200 hover:bg-white/8',
+                    )}
                     disabled={resolvedExportRows.length === 0}
                     onClick={() => {
                       void exportGridToExcel({
@@ -460,7 +517,10 @@ export function AppDataGrid<TRow>({
                   </button>
                   <button
                     type="button"
-                    className="flex w-full items-center gap-3 rounded-2xl px-3 py-3 text-left text-sm text-slate-700 transition hover:bg-slate-50 disabled:opacity-50"
+                    className={cn(
+                      'flex w-full items-center gap-3 rounded-2xl px-3 py-3 text-left text-sm transition disabled:opacity-50',
+                      isLight ? 'text-slate-700 hover:bg-slate-100' : 'text-slate-200 hover:bg-white/8',
+                    )}
                     disabled={resolvedExportRows.length === 0}
                     onClick={() => {
                       void exportGridToPdf({
@@ -482,22 +542,50 @@ export function AppDataGrid<TRow>({
           </div>
         </div>
 
+        {subheaderContent ? <div className="-mt-1">{subheaderContent}</div> : null}
+
         <div className="md:hidden space-y-3">
           {isLoading ? (
-            <div className="rounded-[1.5rem] border border-slate-100 px-4 py-10 text-center text-slate-500">
+            <div className={cn(
+              'rounded-[1.5rem] border px-4 py-10 text-center backdrop-blur-xl',
+              isLight
+                ? 'border-slate-200/80 bg-slate-50/90 text-slate-600 shadow-[inset_0_1px_0_rgba(148,163,184,0.12)]'
+                : 'border-white/14 bg-[#140d24]/52 text-slate-300 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]',
+            )}>
               <span className="inline-flex items-center gap-2">
                 <Loader2 className="size-4 animate-spin" />
                 {t('loading')}
               </span>
             </div>
           ) : isError ? (
-            <div className="rounded-[1.5rem] border border-slate-100 px-4 py-10 text-center text-rose-500">
+            <div className={cn(
+              'rounded-[1.5rem] border px-4 py-10 text-center backdrop-blur-xl',
+              isLight
+                ? 'border-rose-200/80 bg-rose-50/90 text-rose-700 shadow-[inset_0_1px_0_rgba(251,113,133,0.15)]'
+                : 'border-white/14 bg-[#140d24]/52 text-rose-300 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]',
+            )}>
               {errorText ?? t('gridLoadError')}
             </div>
           ) : rows.length === 0 ? (
-            <div className="rounded-[1.5rem] border border-slate-100 px-4 py-10 text-center text-slate-500">
-              {emptyText ?? t('gridEmpty')}
-            </div>
+            emptyStateContent ? (
+              <div className={cn(
+                'rounded-[1.5rem] border p-4 backdrop-blur-xl',
+                isLight
+                  ? 'border-slate-200/80 bg-slate-50/90 shadow-[inset_0_1px_0_rgba(148,163,184,0.12)]'
+                  : 'border-white/14 bg-[#140d24]/52 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]',
+              )}>
+                {emptyStateContent}
+              </div>
+            ) : (
+              <div className={cn(
+                'rounded-[1.5rem] border px-4 py-10 text-center backdrop-blur-xl',
+                isLight
+                  ? 'border-slate-200/80 bg-slate-50/90 text-slate-600 shadow-[inset_0_1px_0_rgba(148,163,184,0.12)]'
+                  : 'border-white/14 bg-[#140d24]/52 text-slate-300 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]',
+              )}>
+                {emptyText ?? t('gridEmpty')}
+              </div>
+            )
           ) : (
             rows.map((row, rowIndex) => {
               const baseKey = rowKey(row);
@@ -505,7 +593,12 @@ export function AppDataGrid<TRow>({
               const rowId = typeof baseKey === 'number' ? `${rowIndex}-${baseKey}` : `${rowIndex}-${baseKey}`;
               const isSelected = selectedRowIds?.includes(selectionId) ?? false;
               return (
-                <div key={rowId} className="rounded-[1.5rem] border border-slate-100 bg-white p-4 shadow-sm">
+                <div className={cn(
+                  'group border backdrop-blur-xl transition-all duration-200',
+                  isLight
+                    ? 'rounded-[1.5rem] border-slate-200/80 bg-white/95 p-4 shadow-[0_10px_24px_rgba(15,23,42,0.08),inset_0_1px_0_rgba(148,163,184,0.12)] hover:border-slate-300 hover:bg-white'
+                    : 'rounded-[1.25rem] border-white/14 bg-[#140d24]/55 p-3 shadow-[0_14px_34px_rgba(2,4,14,0.38),inset_0_1px_0_rgba(255,255,255,0.05)] hover:border-pink-300/35 hover:bg-[#181029]/72 hover:shadow-[0_18px_42px_rgba(2,4,14,0.48)]',
+                )} key={rowId}>
                   <div className="space-y-3">
                     {selectableRows ? (
                       <div className="flex items-center gap-2">
@@ -521,13 +614,13 @@ export function AppDataGrid<TRow>({
                             onSelectedRowIdsChange(Array.from(current));
                           }}
                         />
-                        <span className="text-xs text-slate-500">{t('select')}</span>
+                        <span className={cn('text-xs', isLight ? 'text-slate-600' : 'text-slate-300')}>{t('select')}</span>
                       </div>
                     ) : null}
                     {visibleColumns.map((column) => (
                       <div key={`${rowId}-${column.key}`} className="flex flex-col gap-1">
-                        <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">{column.label}</span>
-                        <div className={cn('text-sm text-slate-700 break-words', column.className)}>
+                        <span className={cn('text-[11px] font-semibold uppercase tracking-[0.18em]', isLight ? 'text-slate-500' : 'text-sky-300')}>{column.label}</span>
+                        <div className={cn('text-sm break-words', isLight ? 'text-slate-700' : 'text-slate-200', column.className)}>
                           {column.render ? column.render(row) : String((row as Record<string, unknown>)[column.key] ?? '')}
                         </div>
                       </div>
@@ -539,12 +632,17 @@ export function AppDataGrid<TRow>({
           )}
         </div>
 
-        <div className="hidden overflow-x-auto rounded-[1.75rem] border border-slate-100 md:block">
-          <table className="min-w-full text-left text-sm">
-            <thead className="bg-slate-50/90">
-              <tr className="border-b border-slate-200 text-slate-500">
+        <div className={cn(
+          'hidden overflow-x-auto border backdrop-blur-2xl md:block',
+          isLight
+            ? 'rounded-[1.75rem] border-slate-200/70 bg-white/95 shadow-[0_12px_30px_rgba(15,23,42,0.08)]'
+            : 'rounded-[1.25rem] border-transparent bg-[#140d24]/38 shadow-[0_12px_30px_rgba(2,4,14,0.24)]',
+        )}>
+          <table className={cn('min-w-full text-left', isLight ? 'text-sm' : 'text-[13px]')}>
+            <thead className={cn('backdrop-blur-xl', isLight ? 'bg-slate-100/90' : 'bg-[#1f1432]/42')}>
+                <tr className={cn('border-b', isLight ? 'border-slate-200 text-slate-600' : 'border-white/8 text-sky-200')}>
                 {selectableRows ? (
-                  <th className="w-10 px-4 py-3">
+                  <th className={cn('w-10', isLight ? 'px-4 py-3' : 'px-3 py-2')}>
                     <input
                       type="checkbox"
                       className="size-4 rounded border-slate-300 text-indigo-600"
@@ -568,14 +666,25 @@ export function AppDataGrid<TRow>({
                 {visibleColumns.map((column) => {
                   const isActiveSort = sortBy === column.key;
                   return (
-                    <th key={column.key} className="px-4 py-3 font-medium">
+                    <th key={column.key} className={cn('font-medium', isLight ? 'px-4 py-2.5' : 'px-3 py-2')}>
                       {column.sortable && onSort ? (
-                        <button type="button" className="inline-flex items-center gap-2" onClick={() => onSort(column.key)}>
+                        <button
+                          type="button"
+                          className={cn(
+                            'group inline-flex items-center gap-2 rounded-full px-2.5 py-1 transition-all duration-200 hover:bg-white/8 hover:text-sky-100',
+                            isActiveSort && 'bg-white/8 text-sky-100 shadow-[0_0_0_1px_rgba(125,211,252,0.18)]',
+                          )}
+                          onClick={() => onSort(column.key)}
+                        >
                           <span>{column.label}</span>
                           {isActiveSort ? (
-                            sortDirection === 'asc' ? <ArrowUp className="size-3.5" /> : <ArrowDown className="size-3.5" />
+                            sortDirection === 'asc' ? (
+                              <ArrowUp className="size-4 transition-transform duration-200 group-hover:-translate-y-0.5" />
+                            ) : (
+                              <ArrowDown className="size-4 transition-transform duration-200 group-hover:translate-y-0.5" />
+                            )
                           ) : (
-                            <ChevronDown className="size-3.5 opacity-40" />
+                            <ChevronDown className="size-4 opacity-45 transition-all duration-200 group-hover:opacity-90 group-hover:translate-y-0.5" />
                           )}
                         </button>
                       ) : (
@@ -589,7 +698,7 @@ export function AppDataGrid<TRow>({
             <tbody>
               {isLoading ? (
                 <tr>
-                  <td colSpan={Math.max(visibleColumns.length, 1)} className="px-4 py-10 text-center text-slate-500">
+                  <td colSpan={Math.max(visibleColumns.length, 1)} className={cn('px-4 py-10 text-center', isLight ? 'text-slate-600' : 'text-slate-300')}>
                     <span className="inline-flex items-center gap-2">
                       <Loader2 className="size-4 animate-spin" />
                       {t('loading')}
@@ -598,14 +707,30 @@ export function AppDataGrid<TRow>({
                 </tr>
               ) : isError ? (
                 <tr>
-                  <td colSpan={Math.max(visibleColumns.length, 1)} className="px-4 py-10 text-center text-rose-500">
+                  <td colSpan={Math.max(visibleColumns.length, 1)} className={cn('px-4 py-10 text-center', isLight ? 'text-rose-700' : 'text-rose-300')}>
                     {errorText ?? t('gridLoadError')}
                   </td>
                 </tr>
               ) : rows.length === 0 ? (
                 <tr>
-                  <td colSpan={Math.max(visibleColumns.length, 1)} className="px-4 py-10 text-center text-slate-500">
-                    {emptyText ?? t('gridEmpty')}
+                  <td colSpan={Math.max(visibleColumns.length, 1)} className="px-4 py-8">
+                    {emptyStateContent ? (
+                      <div className={cn(
+                        'rounded-[1.5rem] border p-4 backdrop-blur-xl',
+                        isLight
+                          ? 'border-slate-200/80 bg-slate-50/90 shadow-[inset_0_1px_0_rgba(148,163,184,0.12)]'
+                          : 'border-white/14 bg-[#140d24]/52 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]',
+                      )}>{emptyStateContent}</div>
+                    ) : (
+                      <div className={cn(
+                        'rounded-[1.5rem] border px-4 py-10 text-center backdrop-blur-xl',
+                        isLight
+                          ? 'border-slate-200/80 bg-slate-50/90 text-slate-600 shadow-[inset_0_1px_0_rgba(148,163,184,0.12)]'
+                          : 'border-white/14 bg-[#140d24]/52 text-slate-300 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]',
+                      )}>
+                        {emptyText ?? t('gridEmpty')}
+                      </div>
+                    )}
                   </td>
                 </tr>
               ) : (
@@ -615,9 +740,14 @@ export function AppDataGrid<TRow>({
                   const rowId = typeof baseKey === 'number' ? `${rowIndex}-${baseKey}` : `${rowIndex}-${baseKey}`;
                   const isSelected = selectedRowIds?.includes(selectionId) ?? false;
                   return (
-                    <tr key={rowId} className="border-b border-slate-100 last:border-b-0">
+                    <tr className={cn(
+                      'group border-b transition-colors duration-200 last:border-b-0',
+                      isLight
+                        ? 'border-slate-200 hover:bg-slate-50'
+                        : 'border-white/8 hover:bg-white/6 hover:shadow-[inset_0_0_0_1px_rgba(125,211,252,0.1)]',
+                    )} key={rowId}>
                       {selectableRows ? (
-                        <td className="px-4 py-4">
+                        <td className={cn(isLight ? 'px-4 py-3' : 'px-3 py-2')}>
                           <input
                             type="checkbox"
                             className="size-4 rounded border-slate-300 text-indigo-600"
@@ -633,7 +763,7 @@ export function AppDataGrid<TRow>({
                         </td>
                       ) : null}
                       {visibleColumns.map((column) => (
-                        <td key={`${rowId}-${column.key}`} className={cn('px-4 py-4 text-slate-700', column.className)}>
+                        <td key={`${rowId}-${column.key}`} className={cn(isLight ? 'px-4 py-3 transition-colors duration-200' : 'px-3 py-2 transition-colors duration-200', isLight ? 'text-slate-700 group-hover:text-slate-800' : 'text-slate-200 group-hover:text-slate-100', column.className)}>
                           {column.render ? column.render(row) : String((row as Record<string, unknown>)[column.key] ?? '')}
                         </td>
                       ))}
@@ -646,15 +776,20 @@ export function AppDataGrid<TRow>({
         </div>
 
         {!hidePagination && pagination && onPageNumberChange && onPageSizeChange ? (
-        <div className="flex flex-col gap-3 border-t border-slate-100 pt-4 lg:flex-row lg:items-center lg:justify-between">
-          <div className="flex flex-wrap items-center gap-3 text-sm text-slate-500">
+        <div className={cn('flex flex-col gap-3 border-t pt-4 lg:flex-row lg:items-center lg:justify-between', isLight ? 'border-slate-200/80' : 'border-white/14')}>
+          <div className={cn('flex flex-wrap items-center gap-3 text-sm', isLight ? 'text-slate-600' : 'text-slate-300')}>
             <span>
-              {t('totalRecords')}: <span className="font-semibold text-slate-900">{pagination.totalCount}</span>
+              {t('totalRecords')}: <span className={cn('font-semibold', isLight ? 'text-slate-900' : 'text-sky-100')}>{pagination.totalCount}</span>
             </span>
             <div className="flex items-center gap-2">
               <span>{t('pageSize')}</span>
               <select
-                className="h-10 rounded-2xl border border-slate-200 bg-white px-3 text-sm text-slate-900 outline-none"
+                className={cn(
+                  'h-10 rounded-2xl border px-3 text-sm outline-none backdrop-blur-xl',
+                  isLight
+                    ? 'border-slate-200 bg-white text-slate-700'
+                    : 'border-white/14 bg-[#120b1f]/58 text-slate-100',
+                )}
                 value={pagination.pageSize}
                 onChange={(event) => onPageSizeChange(Number(event.target.value))}
               >
@@ -672,7 +807,12 @@ export function AppDataGrid<TRow>({
               <ChevronLeft className="mr-1 size-4" />
               {t('previous')}
             </Button>
-            <div className="rounded-2xl border border-slate-200 bg-white px-3 py-2 text-center text-sm font-semibold text-slate-700 sm:px-4">
+            <div className={cn(
+              'rounded-2xl border px-3 py-2 text-center text-sm font-semibold backdrop-blur-xl sm:px-4',
+              isLight
+                ? 'border-slate-200 bg-white text-slate-800 shadow-[inset_0_1px_0_rgba(148,163,184,0.12)]'
+                : 'border-white/14 bg-[#120b1f]/58 text-sky-100 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]',
+            )}>
               {pagination.pageNumber} / {Math.max(pagination.totalPages, 1)}
             </div>
             <Button type="button" variant="secondary" className="max-sm:flex-1" disabled={!pagination.hasNextPage} onClick={() => onPageNumberChange(pagination.pageNumber + 1)}>

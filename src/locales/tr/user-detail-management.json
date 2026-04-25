@@ -1,8 +1,8 @@
 {
-  "profileDetails": "Profil Detaylari",
-  "profileDetailsDescription": "Profil penceresinden bu sayfaya gelinir ve kullanici bilgileri burada guncellenir.",
+  "profileDetails": "Profil Detayları",
+  "profileDetailsDescription": "Profil penceresinden bu sayfaya gelinir ve kullanıcı bilgileri burada güncellenir.",
   "roleInformation": "Rol Bilgisi",
-  "editProfileDetails": "Profil Detaylari",
-  "editProfileDescription": "Profil bilgilerini duzenle ve kisisel alanlari guncelle.",
-  "updateProfile": "Profili Guncelle"
+  "editProfileDetails": "Profil Detayları",
+  "editProfileDescription": "Profil bilgilerini düzenle ve kişisel alanları güncelle.",
+  "updateProfile": "Profili Güncelle"
 }

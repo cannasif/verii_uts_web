@@ -1,18 +1,88 @@
 import { useEffect, useMemo, useState } from 'react';
+import { Crown, KeyRound, Pencil, Plus, ShieldCheck, UserRound } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { useQuery } from '@tanstack/react-query';
+import { toast } from 'sonner';
 import { AppDataGrid, type DataGridColumn } from '@/components/shared/data-grid';
+import { Button } from '@/components/ui/button';
 import { PageHeader } from '@/components/ui/page-header';
 import type { FilterRow } from '@/lib/advanced-filter';
 import { rowsToBackendFilters } from '@/lib/advanced-filter';
 import { loadColumnPreferences, saveColumnPreferences } from '@/lib/column-preferences';
 import { useAuthStore } from '@/stores/auth-store';
+import { useUiStore } from '@/stores/ui-store';
 import type { Role } from '@/features/roles/api/roles-api';
 import { searchRoles } from '@/features/roles/api/roles-api';
-import { useQuery } from '@tanstack/react-query';
+import type { UserListItem } from '@/features/users/api/users-api';
+import { searchUsers } from '@/features/users/api/users-api';
+
+function getRoleBadgeMeta(roleName: string) {
+  const normalized = roleName.trim().toLowerCase();
+
+  if (normalized === 'admin') {
+    return {
+      Icon: Crown,
+      badgeClassName: 'border-fuchsia-300/60 bg-fuchsia-100/80 text-fuchsia-700 shadow-[0_0_18px_rgba(219,39,119,0.18)]',
+      iconClassName: 'text-fuchsia-600',
+    };
+  }
+
+  if (normalized === 'user') {
+    return {
+      Icon: UserRound,
+      badgeClassName: 'border-orange-300/60 bg-orange-100/80 text-orange-700 shadow-[0_0_14px_rgba(249,115,22,0.14)]',
+      iconClassName: 'text-orange-600',
+    };
+  }
+
+  if (normalized.includes('editor') || normalized.includes('manager')) {
+    return {
+      Icon: ShieldCheck,
+      badgeClassName: 'border-fuchsia-300/55 bg-fuchsia-100/75 text-fuchsia-700 shadow-[0_0_14px_rgba(236,72,153,0.12)]',
+      iconClassName: 'text-fuchsia-600',
+    };
+  }
+
+  return {
+    Icon: KeyRound,
+    badgeClassName: 'border-slate-300/60 bg-slate-100/80 text-slate-700 shadow-[0_0_12px_rgba(148,163,184,0.12)]',
+    iconClassName: 'text-slate-600',
+  };
+}
+
+function getAvatarPalette(index: number) {
+  const palettes = [
+    'border-fuchsia-300/60 bg-fuchsia-100 text-fuchsia-700',
+    'border-orange-300/60 bg-orange-100 text-orange-700',
+    'border-cyan-300/60 bg-cyan-100 text-cyan-700',
+    'border-violet-300/60 bg-violet-100 text-violet-700',
+  ];
+
+  return palettes[index % palettes.length];
+}
+
+function getRolePermissionKeys(roleName: string): Array<'read' | 'write' | 'delete'> {
+  const normalized = roleName.trim().toLowerCase();
+
+  if (normalized === 'admin') return ['read', 'write', 'delete'];
+  if (normalized === 'user') return ['read'];
+  if (normalized.includes('editor')) return ['read', 'write'];
+  if (normalized.includes('manager')) return ['read', 'write', 'delete'];
+
+  return ['read'];
+}
+
+function getPermissionChipClass(permission: 'read' | 'write' | 'delete') {
+  if (permission === 'delete') return 'border-rose-300/60 bg-rose-100 text-rose-700';
+  if (permission === 'write') return 'border-amber-300/60 bg-amber-100 text-amber-700';
+  return 'border-emerald-300/60 bg-emerald-100 text-emerald-700';
+}
 
 export function RolesPage() {
   const { t } = useTranslation(['role-management', 'common']);
   const user = useAuthStore((state) => state.user);
+  const theme = useUiStore((state) => state.theme);
+  const isLight = theme === 'light';
   const [search, setSearch] = useState('');
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -20,7 +90,7 @@ export function RolesPage() {
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const [draftFilterRows, setDraftFilterRows] = useState<FilterRow[]>([]);
   const [appliedFilterRows, setAppliedFilterRows] = useState<FilterRow[]>([]);
-  const defaultColumnOrder = ['name', 'description'];
+  const defaultColumnOrder = ['name', 'memberCount', 'description', 'actions'];
   const [visibleColumnKeys, setVisibleColumnKeys] = useState<string[]>(defaultColumnOrder);
   const [columnOrder, setColumnOrder] = useState<string[]>(defaultColumnOrder);
 
@@ -33,6 +103,32 @@ export function RolesPage() {
   useEffect(() => {
     saveColumnPreferences('roles-grid', user?.id, { visibleKeys: visibleColumnKeys, order: columnOrder });
   }, [columnOrder, user?.id, visibleColumnKeys]);
+
+  useEffect(() => {
+    if (!columnOrder.includes('memberCount') || !columnOrder.includes('actions')) {
+      setColumnOrder((current) => {
+        const next = [...current];
+        const descriptionIndex = next.indexOf('description');
+        if (descriptionIndex >= 0) {
+          next.splice(descriptionIndex, 0, 'memberCount');
+          next.splice(descriptionIndex + 1, 0, 'actions');
+        } else {
+          next.push('memberCount');
+          next.push('actions');
+        }
+        return next;
+      });
+    }
+
+    if (!visibleColumnKeys.includes('memberCount') || !visibleColumnKeys.includes('actions')) {
+      setVisibleColumnKeys((current) => {
+        const next = [...current];
+        if (!next.includes('memberCount')) next.push('memberCount');
+        if (!next.includes('actions')) next.push('actions');
+        return next;
+      });
+    }
+  }, [columnOrder, visibleColumnKeys]);
 
   const rolesQuery = useQuery({
     queryKey: ['roles', pageNumber, pageSize, search, sortBy, sortDirection, appliedFilterRows],
@@ -48,13 +144,144 @@ export function RolesPage() {
       }),
   });
 
+  const usersForRoleCountsQuery = useQuery({
+    queryKey: ['roles-user-counts'],
+    queryFn: () =>
+      searchUsers({
+        pageNumber: 1,
+        pageSize: 5000,
+        search: '',
+        sortBy: 'createdAtUtc',
+        sortDirection: 'desc',
+        filters: [],
+        filterLogic: 'and',
+      }),
+  });
+
+  const roleMemberMap = useMemo(() => {
+    const map = new Map<string, UserListItem[]>();
+    (usersForRoleCountsQuery.data?.data ?? []).forEach((item) => {
+      const key = item.roleName.trim().toLowerCase();
+      const existing = map.get(key) ?? [];
+      map.set(key, [...existing, item]);
+    });
+    return map;
+  }, [usersForRoleCountsQuery.data?.data]);
+
   const columns = useMemo<DataGridColumn<Role>[]>(() => [
-    { key: 'name', label: t('role', { ns: 'common' }), sortable: true, render: (row) => <span className="font-semibold text-slate-900">{row.name}</span> },
-    { key: 'description', label: t('descriptionColumn', { ns: 'role-management' }), sortable: true },
-  ], [t]);
+    {
+      key: 'name',
+      label: t('role', { ns: 'common' }),
+      sortable: true,
+      render: (row) => {
+        const { Icon, badgeClassName, iconClassName } = getRoleBadgeMeta(row.name);
+
+        return (
+          <div className="flex items-center gap-3">
+            <div className={`flex size-10 shrink-0 items-center justify-center rounded-full border ${badgeClassName}`}>
+              <Icon className={`size-5 ${iconClassName}`} />
+            </div>
+            <div className="min-w-0">
+              <span className={`inline-flex items-center rounded-full border px-3 py-1 text-sm font-bold tracking-[0.02em] ${badgeClassName}`}>
+                {row.name}
+              </span>
+            </div>
+          </div>
+        );
+      },
+    },
+    {
+      key: 'memberCount',
+      label: t('memberCount', { ns: 'role-management' }),
+      render: (row) => {
+        const members = roleMemberMap.get(row.name.trim().toLowerCase()) ?? [];
+        const previewMembers = members.slice(0, 4);
+        const extraCount = Math.max(members.length - previewMembers.length, 0);
+
+        return (
+          <div className="flex items-center gap-3">
+            <div className="flex -space-x-2">
+              {previewMembers.length > 0 ? (
+                previewMembers.map((member, index) => {
+                  const initials = `${member.firstName?.[0] ?? ''}${member.lastName?.[0] ?? ''}`.toUpperCase() || 'U';
+                  return (
+                    <div
+                      key={`${row.id}-${member.id}`}
+                      className={`grid place-items-center rounded-full border font-bold shadow-[0_0_12px_rgba(15,23,42,0.12)] ${isLight ? 'size-8 text-[10px]' : 'size-7 text-[9px]'} ${getAvatarPalette(index)}`}
+                      title={`${member.firstName} ${member.lastName}`}
+                    >
+                      {initials}
+                    </div>
+                  );
+                })
+              ) : (
+                <div className={`grid place-items-center rounded-full border border-slate-300/60 bg-slate-100 font-bold text-slate-500 ${isLight ? 'size-8 text-[10px]' : 'size-7 text-[9px]'}`}>
+                  0
+                </div>
+              )}
+            </div>
+            <span className={`rounded-full border font-semibold ${isLight ? 'px-3 py-1 text-sm border-slate-200/80 bg-white/72 text-[#1E293B]' : 'px-2.5 py-0.5 text-xs border-white/12 bg-[#1a132b]/80 text-slate-100'}`}>
+              {members.length}
+              {extraCount > 0 ? <span className={`ml-1 ${isLight ? 'text-[#64748B]' : 'text-slate-400'}`}>+{extraCount}</span> : null}
+            </span>
+          </div>
+        );
+      },
+      exportValue: (row) => roleMemberMap.get(row.name.trim().toLowerCase())?.length ?? 0,
+    },
+    {
+      key: 'description',
+      label: t('descriptionColumn', { ns: 'role-management' }),
+      sortable: true,
+      render: (row) => {
+        const permissionKeys = getRolePermissionKeys(row.name);
+
+        return (
+          <div className="space-y-2">
+            <p className={`max-w-2xl ${isLight ? 'text-[#64748B]' : 'text-xs text-slate-200'}`}>{row.description}</p>
+            <div className="flex flex-wrap items-center gap-2">
+              {permissionKeys.map((permission) => (
+                <span
+                  key={`${row.id}-${permission}`}
+                  className={`inline-flex items-center rounded-full border font-semibold uppercase tracking-[0.14em] ${isLight ? 'px-2.5 py-1 text-[11px]' : 'px-2 py-0.5 text-[10px]'} ${getPermissionChipClass(permission)}`}
+                >
+                  {t(permission, { ns: 'common' })}
+                </span>
+              ))}
+            </div>
+          </div>
+        );
+      },
+    },
+    {
+      key: 'actions',
+      label: t('actions', { ns: 'common' }),
+      className: isLight ? 'w-[112px] text-right' : 'w-[96px] text-right',
+      render: (row) => (
+        <div className="flex items-center justify-end gap-1.5 opacity-100 transition md:opacity-0 md:group-hover:opacity-100">
+          <button
+            type="button"
+            className={`rounded-lg border transition ${isLight ? 'p-1.5 border-indigo-200/80 bg-white/70 text-indigo-700 hover:bg-indigo-50' : 'p-1 border-cyan-300/30 bg-[#1a132b]/70 text-cyan-200 hover:border-red-300/50 hover:bg-red-500/10 hover:text-white'}`}
+            title={t('edit', { ns: 'common' })}
+            onClick={() => toast.info(`${row.name} - ${t('comingSoon', { ns: 'common' })}`)}
+          >
+            <Pencil className={isLight ? 'size-3.5' : 'size-3'} />
+          </button>
+          <button
+            type="button"
+            className={`rounded-lg border transition ${isLight ? 'p-1.5 border-violet-200/80 bg-white/70 text-violet-700 hover:bg-violet-50' : 'p-1 border-fuchsia-300/30 bg-[#23163a]/70 text-fuchsia-200 hover:border-red-300/50 hover:bg-red-500/10 hover:text-white'}`}
+            title={t('managePermissions', { ns: 'role-management' })}
+            onClick={() => toast.info(`${row.name} - ${t('comingSoon', { ns: 'common' })}`)}
+          >
+            <ShieldCheck className={isLight ? 'size-3.5' : 'size-3'} />
+          </button>
+        </div>
+      ),
+    },
+  ], [isLight, roleMemberMap, t]);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <PageHeader
         title={t('title', { ns: 'role-management' })}
         description={t('description', { ns: 'role-management' })}
@@ -98,7 +325,7 @@ export function RolesPage() {
           setPageNumber(1);
         }}
         exportFileName="roles"
-        exportRows={(rolesQuery.data?.data ?? []).map((role) => ({ name: role.name, description: role.description }))}
+        exportRows={(rolesQuery.data?.data ?? []).map((role) => ({ name: role.name, memberCount: roleMemberMap.get(role.name.trim().toLowerCase())?.length ?? 0, description: role.description }))}
         filterColumns={[
           { value: 'name', label: t('role', { ns: 'common' }), type: 'string' },
           { value: 'description', label: t('descriptionColumn', { ns: 'role-management' }), type: 'string' },
@@ -116,6 +343,16 @@ export function RolesPage() {
           setPageNumber(1);
         }}
         appliedFilterCount={appliedFilterRows.length}
+        headerAction={
+          <Button
+            type="button"
+            onClick={() => toast.info(t('createRoleSoon', { ns: 'role-management' }))}
+            className={isLight ? 'light-gradient-accent' : 'create-action-button'}
+          >
+            <Plus className="mr-2 size-4" />
+            {t('createRole', { ns: 'role-management' })}
+          </Button>
+        }
       />
     </div>
   );

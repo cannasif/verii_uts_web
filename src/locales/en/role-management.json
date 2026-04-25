@@ -2,5 +2,9 @@
   "title": "Roles",
   "description": "Roles returned from POST /api/roles/search are listed here.",
   "searchPlaceholder": "Search role or description",
-  "descriptionColumn": "Description"
+  "descriptionColumn": "Description",
+  "memberCount": "Member Count",
+  "managePermissions": "Manage Permissions",
+  "createRole": "Create New Role",
+  "createRoleSoon": "The new role creation flow will be available soon."
 }

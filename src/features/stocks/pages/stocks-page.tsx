@@ -56,7 +56,7 @@ export function StocksPage() {
   });
 
   const columns = useMemo<DataGridColumn<StockListItem>[]>(() => [
-    { key: 'erpStockCode', label: t('erpStockCode'), sortable: true, render: (row) => <span className="font-mono text-xs text-slate-700">{row.erpStockCode}</span> },
+    { key: 'erpStockCode', label: t('erpStockCode'), sortable: true, render: (row) => <span className="text-xs text-slate-700">{row.erpStockCode}</span> },
     { key: 'stockName', label: t('stockName'), sortable: true, render: (row) => <span className="font-medium text-slate-900">{row.stockName}</span> },
     { key: 'unit', label: t('unit'), sortable: true, render: (row) => row.unit || '-' },
     { key: 'grupAdi', label: t('groupName'), sortable: true, render: (row) => row.grupAdi || '-' },
