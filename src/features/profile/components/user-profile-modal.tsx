@@ -61,7 +61,7 @@ export function UserProfileModal({ open, onClose, onOpenProfileDetails }: UserPr
           </div>
           <div className="relative text-center">
             <h2 className="text-3xl font-black">{profile?.firstName} {profile?.lastName}</h2>
-            <p className="mt-2 inline-flex rounded-full border border-pink-500/20 bg-pink-500/10 px-4 py-1 text-xs font-bold uppercase tracking-[0.2em] text-pink-300">
+            <p className="mt-2 inline-flex rounded-full border border-pink-400/30 bg-pink-500/15 px-4 py-1 text-xs font-bold uppercase tracking-[0.2em] text-pink-200">
               {profile?.role ?? t('role', { ns: 'common' })}
             </p>
           </div>
@@ -110,7 +110,7 @@ export function UserProfileModal({ open, onClose, onOpenProfileDetails }: UserPr
                 </div>
                 <div>
                   <p className="text-lg font-bold text-slate-900">{t('roleInformation', { ns: 'user-detail-management' })}</p>
-                  <p className="text-xs text-slate-500">{profile?.role}</p>
+                  <p className="inline-flex rounded-full bg-fuchsia-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.08em] text-fuchsia-700">{profile?.role}</p>
                 </div>
               </div>
               <div className="w-40">

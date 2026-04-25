@@ -1,15 +1,16 @@
 {
   "title": "Ana Panel",
-  "description": "UTS yonetim panelinin baslangic ekrani. Kullanici, rol ve yetki modulleri bu iskelet uzerinden ilerler.",
-  "activeUser": "Aktif Kullanici",
-  "permissionCountLabel": "Izin Sayisi",
+  "description": "UTS yönetim panelinin başlangıç ekranı. Kullanıcı, rol ve yetki modülleri bu iskelet üzerinden ilerler.",
+  "activeUser": "Aktif Kullanıcı",
+  "permissionCountLabel": "İzin Sayısı",
   "apiStatus": "API Durumu",
-  "connected": "Bagli",
-  "initialConnections": "Ilk Baglantilar",
-  "authCardDescription": "Giris, oturum bilgisi, izinlerim ve cikis akislari on yuzde baglandi.",
-  "usersCardDescription": "Istek govdesinde sayfalama modeli gonderilerek kullanici listesi getiriliyor.",
-  "createUserCardTitle": "Kullanici Ac",
-  "createUserCardDescription": "Rol ve yetki grubu secerek kullanici acma paneli hazir.",
+  "connected": "Bağlı",
+  "initialConnections": "İlk Bağlantılar",
+  "authCardDescription": "Giriş, oturum bilgisi, izinlerim ve çıkış akışları ön yüzde bağlandı.",
+  "usersCardDescription": "İstek gövdesinde sayfalama modeli gönderilerek kullanıcı listesi getiriliyor.",
+  "createUserCardTitle": "Kullanıcı Aç",
+  "createUserCardDescription": "Rol ve yetki grubu seçerek kullanıcı açma paneli hazır.",
+  "detailAction": "Detay",
   "authCardTitle": "Kimlik",
-  "usersCardTitle": "Kullanicilar"
+  "usersCardTitle": "Kullanıcılar"
 }

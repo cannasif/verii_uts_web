@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
+import { useUiStore } from '@/stores/ui-store';
 import {
   DROPDOWN_DEBOUNCE_MS,
   DROPDOWN_MAX_HEIGHT_PX,
@@ -87,6 +88,8 @@ export function VoiceSearchCombobox<TValue extends Primitive = Primitive>({
   className,
 }: VoiceSearchComboboxProps<TValue>) {
   const { t, i18n } = useTranslation('common');
+  const theme = useUiStore((state) => state.theme);
+  const isLight = theme === 'light';
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const listRef = useRef<HTMLDivElement | null>(null);
   const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
@@ -236,20 +239,20 @@ export function VoiceSearchCombobox<TValue extends Primitive = Primitive>({
         variant="secondary"
         disabled={disabled}
         className={cn(
-          'h-12 w-full justify-between rounded-2xl border border-slate-200 bg-white px-4 text-left text-sm font-medium text-slate-900 ring-0 hover:bg-white',
-          !selectedOption && 'text-slate-400',
+          `h-12 w-full justify-between rounded-2xl border px-4 text-left text-sm font-medium ring-0 ${isLight ? 'border-fuchsia-200/70 bg-white/85 text-slate-800 hover:bg-white' : 'border-white/12 bg-[#160f26]/78 text-slate-100 hover:bg-[#201334]'}`,
+          !selectedOption && (isLight ? 'text-slate-400' : 'text-slate-400'),
         )}
         onClick={() => setOpen((current) => !current)}
       >
         <span className="truncate">{selectedOption?.label ?? placeholder ?? t('select')}</span>
-        <ChevronDown className={cn('size-4 text-slate-400 transition', open && 'rotate-180')} />
+        <ChevronDown className={cn(`size-4 transition ${isLight ? 'text-slate-400' : 'text-slate-400'}`, open && 'rotate-180')} />
       </Button>
 
       {open ? (
-        <div className="absolute z-50 mt-2 w-full overflow-hidden rounded-[1.5rem] border border-slate-200 bg-white shadow-[0_24px_60px_rgba(15,23,42,0.18)]">
-          <div className="border-b border-slate-100 p-3">
+        <div className={`absolute z-50 mt-2 w-full overflow-hidden rounded-[1.5rem] border shadow-[0_24px_60px_rgba(15,23,42,0.18)] ${isLight ? 'border-fuchsia-200/70 bg-white' : 'border-white/12 bg-[#160f26]/95 shadow-[0_24px_60px_rgba(2,4,14,0.55)]'}`}>
+          <div className={`border-b p-3 ${isLight ? 'border-slate-100' : 'border-white/10'}`}>
             <div className="relative">
-              <Search className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
+              <Search className={`pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 ${isLight ? 'text-slate-400' : 'text-slate-500'}`} />
               <Input
                 autoFocus
                 className="pr-12 pl-11"
@@ -262,7 +265,13 @@ export function VoiceSearchCombobox<TValue extends Primitive = Primitive>({
                   type="button"
                   className={cn(
                     'absolute right-3 top-1/2 inline-flex size-8 -translate-y-1/2 items-center justify-center rounded-xl transition',
-                    isListening ? 'bg-rose-100 text-rose-600' : 'bg-slate-100 text-slate-500 hover:bg-slate-200',
+                    isListening
+                      ? isLight
+                        ? 'bg-rose-100 text-rose-600'
+                        : 'bg-rose-500/20 text-rose-300'
+                      : isLight
+                        ? 'bg-slate-100 text-slate-500 hover:bg-slate-200'
+                        : 'bg-[#23163a] text-slate-300 hover:bg-[#2e1d4a]',
                   )}
                   onClick={handleVoiceSearch}
                 >
@@ -271,7 +280,7 @@ export function VoiceSearchCombobox<TValue extends Primitive = Primitive>({
               ) : null}
             </div>
             {isThresholdMode ? (
-              <div className="mt-2 flex items-center gap-2 text-xs text-amber-600">
+              <div className={`mt-2 flex items-center gap-2 text-xs ${isLight ? 'text-amber-600' : 'text-amber-300'}`}>
                 <AlertCircle className="size-3.5" />
                 <span>{t('dropdown.minCharsHint', { count: minChars })}</span>
               </div>
@@ -285,12 +294,12 @@ export function VoiceSearchCombobox<TValue extends Primitive = Primitive>({
             onScroll={handleListScroll}
           >
             {isLoading ? (
-              <div className="flex items-center justify-center gap-2 px-4 py-8 text-sm text-slate-500">
+              <div className={`flex items-center justify-center gap-2 px-4 py-8 text-sm ${isLight ? 'text-slate-500' : 'text-slate-300'}`}>
                 <Loader2 className="size-4 animate-spin" />
                 <span>{t('loading')}</span>
               </div>
             ) : filteredOptions.length === 0 ? (
-              <div className="px-4 py-8 text-center text-sm text-slate-500">
+              <div className={`px-4 py-8 text-center text-sm ${isLight ? 'text-slate-500' : 'text-slate-300'}`}>
                 {emptyText ?? t('dropdown.noResults')}
               </div>
             ) : (
@@ -303,19 +312,19 @@ export function VoiceSearchCombobox<TValue extends Primitive = Primitive>({
                       key={`${option.value}`}
                       type="button"
                       className={cn(
-                        'flex w-full items-start gap-3 rounded-2xl px-4 py-3 text-left transition hover:bg-slate-50',
-                        selected && 'bg-indigo-50 text-indigo-700',
+                        `flex w-full items-start gap-3 rounded-2xl px-4 py-3 text-left transition ${isLight ? 'hover:bg-slate-50' : 'hover:bg-white/8'}`,
+                        selected && (isLight ? 'bg-indigo-50 text-indigo-700' : 'bg-cyan-500/12 text-cyan-200'),
                       )}
                       onClick={() => {
                         onSelect(option.value);
                         setOpen(false);
                       }}
                     >
-                      <div className="mt-0.5 text-slate-400">{option.icon}</div>
+                      <div className={`mt-0.5 ${isLight ? 'text-slate-400' : 'text-slate-300'}`}>{option.icon}</div>
                       <div className="min-w-0 flex-1">
                         <div className="truncate text-sm font-semibold text-current">{option.label}</div>
                         {option.description ? (
-                          <div className="mt-1 truncate text-xs text-slate-500">{option.description}</div>
+                          <div className={`mt-1 truncate text-xs ${isLight ? 'text-slate-500' : 'text-slate-300'}`}>{option.description}</div>
                         ) : null}
                       </div>
                       {selected ? <Check className="mt-0.5 size-4 shrink-0" /> : null}
@@ -323,7 +332,7 @@ export function VoiceSearchCombobox<TValue extends Primitive = Primitive>({
                   );
                 })}
                 {isFetchingNextPage ? (
-                  <div className="flex items-center justify-center gap-2 px-4 py-3 text-xs text-slate-500">
+                  <div className={`flex items-center justify-center gap-2 px-4 py-3 text-xs ${isLight ? 'text-slate-500' : 'text-slate-300'}`}>
                     <Loader2 className="size-3.5 animate-spin" />
                     <span>{t('loading')}</span>
                   </div>

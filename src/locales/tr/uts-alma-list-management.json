@@ -1,6 +1,6 @@
 {
   "title": "UTS Alma Listesi",
-  "description": "VWLEGO_UTS_ALMA_LIST gorunumundeki kayitlari izleyin.",
+  "description": "VWLEGO_UTS_ALMA_LIST görünümündeki kayıtlari izleyin.",
   "searchPlaceholder": "Alma listesinde ara...",
   "chk": "Kontrol",
   "siraNo": "Sira No",
@@ -17,7 +17,7 @@
   "cariIsim": "Cari Isim",
   "stokKodu": "Stok Kodu",
   "stokAdi": "Stok Adi",
-  "acik16": "Aciklama",
+  "acik16": "Açıklama",
   "utsDurum": "UTS Durum",
   "uretimLsNo": "Uretim LS No"
 }

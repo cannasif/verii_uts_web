@@ -1,6 +1,6 @@
 {
   "title": "UTS Uretim Listesi",
-  "description": "VWLEGO_UTS_URETIM_LIST gorunumundeki kayitlari izleyin ve filtreleyin.",
+  "description": "VWLEGO_UTS_URETIM_LIST görünümündeki kayıtlari izleyin ve filtreleyin.",
   "searchPlaceholder": "Stok kodu, lot seri no veya durum ara",
   "chk": "Kontrol",
   "siraNo": "Sira No",

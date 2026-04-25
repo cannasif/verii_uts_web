@@ -36,3 +36,7 @@ export async function searchUsers(request: PagedRequest) {
 export async function createUser(request: CreateUserRequest) {
   return apiClient.post<never, ApiResponse<UserDetail>>('/api/users', request);
 }
+
+export async function deleteUser(id: number) {
+  return apiClient.delete<never, ApiResponse<null>>(`/api/users/${id}`);
+}

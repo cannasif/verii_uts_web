@@ -56,7 +56,7 @@ export function CustomersPage() {
   });
 
   const columns = useMemo<DataGridColumn<CustomerListItem>[]>(() => [
-    { key: 'customerCode', label: t('customerCode'), sortable: true, render: (row) => <span className="font-mono text-xs text-slate-700">{row.customerCode}</span> },
+    { key: 'customerCode', label: t('customerCode'), sortable: true, render: (row) => <span className="text-xs text-slate-700">{row.customerCode}</span> },
     { key: 'customerName', label: t('customerName'), sortable: true, render: (row) => <span className="font-medium text-slate-900">{row.customerName}</span> },
     { key: 'taxNumber', label: t('taxNumber'), sortable: true, render: (row) => row.taxNumber || '-' },
     { key: 'phone', label: t('phone', { ns: 'common' }), sortable: true, render: (row) => row.phone || '-' },

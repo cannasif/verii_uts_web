@@ -8,6 +8,8 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { cn } from '@/lib/utils';
+import { useUiStore } from '@/stores/ui-store';
 import i18n from '@/lib/i18n';
 import { searchPermissionDefinitions } from '@/features/permission-definitions/api/permission-definitions-api';
 import { createPermissionGroup, updatePermissionGroupPermissions } from '@/features/permission-groups/api/permission-groups-api';
@@ -27,6 +29,8 @@ interface CreatePermissionGroupPanelProps {
 
 export function CreatePermissionGroupPanel({ open, onClose }: CreatePermissionGroupPanelProps) {
   const { t } = useTranslation(['access-control', 'common']);
+  const theme = useUiStore((state) => state.theme);
+  const isLight = theme === 'light';
   const queryClient = useQueryClient();
   const {
     register,
@@ -99,49 +103,54 @@ export function CreatePermissionGroupPanel({ open, onClose }: CreatePermissionGr
       <Card className="custom-scrollbar h-full w-full max-w-xl overflow-y-auto p-6">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <h2 className="text-xl font-semibold text-slate-900">{t('newPermissionGroup', { ns: 'access-control' })}</h2>
-            <p className="mt-1 text-sm text-slate-500">{t('createPermissionGroupDescription', { ns: 'access-control' })}</p>
+            <h2 className={cn('text-xl font-semibold', isLight ? 'text-slate-900' : 'text-white')}>{t('newPermissionGroup', { ns: 'access-control' })}</h2>
+            <p className={cn('mt-1 text-sm', isLight ? 'text-slate-500' : 'text-slate-400')}>{t('createPermissionGroupDescription', { ns: 'access-control' })}</p>
           </div>
           <Button variant="ghost" onClick={onClose}>{t('close', { ns: 'common' })}</Button>
         </div>
 
         <form className="mt-6 space-y-5" onSubmit={handleSubmit((values) => createMutation.mutate(values))}>
           <div>
-            <label className="mb-2 block text-sm font-medium text-slate-700">
+            <label className={cn('mb-2 block text-sm font-medium', isLight ? 'text-slate-700' : 'text-slate-200')}>
               {t('groupName', { ns: 'access-control' })}{requiredMark}
             </label>
-            <Input {...register('name')} />
+            <Input {...register('name')} className={isLight ? undefined : 'bg-[#120b1f]/86 text-slate-100 border-white/10 focus:border-pink-400/60 focus:ring-pink-500/20'} />
             {errors.name ? <p className="mt-2 text-sm text-rose-500">{errors.name.message}</p> : null}
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium text-slate-700">
+            <label className={cn('mb-2 block text-sm font-medium', isLight ? 'text-slate-700' : 'text-slate-200')}>
               {t('descriptionColumn', { ns: 'access-control' })}
             </label>
             <textarea
               {...register('description')}
-              className="min-h-32 w-full rounded-2xl border border-slate-200 bg-white/90 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100"
+              className={cn(
+                'min-h-32 w-full rounded-2xl px-4 py-3 text-sm outline-none transition focus:ring-4',
+                isLight
+                  ? 'border border-slate-200 bg-white/90 text-slate-900 focus:border-indigo-400 focus:ring-indigo-100'
+                  : 'border border-white/10 bg-[#120b1f]/86 text-slate-100 focus:border-pink-400/60 focus:ring-pink-500/20',
+              )}
             />
             {errors.description ? <p className="mt-2 text-sm text-rose-500">{errors.description.message}</p> : null}
           </div>
 
           <div>
             <div className="mb-2 flex items-center justify-between gap-3">
-              <label className="block text-sm font-medium text-slate-700">
+              <label className={cn('block text-sm font-medium', isLight ? 'text-slate-700' : 'text-slate-200')}>
                 {t('permissionDefinitionsTitle', { ns: 'access-control' })}{requiredMark}
               </label>
-              <span className="text-xs font-medium text-slate-500">
+              <span className={cn('text-xs font-medium', isLight ? 'text-slate-500' : 'text-slate-400')}>
                 {selectedPermissionDefinitionIds.length} {t('permissionSelectedCount', { ns: 'access-control' })}
               </span>
             </div>
 
             <div className="space-y-4">
               {permissionDefinitionsQuery.isLoading ? (
-                <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-6 text-sm text-slate-500">
+                <div className={cn('rounded-2xl px-4 py-6 text-sm', isLight ? 'border border-slate-200 bg-slate-50 text-slate-500' : 'border border-white/10 bg-[#120b1f]/85 text-slate-400')}>
                   {t('loading', { ns: 'common' })}
                 </div>
               ) : Object.keys(permissionGroupsByModule).length === 0 ? (
-                <div className="rounded-2xl border border-dashed border-slate-200 px-4 py-6 text-sm text-slate-500">
+                <div className={cn('rounded-2xl px-4 py-6 text-sm', isLight ? 'border border-dashed border-slate-200 text-slate-500' : 'border border-dashed border-white/10 bg-[#120b1f]/85 text-slate-400')}>
                   {t('noPermissionDefinitionsFound', { ns: 'access-control' })}
                 </div>
               ) : (
@@ -151,11 +160,17 @@ export function CreatePermissionGroupPanel({ open, onClose }: CreatePermissionGr
                   const allSelected = selectedCount === modulePermissionIds.length && modulePermissionIds.length > 0;
 
                   return (
-                    <div key={module} className="rounded-[1.75rem] border border-slate-200 bg-slate-50/70 p-4">
+                    <div
+                      key={module}
+                      className={cn(
+                        'rounded-[1.75rem] p-4',
+                        isLight ? 'border border-slate-200 bg-slate-50/70' : 'border border-white/10 bg-[#120b1f]/70',
+                      )}
+                    >
                       <div className="mb-3 flex items-center justify-between gap-3">
                         <div>
-                          <h3 className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-900">{module}</h3>
-                          <p className="mt-1 text-xs text-slate-500">
+                          <h3 className={cn('text-sm font-semibold uppercase tracking-[0.18em]', isLight ? 'text-slate-900' : 'text-slate-100')}>{module}</h3>
+                          <p className={cn('mt-1 text-xs', isLight ? 'text-slate-500' : 'text-slate-400')}>
                             {selectedCount}/{modulePermissionIds.length} {t('permissionSelectedCount', { ns: 'access-control' })}
                           </p>
                         </div>
@@ -183,7 +198,13 @@ export function CreatePermissionGroupPanel({ open, onClose }: CreatePermissionGr
                           const checked = selectedPermissionDefinitionIds.includes(definition.id);
 
                           return (
-                            <label key={definition.id} className="flex items-start gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3">
+                            <label
+                              key={definition.id}
+                              className={cn(
+                                'flex items-start gap-3 rounded-2xl px-4 py-3',
+                                isLight ? 'border border-slate-200 bg-white' : 'border border-white/10 bg-[#130d21]/80',
+                              )}
+                            >
                               <input
                                 checked={checked}
                                 type="checkbox"
@@ -200,9 +221,9 @@ export function CreatePermissionGroupPanel({ open, onClose }: CreatePermissionGr
                                 }}
                               />
                               <span>
-                                <span className="block text-sm font-semibold text-slate-900">{definition.name}</span>
-                                <span className="mt-1 block text-xs font-medium text-indigo-600">{definition.code}</span>
-                                <span className="mt-1 block text-xs text-slate-500">{definition.description}</span>
+                                <span className={cn('block text-sm font-semibold', isLight ? 'text-slate-900' : 'text-slate-100')}>{definition.name}</span>
+                                <span className={cn('mt-1 block text-xs font-medium', isLight ? 'text-indigo-600' : 'text-cyan-200')}>{definition.code}</span>
+                                <span className={cn('mt-1 block text-xs', isLight ? 'text-slate-500' : 'text-slate-400')}>{definition.description}</span>
                               </span>
                             </label>
                           );

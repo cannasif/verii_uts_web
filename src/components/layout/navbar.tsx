@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Bell, Menu, Search, X } from 'lucide-react';
+import { Bell, Globe, Moon, Search, Sun, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/stores/auth-store';
@@ -7,36 +7,20 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useUiStore } from '@/stores/ui-store';
 import { UserProfileModal } from '@/features/profile/components/user-profile-modal';
-
-const titles: Record<string, { eyebrow: string; title: string; titleNs?: string }> = {
-  '/': { eyebrow: 'general', title: 'title', titleNs: 'dashboard' },
-  '/users': { eyebrow: 'accessManagement', title: 'title', titleNs: 'user-management' },
-  '/roles': { eyebrow: 'accessManagement', title: 'title', titleNs: 'role-management' },
-  '/permission-groups': { eyebrow: 'accessManagement', title: 'permissionGroupsTitle', titleNs: 'access-control' },
-  '/customers': { eyebrow: 'system', title: 'title', titleNs: 'customer-management' },
-  '/stocks': { eyebrow: 'system', title: 'title', titleNs: 'stock-management' },
-  '/uts-uretim-list': { eyebrow: 'productionModule', title: 'title', titleNs: 'uts-uretim-list-management' },
-  '/uts-verme-list': { eyebrow: 'productionModule', title: 'title', titleNs: 'uts-verme-list-management' },
-  '/uts-tverme-list': { eyebrow: 'undefinedDeliveryModule', title: 'title', titleNs: 'uts-tverme-list-management' },
-  '/uts-tuketici-verme-list': { eyebrow: 'consumerDeliveryModule', title: 'title', titleNs: 'uts-tuketici-verme-list-management' },
-  '/uts-ithalat-list': { eyebrow: 'importModule', title: 'title', titleNs: 'uts-ithalat-list-management' },
-  '/uts-imha-list': { eyebrow: 'disposalModule', title: 'title', titleNs: 'uts-imha-list-management' },
-  '/uts-ihracat-list': { eyebrow: 'exportModule', title: 'title', titleNs: 'uts-ihracat-list-management' },
-  '/uts-alma-list': { eyebrow: 'receiptModule', title: 'title', titleNs: 'uts-alma-list-management' },
-  '/hangfire-monitoring': { eyebrow: 'system', title: 'title', titleNs: 'hangfire-monitoring' },
-  '/profile': { eyebrow: 'general', title: 'profileDetails', titleNs: 'user-detail-management' },
-};
+import { loadLanguage } from '@/lib/i18n';
 
 export function Navbar() {
-  const { t } = useTranslation(['common', 'dashboard', 'user-management', 'role-management', 'access-control', 'user-detail-management', 'uts-verme-list-management', 'uts-uretim-list-management', 'uts-tverme-list-management', 'uts-tuketici-verme-list-management', 'uts-ithalat-list-management', 'uts-imha-list-management', 'uts-ihracat-list-management', 'uts-alma-list-management']);
+  const { t, i18n } = useTranslation(['common', 'dashboard', 'user-management', 'role-management', 'access-control', 'user-detail-management', 'uts-verme-list-management', 'uts-uretim-list-management', 'uts-tverme-list-management', 'uts-tuketici-verme-list-management', 'uts-ithalat-list-management', 'uts-imha-list-management', 'uts-ihracat-list-management', 'uts-alma-list-management']);
   const navigate = useNavigate();
   const location = useLocation();
   const user = useAuthStore((state) => state.user);
-  const { toggleSidebar, searchQuery, setSearchQuery, setSidebarOpen } = useUiStore();
+  const { toggleSidebar, searchQuery, setSearchQuery, setSidebarOpen, theme, toggleTheme, isSidebarCollapsed } = useUiStore();
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+  const [isLanguageOpen, setIsLanguageOpen] = useState(false);
   const searchRef = useRef<HTMLInputElement>(null);
-  const currentTitle = useMemo(() => titles[location.pathname] ?? { eyebrow: 'logoName', title: 'panel', titleNs: 'common' }, [location.pathname]);
-
+  const languageRef = useRef<HTMLDivElement>(null);
+  
+  const currentLanguage = (i18n.resolvedLanguage ?? i18n.language).split('-')[0];
   useEffect(() => {
     setSearchQuery('');
   }, [location.pathname, setSearchQuery]);
@@ -53,34 +37,35 @@ export function Navbar() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (languageRef.current && !languageRef.current.contains(event.target as Node)) {
+        setIsLanguageOpen(false);
+      }
+    };
+
+    if (isLanguageOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [isLanguageOpen]);
+
+  const handleLanguageChange = async (lang: string) => {
+    await loadLanguage(lang);
+    await i18n.changeLanguage(lang);
+    setIsLanguageOpen(false);
+  };
+
   return (
     <>
-      <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/80 px-3 backdrop-blur-xl dark:border-white/5 dark:bg-[#0c0516]/80 sm:px-4 lg:px-8">
+      <header className={`sticky top-0 z-30 border-b px-3 backdrop-blur-xl sm:px-4 lg:px-8 ${theme === 'light' ? 'border-purple-200/30 bg-white/90' : 'border-[#ff7a55]/20 bg-[#12061f]/86'}`}>
         <div className="flex min-h-20 flex-wrap items-center justify-between gap-3 py-3">
-        <div className="flex min-w-0 items-center gap-3">
-          <button
-            type="button"
-            onClick={toggleSidebar}
-            className="rounded-xl p-2 text-slate-500 transition hover:bg-pink-500/10 hover:text-pink-500"
-          >
-            <Menu className="size-5" />
-          </button>
-          <div className="min-w-0">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-indigo-500 md:hidden">{t(currentTitle.eyebrow, { ns: 'common' })}</p>
-            <h2 className="truncate text-base font-semibold text-slate-900 dark:text-white md:hidden">{t(currentTitle.title, { ns: currentTitle.titleNs ?? 'common' })}</h2>
-          <div className="hidden md:block">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-indigo-500">{t(currentTitle.eyebrow, { ns: 'common' })}</p>
-            <h2 className="mt-1 text-xl font-semibold text-slate-900 dark:text-white">{t(currentTitle.title, { ns: currentTitle.titleNs ?? 'common' })}</h2>
-          </div>
-          </div>
-        </div>
-
-        <div className="flex w-full items-center justify-end gap-2 sm:w-auto sm:gap-3">
+        <div className="flex w-full items-center gap-2 sm:gap-3">
           <div className="relative hidden w-[280px] lg:block xl:w-[340px]">
-            <Search className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
+            <Search className={`pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 ${theme === 'light' ? 'text-[#5E626D]' : 'text-[#bba6c9]'}`} />
             <Input
               ref={searchRef}
-              className="h-11 rounded-2xl border-slate-200 bg-slate-100/70 pl-11 pr-16 focus:bg-white"
+              className={`h-11 rounded-2xl pl-11 pr-16 ${theme === 'light' ? 'border-purple-200/50 bg-white/80 text-[#2A2C31] placeholder:text-[#5E626D] focus:border-purple-300/70 focus:bg-white' : 'border-[#ff7a55]/16 bg-[#1a0d2a]/80 text-[#f4effa] placeholder:text-[#9f8baa] focus:border-[#ff5f77] focus:bg-[#1b0d2c]'} focus:ring-0`}
               placeholder={t('menuSearch', { ns: 'common' })}
               value={searchQuery}
               onChange={(event) => {
@@ -94,31 +79,87 @@ export function Navbar() {
               <button
                 type="button"
                 onClick={() => setSearchQuery('')}
-                className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-slate-400 transition hover:bg-slate-200 hover:text-slate-600"
+                className={`absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 transition ${theme === 'light' ? 'text-[#5E626D] hover:bg-purple-100/60 hover:text-[#7C3AED]' : 'text-[#ab97ba] hover:bg-white/10 hover:text-[#ffd8c1]'}`}
               >
                 <X className="size-3.5" />
               </button>
             )}
           </div>
-          <button type="button" className="hidden size-12 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-500 sm:flex">
+          <div className="ml-auto flex items-center gap-2 sm:gap-3">
+          <button type="button" className={`hidden size-12 items-center justify-center rounded-2xl border sm:flex ${theme === 'light' ? 'border-purple-200/40 bg-white/70 text-[#5E626D] shadow-sm hover:bg-purple-50/50' : 'border-[#ff7a55]/16 bg-[#1a0d2a]/75 text-[#e7d4f4] hover:border-[#ff8a60]/36 hover:text-[#ffd5bf]'}`}>
             <Bell className="size-5" />
           </button>
           <button
             type="button"
-            onClick={() => setIsProfileModalOpen(true)}
-            className="flex min-w-0 items-center gap-2 rounded-2xl border border-slate-200 bg-white px-2.5 py-2 transition hover:border-pink-200 hover:bg-pink-50/40 sm:gap-3 sm:px-4 sm:py-2.5"
+            onClick={toggleTheme}
+            className={`flex size-12 items-center justify-center rounded-2xl border transition ${theme === 'light' ? 'border-purple-200/50 bg-white/80 text-[#7C3AED] shadow-sm hover:bg-purple-50/60' : 'border-pink-400/30 bg-[#1b1230]/70 text-pink-200 hover:border-orange-400/60 hover:text-orange-200'}`}
+            title={theme === 'light' ? 'Dark Mode' : 'Light Mode'}
           >
-            <div className="flex size-10 shrink-0 items-center justify-center rounded-2xl bg-linear-to-r from-indigo-600 to-fuchsia-600 text-sm font-bold text-white sm:size-11">
+            {theme === 'light' ? <Moon className="size-5" /> : <Sun className="size-5" />}
+          </button>
+          <div className="relative" ref={languageRef}>
+            <button
+              type="button"
+              onClick={() => setIsLanguageOpen(!isLanguageOpen)}
+              className={`flex size-12 items-center justify-center rounded-2xl border transition ${theme === 'light' ? 'border-purple-200/50 bg-white/80 text-[#5E626D] shadow-sm hover:bg-purple-50/60' : 'border-pink-400/30 bg-[#1b1230]/70 text-pink-200 hover:border-orange-400/60 hover:text-orange-200'}`}
+              title="Change Language"
+            >
+              <Globe className="size-5" />
+            </button>
+            {isLanguageOpen && (
+              <div
+                className={`absolute right-0 top-full mt-2 rounded-2xl border shadow-lg ${theme === 'light' ? 'border-purple-200/50 bg-white/98' : 'border-[#ff7a55]/20 bg-[#1a0d2a]'}`}
+              >
+                <button
+                  type="button"
+                  onClick={() => handleLanguageChange('tr')}
+                  className={`block w-full px-4 py-2 text-left text-sm transition ${
+                    currentLanguage === 'tr'
+                      ? theme === 'light'
+                        ? 'bg-purple-100/70 text-[#7C3AED] font-semibold'
+                        : 'bg-pink-500/20 text-pink-200 font-semibold'
+                      : theme === 'light'
+                        ? 'text-[#2A2C31] hover:bg-purple-50/50'
+                        : 'text-slate-300 hover:bg-white/10'
+                  } first:rounded-t-xl`}
+                >
+                  Türkçe
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleLanguageChange('en')}
+                  className={`block w-full px-4 py-2 text-left text-sm transition ${
+                    currentLanguage === 'en'
+                      ? theme === 'light'
+                        ? 'bg-purple-100/70 text-[#7C3AED] font-semibold'
+                        : 'bg-pink-500/20 text-pink-200 font-semibold'
+                      : theme === 'light'
+                        ? 'text-[#2A2C31] hover:bg-purple-50/50'
+                        : 'text-slate-300 hover:bg-white/10'
+                  } last:rounded-b-xl`}
+                >
+                  English
+                </button>
+              </div>
+            )}
+          </div>
+          <button
+            type="button"
+            onClick={() => setIsProfileModalOpen(true)}
+            className={`flex min-w-0 items-center gap-2 rounded-2xl border px-2.5 py-2 transition sm:gap-3 sm:px-4 sm:py-2.5 ${theme === 'light' ? 'border-purple-200/50 bg-white/80 shadow-sm hover:bg-purple-50/40' : 'border-[#ff7a55]/16 bg-[#1a0d2a]/72 hover:border-[#ff5f77]/50 hover:bg-[#2a1233]/82'}`}
+          >
+            <div className={`flex size-10 shrink-0 items-center justify-center rounded-2xl text-sm font-bold text-white sm:size-11 ${theme === 'light' ? 'bg-linear-to-r from-purple-600 to-purple-500' : 'bg-linear-to-r from-[#ff2f92] via-[#ff5a63] to-[#ff7f2a]'}`}>
               {user?.firstName?.[0]}
               {user?.lastName?.[0]}
             </div>
             <div className="hidden min-w-0 text-left lg:block">
-              <p className="text-sm font-semibold text-slate-900">
+              <p className={`text-sm font-semibold ${theme === 'light' ? 'text-[#2A2C31]' : 'bg-linear-to-r from-[#ff8bc7] via-[#ff9f9f] to-[#ffc58e] bg-clip-text text-transparent'}`}>
                 {user?.firstName} {user?.lastName}
               </p>
-              <p className="text-xs text-slate-500">{user?.role}</p>
+              <p className={`text-xs font-semibold uppercase tracking-[0.08em] ${theme === 'light' ? 'text-[#5E626D]' : 'bg-linear-to-r from-[#ff8ac4] to-[#ffb067] bg-clip-text text-transparent'}`}>{user?.role}</p>
             </div>
           </button>
+          </div>
         </div>
         </div>
       </header>

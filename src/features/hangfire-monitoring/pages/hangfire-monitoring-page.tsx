@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { PageHeader } from '@/components/ui/page-header';
 import { useHangfireDeadLetterQuery, useHangfireFailedJobsQuery, useHangfireStatsQuery } from '@/features/hangfire-monitoring/hooks/use-hangfire-monitoring';
+import { useUiStore } from '@/stores/ui-store';
 
 const PAGE_SIZE = 20;
 
@@ -19,9 +20,19 @@ function formatDate(value?: string): string {
   return date.toLocaleString();
 }
 
-function StatCard({ title, value, tone = 'default' }: { title: string; value: number; tone?: 'default' | 'success' | 'danger' }) {
+function StatCard({ title, value, tone = 'default', isLight }: { title: string; value: number; tone?: 'default' | 'success' | 'danger'; isLight: boolean }) {
   const colorClassName =
-    tone === 'danger' ? 'text-rose-600' : tone === 'success' ? 'text-emerald-600' : 'text-slate-900';
+    tone === 'danger'
+      ? isLight
+        ? 'text-rose-600'
+        : 'text-rose-300'
+      : tone === 'success'
+        ? isLight
+          ? 'text-emerald-600'
+          : 'text-emerald-300'
+        : isLight
+          ? 'text-fuchsia-700'
+          : 'text-sky-100';
 
   return (
     <Card className="p-5">
@@ -33,6 +44,8 @@ function StatCard({ title, value, tone = 'default' }: { title: string; value: nu
 
 export function HangfireMonitoringPage() {
   const { t } = useTranslation(['hangfire-monitoring', 'common']);
+  const theme = useUiStore((state) => state.theme);
+  const isLight = theme === 'light';
   const [failedPage, setFailedPage] = useState(1);
   const [deadLetterPage, setDeadLetterPage] = useState(1);
 
@@ -72,7 +85,7 @@ export function HangfireMonitoringPage() {
 
       {isLoading ? (
         <Card className="flex min-h-[360px] items-center justify-center p-8">
-          <div className="flex flex-col items-center gap-3 text-slate-500">
+          <div className={`flex flex-col items-center gap-3 ${isLight ? 'text-slate-600' : 'text-slate-300'}`}>
             <Loader2 className="size-10 animate-spin" />
             <span>{t('common:loading')}</span>
           </div>
@@ -80,50 +93,50 @@ export function HangfireMonitoringPage() {
       ) : (
         <>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
-            <StatCard title={t('stats.enqueued')} value={statsQuery.data?.data.enqueued ?? 0} />
-            <StatCard title={t('stats.processing')} value={statsQuery.data?.data.processing ?? 0} />
-            <StatCard title={t('stats.succeeded')} value={statsQuery.data?.data.succeeded ?? 0} tone="success" />
-            <StatCard title={t('stats.failed')} value={statsQuery.data?.data.failed ?? 0} tone="danger" />
+            <StatCard title={t('stats.enqueued')} value={statsQuery.data?.data.enqueued ?? 0} isLight={isLight} />
+            <StatCard title={t('stats.processing')} value={statsQuery.data?.data.processing ?? 0} isLight={isLight} />
+            <StatCard title={t('stats.succeeded')} value={statsQuery.data?.data.succeeded ?? 0} tone="success" isLight={isLight} />
+            <StatCard title={t('stats.failed')} value={statsQuery.data?.data.failed ?? 0} tone="danger" isLight={isLight} />
           </div>
 
           <Card className="p-5">
             <div className="mb-4 flex items-center justify-between">
               <div>
-                <h2 className="text-lg font-semibold text-slate-900">{t('failed.title')}</h2>
-                <p className="mt-1 text-sm text-slate-500">{t('failed.description')}</p>
+                <h2 className="bg-linear-to-r from-pink-200 to-cyan-200 bg-clip-text text-lg font-semibold text-transparent">{t('failed.title')}</h2>
+                <p className={`mt-1 text-sm ${isLight ? 'text-slate-600' : 'text-slate-300'}`}>{t('failed.description')}</p>
               </div>
-              <span className="text-sm text-slate-500">
+              <span className={`text-sm ${isLight ? 'text-slate-600' : 'text-slate-300'}`}>
                 {t('failed.total')}: {failedQuery.data?.data.total ?? 0}
               </span>
             </div>
 
-            <div className="overflow-hidden rounded-3xl border border-slate-200">
+            <div className={`overflow-hidden rounded-3xl border ${isLight ? 'border-fuchsia-200/70 bg-[#f5eeff]/82' : 'border-white/12 bg-[#140d24]/72'}`}>
               <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-slate-200">
-                  <thead className="bg-slate-50">
+                <table className={`min-w-full divide-y ${isLight ? 'divide-fuchsia-200/60' : 'divide-white/10'}`}>
+                  <thead className={isLight ? 'bg-[#ece0ff]/80' : 'bg-[#1f1432]/80'}>
                     <tr>
-                      <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">{t('table.jobId')}</th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">{t('table.jobName')}</th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">{t('table.state')}</th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">{t('table.time')}</th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">{t('table.reason')}</th>
+                      <th className={`px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide ${isLight ? 'text-fuchsia-700' : 'text-sky-200'}`}>{t('table.jobId')}</th>
+                      <th className={`px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide ${isLight ? 'text-fuchsia-700' : 'text-sky-200'}`}>{t('table.jobName')}</th>
+                      <th className={`px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide ${isLight ? 'text-fuchsia-700' : 'text-sky-200'}`}>{t('table.state')}</th>
+                      <th className={`px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide ${isLight ? 'text-fuchsia-700' : 'text-sky-200'}`}>{t('table.time')}</th>
+                      <th className={`px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide ${isLight ? 'text-fuchsia-700' : 'text-sky-200'}`}>{t('table.reason')}</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100 bg-white">
+                  <tbody className={`divide-y ${isLight ? 'divide-fuchsia-200/60 bg-[#f8f2ff]/90' : 'divide-white/10 bg-[#140d24]/72'}`}>
                     {(failedQuery.data?.data.items ?? []).length === 0 ? (
                       <tr>
-                        <td className="px-4 py-8 text-center text-sm text-slate-500" colSpan={5}>
+                        <td className={`px-4 py-8 text-center text-sm ${isLight ? 'text-slate-600' : 'text-slate-300'}`} colSpan={5}>
                           {t('failed.empty')}
                         </td>
                       </tr>
                     ) : (
                       (failedQuery.data?.data.items ?? []).map((item) => (
                         <tr key={`${item.jobId}-${item.failedAt ?? item.enqueuedAt ?? 'failed'}`}>
-                          <td className="px-4 py-3 font-mono text-xs text-slate-600">{item.jobId}</td>
-                          <td className="px-4 py-3 text-sm font-medium text-slate-900">{item.jobName}</td>
-                          <td className="px-4 py-3 text-sm text-rose-600">{item.state || t('table.failedState')}</td>
-                          <td className="px-4 py-3 text-sm text-slate-600">{formatDate(item.failedAt)}</td>
-                          <td className="max-w-[360px] truncate px-4 py-3 text-sm text-slate-600" title={item.reason}>
+                          <td className={`px-4 py-3 text-xs ${isLight ? 'text-slate-600' : 'text-slate-300'}`}>{item.jobId}</td>
+                          <td className={`px-4 py-3 text-sm font-medium ${isLight ? 'text-slate-800' : 'text-slate-100'}`}>{item.jobName}</td>
+                          <td className={`px-4 py-3 text-sm ${isLight ? 'text-rose-600' : 'text-rose-300'}`}>{item.state || t('table.failedState')}</td>
+                          <td className={`px-4 py-3 text-sm ${isLight ? 'text-slate-600' : 'text-slate-300'}`}>{formatDate(item.failedAt)}</td>
+                          <td className={`max-w-[360px] truncate px-4 py-3 text-sm ${isLight ? 'text-slate-600' : 'text-slate-300'}`} title={item.reason}>
                             {item.reason || '-'}
                           </td>
                         </tr>
@@ -147,41 +160,41 @@ export function HangfireMonitoringPage() {
           <Card className="p-5">
             <div className="mb-4 flex items-center justify-between">
               <div>
-                <h2 className="text-lg font-semibold text-slate-900">{t('deadLetter.title')}</h2>
-                <p className="mt-1 text-sm text-slate-500">{t('deadLetter.description')}</p>
+                <h2 className="bg-linear-to-r from-pink-200 to-cyan-200 bg-clip-text text-lg font-semibold text-transparent">{t('deadLetter.title')}</h2>
+                <p className={`mt-1 text-sm ${isLight ? 'text-slate-600' : 'text-slate-300'}`}>{t('deadLetter.description')}</p>
               </div>
-              <span className="text-sm text-slate-500">
+              <span className={`text-sm ${isLight ? 'text-slate-600' : 'text-slate-300'}`}>
                 {t('deadLetter.enqueued')}: {deadLetterQuery.data?.data.enqueued ?? 0}
               </span>
             </div>
 
-            <div className="overflow-hidden rounded-3xl border border-slate-200">
+            <div className={`overflow-hidden rounded-3xl border ${isLight ? 'border-fuchsia-200/70 bg-[#f5eeff]/82' : 'border-white/12 bg-[#140d24]/72'}`}>
               <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-slate-200">
-                  <thead className="bg-slate-50">
+                <table className={`min-w-full divide-y ${isLight ? 'divide-fuchsia-200/60' : 'divide-white/10'}`}>
+                  <thead className={isLight ? 'bg-[#ece0ff]/80' : 'bg-[#1f1432]/80'}>
                     <tr>
-                      <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">{t('table.jobId')}</th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">{t('table.jobName')}</th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">{t('table.state')}</th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">{t('table.time')}</th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">{t('table.reason')}</th>
+                      <th className={`px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide ${isLight ? 'text-fuchsia-700' : 'text-sky-200'}`}>{t('table.jobId')}</th>
+                      <th className={`px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide ${isLight ? 'text-fuchsia-700' : 'text-sky-200'}`}>{t('table.jobName')}</th>
+                      <th className={`px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide ${isLight ? 'text-fuchsia-700' : 'text-sky-200'}`}>{t('table.state')}</th>
+                      <th className={`px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide ${isLight ? 'text-fuchsia-700' : 'text-sky-200'}`}>{t('table.time')}</th>
+                      <th className={`px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide ${isLight ? 'text-fuchsia-700' : 'text-sky-200'}`}>{t('table.reason')}</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100 bg-white">
+                  <tbody className={`divide-y ${isLight ? 'divide-fuchsia-200/60 bg-[#f8f2ff]/90' : 'divide-white/10 bg-[#140d24]/72'}`}>
                     {(deadLetterQuery.data?.data.items ?? []).length === 0 ? (
                       <tr>
-                        <td className="px-4 py-8 text-center text-sm text-slate-500" colSpan={5}>
+                        <td className={`px-4 py-8 text-center text-sm ${isLight ? 'text-slate-600' : 'text-slate-300'}`} colSpan={5}>
                           {t('deadLetter.empty')}
                         </td>
                       </tr>
                     ) : (
                       (deadLetterQuery.data?.data.items ?? []).map((item) => (
                         <tr key={`${item.jobId}-${item.enqueuedAt ?? 'dead-letter'}`}>
-                          <td className="px-4 py-3 font-mono text-xs text-slate-600">{item.jobId}</td>
-                          <td className="px-4 py-3 text-sm font-medium text-slate-900">{item.jobName}</td>
-                          <td className="px-4 py-3 text-sm text-amber-600">{item.state || t('table.enqueuedState')}</td>
-                          <td className="px-4 py-3 text-sm text-slate-600">{formatDate(item.enqueuedAt)}</td>
-                          <td className="max-w-[360px] truncate px-4 py-3 text-sm text-slate-600" title={item.reason}>
+                          <td className={`px-4 py-3 text-xs ${isLight ? 'text-slate-600' : 'text-slate-300'}`}>{item.jobId}</td>
+                          <td className={`px-4 py-3 text-sm font-medium ${isLight ? 'text-slate-800' : 'text-slate-100'}`}>{item.jobName}</td>
+                          <td className={`px-4 py-3 text-sm ${isLight ? 'text-amber-600' : 'text-amber-300'}`}>{item.state || t('table.enqueuedState')}</td>
+                          <td className={`px-4 py-3 text-sm ${isLight ? 'text-slate-600' : 'text-slate-300'}`}>{formatDate(item.enqueuedAt)}</td>
+                          <td className={`max-w-[360px] truncate px-4 py-3 text-sm ${isLight ? 'text-slate-600' : 'text-slate-300'}`} title={item.reason}>
                             {item.reason || '-'}
                           </td>
                         </tr>

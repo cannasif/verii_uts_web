@@ -16,6 +16,7 @@ import { createUser } from '@/features/users/api/users-api';
 import { searchRoles } from '@/features/roles/api/roles-api';
 import { searchPermissionGroups } from '@/features/permission-groups/api/permission-groups-api';
 import { useDropdownInfiniteSearch } from '@/hooks/use-dropdown-infinite-search';
+import { useUiStore } from '@/stores/ui-store';
 
 const schema = z.object({
   firstName: z.string().min(1, i18n.t('validationFirstNameRequired', { ns: 'common' })),
@@ -35,6 +36,8 @@ interface CreateUserPanelProps {
 
 export function CreateUserPanel({ open, onClose }: CreateUserPanelProps) {
   const { t } = useTranslation(['user-management', 'common']);
+  const theme = useUiStore((state) => state.theme);
+  const isLight = theme === 'light';
   const queryClient = useQueryClient();
   const [roleSearchTerm, setRoleSearchTerm] = useState('');
   const groupsQuery = useQuery({
@@ -121,14 +124,14 @@ export function CreateUserPanel({ open, onClose }: CreateUserPanelProps) {
         >
           <div className="grid gap-5 md:grid-cols-2">
             <div>
-              <label className="mb-2 block text-sm font-medium text-slate-700">
+              <label className={`mb-2 block text-sm font-medium ${isLight ? 'text-slate-700' : 'text-slate-200'}`}>
                 {t('firstName', { ns: 'common' })}{requiredMark}
               </label>
               <Input {...register('firstName')} />
               {errors.firstName && <p className="mt-2 text-sm text-rose-500">{errors.firstName.message}</p>}
             </div>
             <div>
-              <label className="mb-2 block text-sm font-medium text-slate-700">
+              <label className={`mb-2 block text-sm font-medium ${isLight ? 'text-slate-700' : 'text-slate-200'}`}>
                 {t('lastName', { ns: 'common' })}{requiredMark}
               </label>
               <Input {...register('lastName')} />
@@ -137,7 +140,7 @@ export function CreateUserPanel({ open, onClose }: CreateUserPanelProps) {
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium text-slate-700">
+            <label className={`mb-2 block text-sm font-medium ${isLight ? 'text-slate-700' : 'text-slate-200'}`}>
               {t('email', { ns: 'common' })}{requiredMark}
             </label>
             <Input {...register('email')} />
@@ -145,7 +148,7 @@ export function CreateUserPanel({ open, onClose }: CreateUserPanelProps) {
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium text-slate-700">
+            <label className={`mb-2 block text-sm font-medium ${isLight ? 'text-slate-700' : 'text-slate-200'}`}>
               {t('password', { ns: 'common' })}{requiredMark}
             </label>
             <Input {...register('password')} type="password" />
@@ -153,7 +156,7 @@ export function CreateUserPanel({ open, onClose }: CreateUserPanelProps) {
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium text-slate-700">
+            <label className={`mb-2 block text-sm font-medium ${isLight ? 'text-slate-700' : 'text-slate-200'}`}>
               {t('role', { ns: 'common' })}{requiredMark}
             </label>
             <input type="hidden" {...register('roleId', { valueAsNumber: true })} />
@@ -181,15 +184,19 @@ export function CreateUserPanel({ open, onClose }: CreateUserPanelProps) {
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium text-slate-700">{t('permissionGroupsLabel', { ns: 'common' })}</label>
+            <label className={`mb-2 block text-sm font-medium ${isLight ? 'text-slate-700' : 'text-slate-200'}`}>{t('permissionGroupsLabel', { ns: 'common' })}</label>
             <div className="grid gap-3">
               {permissionGroups.map((group) => {
                 const checked = selectedPermissionGroupIds.includes(group.id);
                 return (
-                  <label key={group.id} className="flex items-start gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
+                  <label
+                    key={group.id}
+                    className={`flex items-start gap-3 rounded-2xl border px-4 py-3 ${isLight ? 'border-fuchsia-200/70 bg-fuchsia-50/75' : 'border-white/12 bg-[#160f26]/78'}`}
+                  >
                     <input
                       checked={checked}
                       type="checkbox"
+                      className={isLight ? 'accent-fuchsia-600' : 'accent-cyan-400'}
                       onChange={(event) => {
                         const next = event.target.checked
                           ? [...selectedPermissionGroupIds, group.id]
@@ -198,8 +205,8 @@ export function CreateUserPanel({ open, onClose }: CreateUserPanelProps) {
                       }}
                     />
                     <span>
-                      <span className="block text-sm font-semibold text-slate-900">{group.name}</span>
-                      <span className="mt-1 block text-xs text-slate-500">{group.description}</span>
+                      <span className={`block text-sm font-semibold ${isLight ? 'text-slate-800' : 'text-slate-100'}`}>{group.name}</span>
+                      <span className={`mt-1 block text-xs ${isLight ? 'text-slate-600' : 'text-slate-300'}`}>{group.description}</span>
                     </span>
                   </label>
                 );
