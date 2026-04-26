@@ -346,8 +346,8 @@ export function UsersPage() {
         <Card className={`p-3.5 ${isLight ? 'border border-slate-200/30 bg-white/80 shadow-none transition hover:bg-red-50' : 'management-stat-card'}`}>
           <div className="flex items-start justify-between gap-3">
             <div>
-              <p className={`text-xs uppercase tracking-[0.12em] ${isLight ? 'text-[#64748B]' : 'text-white/70'}`}>{t('statsTotalUsers', { ns: 'user-management' })}</p>
-              <p className={`mt-2 text-2xl font-semibold ${isLight ? 'text-[#1A1A1A]' : 'text-white'}`}>{totalUsers}</p>
+              <p className={`text-xs uppercase tracking-[0.12em] ${isLight ? 'text-[#64748B]' : 'text-[11px] text-white/65'}`}>{t('statsTotalUsers', { ns: 'user-management' })}</p>
+              <p className={`mt-2 text-2xl font-semibold ${isLight ? 'text-[#1A1A1A]' : 'text-[1.35rem] text-white/95'}`}>{totalUsers}</p>
             </div>
             <Users className={`size-5 [stroke-width:1.5] ${isLight ? 'text-indigo-700' : 'text-cyan-300'}`} />
           </div>
@@ -356,8 +356,8 @@ export function UsersPage() {
         <Card className={`p-3.5 ${isLight ? 'border border-slate-200/30 bg-white/80 shadow-none transition hover:bg-red-50' : 'management-stat-card'}`}>
           <div className="flex items-start justify-between gap-3">
             <div>
-              <p className={`text-xs uppercase tracking-[0.12em] ${isLight ? 'text-[#64748B]' : 'text-white/70'}`}>{t('statsActiveUsers', { ns: 'user-management' })}</p>
-              <p className={`mt-2 text-2xl font-semibold ${isLight ? 'text-emerald-700' : 'text-white'}`}>{activeUsersOnPage}</p>
+              <p className={`text-xs uppercase tracking-[0.12em] ${isLight ? 'text-[#64748B]' : 'text-[11px] text-white/65'}`}>{t('statsActiveUsers', { ns: 'user-management' })}</p>
+              <p className={`mt-2 text-2xl font-semibold ${isLight ? 'text-emerald-700' : 'text-[1.35rem] text-white/95'}`}>{activeUsersOnPage}</p>
             </div>
             <span className="mt-1 inline-flex items-center gap-1 text-xs text-emerald-400">
               <span className="inline-block size-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(74,222,128,0.9)]" />
@@ -369,8 +369,8 @@ export function UsersPage() {
         <Card className={`p-3.5 ${isLight ? 'border border-slate-200/30 bg-white/80 shadow-none transition hover:bg-red-50' : 'management-stat-card'}`}>
           <div className="flex items-start justify-between gap-3">
             <div>
-              <p className={`text-xs uppercase tracking-[0.12em] ${isLight ? 'text-[#64748B]' : 'text-white/70'}`}>{t('statsNewUsers7Days', { ns: 'user-management' })}</p>
-              <p className={`mt-2 text-2xl font-semibold ${isLight ? 'text-[#1A1A1A]' : 'text-white'}`}>{newUsersInLast7Days}</p>
+              <p className={`text-xs uppercase tracking-[0.12em] ${isLight ? 'text-[#64748B]' : 'text-[11px] text-white/65'}`}>{t('statsNewUsers7Days', { ns: 'user-management' })}</p>
+              <p className={`mt-2 text-2xl font-semibold ${isLight ? 'text-[#1A1A1A]' : 'text-[1.35rem] text-white/95'}`}>{newUsersInLast7Days}</p>
               <p className={`mt-1 inline-flex items-center gap-1 text-xs ${trendDelta >= 0 ? isLight ? 'text-emerald-700' : 'text-emerald-300' : isLight ? 'text-rose-700' : 'text-rose-300'}`}>
                 {trendDelta >= 0 ? <TrendingUp className="size-3.5" /> : <TrendingDown className="size-3.5" />}
                 {trendDelta >= 0 ? '+' : ''}{trendDelta}
@@ -387,7 +387,7 @@ export function UsersPage() {
         <Card className={`p-3.5 ${isLight ? 'border border-slate-200/30 bg-white/80 shadow-none transition hover:bg-red-50' : 'management-stat-card'}`}>
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0">
-              <p className={`text-xs uppercase tracking-[0.12em] ${isLight ? 'text-[#64748B]' : 'text-fuchsia-200/80'}`}>{t('statsRoleDistribution', { ns: 'user-management' })}</p>
+              <p className={`text-xs uppercase tracking-[0.12em] ${isLight ? 'text-[#64748B]' : 'text-[11px] text-fuchsia-200/72'}`}>{t('statsRoleDistribution', { ns: 'user-management' })}</p>
             </div>
             <div className="relative grid place-items-center">
               <div
@@ -443,6 +443,7 @@ export function UsersPage() {
           setPageSize(nextPageSize);
           setPageNumber(1);
         }}
+        compactFooterControls
         exportFileName="users"
         exportRows={exportRows}
         filterColumns={[

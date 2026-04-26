@@ -108,12 +108,12 @@ export function CreateUserPanel({ open, onClose }: CreateUserPanelProps) {
   const requiredMark = <span className="ml-1 text-rose-500">*</span>;
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-end bg-slate-950/30 p-2 sm:p-4">
-      <Card className="custom-scrollbar h-full w-full max-w-xl overflow-y-auto p-4 sm:p-6">
+    <div className={`fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 ${isLight ? 'bg-slate-950/30' : 'bg-[#04010a]/68 backdrop-blur-[3px]'}`}>
+      <Card className={`custom-scrollbar w-full max-w-2xl overflow-y-auto p-5 sm:p-7 ${isLight ? 'max-h-[92vh]' : 'max-h-[90vh] border-white/12 bg-[#120b1f]/90 shadow-[0_28px_80px_rgba(2,4,14,0.6)] backdrop-blur-2xl'}`}>
           <div className="flex items-start justify-between gap-4">
           <div>
-            <h2 className="text-xl font-semibold text-slate-900">{t('newUser', { ns: 'common' })}</h2>
-            <p className="mt-1 text-sm text-slate-500">{t('createUserDescription', { ns: 'user-management' })}</p>
+            <h2 className={`text-xl font-semibold ${isLight ? 'text-slate-900' : 'text-slate-100'}`}>{t('newUser', { ns: 'common' })}</h2>
+            <p className={`mt-1 text-sm ${isLight ? 'text-slate-500' : 'text-slate-400'}`}>{t('createUserDescription', { ns: 'user-management' })}</p>
           </div>
           <Button variant="ghost" onClick={onClose}>{t('close', { ns: 'common' })}</Button>
         </div>
@@ -196,7 +196,7 @@ export function CreateUserPanel({ open, onClose }: CreateUserPanelProps) {
                     <input
                       checked={checked}
                       type="checkbox"
-                      className={isLight ? 'accent-fuchsia-600' : 'accent-cyan-400'}
+                      className="modern-checkbox"
                       onChange={(event) => {
                         const next = event.target.checked
                           ? [...selectedPermissionGroupIds, group.id]

@@ -138,6 +138,7 @@ export function StocksPage() {
           setPageSize(nextPageSize);
           setPageNumber(1);
         }}
+        compactFooterControls
         exportFileName="stocks"
         exportRows={exportRows}
         filterColumns={[

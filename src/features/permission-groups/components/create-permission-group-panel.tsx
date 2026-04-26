@@ -99,8 +99,8 @@ export function CreatePermissionGroupPanel({ open, onClose }: CreatePermissionGr
   const requiredMark = <span className="ml-1 text-rose-500">*</span>;
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-end bg-slate-950/30 p-2 sm:p-4">
-      <Card className="custom-scrollbar h-full w-full max-w-xl overflow-y-auto p-6">
+    <div className={`fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 ${isLight ? 'bg-slate-950/30' : 'bg-[#04010a]/68 backdrop-blur-[3px]'}`}>
+      <Card className={`custom-scrollbar w-full max-w-3xl overflow-y-auto p-6 ${isLight ? 'max-h-[92vh]' : 'max-h-[90vh] border-white/12 bg-[#120b1f]/90 shadow-[0_28px_80px_rgba(2,4,14,0.6)] backdrop-blur-2xl'}`}>
         <div className="flex items-start justify-between gap-4">
           <div>
             <h2 className={cn('text-xl font-semibold', isLight ? 'text-slate-900' : 'text-white')}>{t('newPermissionGroup', { ns: 'access-control' })}</h2>
@@ -208,6 +208,7 @@ export function CreatePermissionGroupPanel({ open, onClose }: CreatePermissionGr
                               <input
                                 checked={checked}
                                 type="checkbox"
+                                className="modern-checkbox"
                                 onChange={(event) => {
                                   const next = event.target.checked
                                     ? [...selectedPermissionDefinitionIds, definition.id]

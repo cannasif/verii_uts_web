@@ -78,22 +78,38 @@ function renderPermissionCount(permissionCount: number, totalPermissionCount: nu
   );
 }
 
-function getGroupNameIcon(groupName: string) {
+function getGroupNameIcon(groupName: string, isLight: boolean) {
   const normalizedName = groupName.toLowerCase();
 
   if (normalizedName.includes('admin')) {
-    return { Icon: Crown, iconClassName: 'text-fuchsia-600', badgeClassName: 'border-fuchsia-300/60 bg-fuchsia-100 text-fuchsia-700' };
+    return {
+      Icon: Crown,
+      iconClassName: isLight ? 'text-fuchsia-600' : 'text-fuchsia-200',
+      badgeClassName: isLight ? 'border-fuchsia-300/60 bg-fuchsia-100 text-fuchsia-700' : 'border-white/16 bg-white/8 text-fuchsia-200',
+    };
   }
 
   if (normalizedName.includes('system')) {
-    return { Icon: ShieldCheck, iconClassName: 'text-sky-600', badgeClassName: 'border-sky-300/60 bg-sky-100 text-sky-700' };
+    return {
+      Icon: ShieldCheck,
+      iconClassName: isLight ? 'text-sky-600' : 'text-sky-200',
+      badgeClassName: isLight ? 'border-sky-300/60 bg-sky-100 text-sky-700' : 'border-white/16 bg-white/8 text-sky-200',
+    };
   }
 
   if (normalizedName.includes('user') || normalizedName.includes('kullan')) {
-    return { Icon: Users, iconClassName: 'text-emerald-600', badgeClassName: 'border-emerald-300/60 bg-emerald-100 text-emerald-700' };
+    return {
+      Icon: Users,
+      iconClassName: isLight ? 'text-emerald-600' : 'text-emerald-200',
+      badgeClassName: isLight ? 'border-emerald-300/60 bg-emerald-100 text-emerald-700' : 'border-white/16 bg-white/8 text-emerald-200',
+    };
   }
 
-  return { Icon: KeyRound, iconClassName: 'text-indigo-600', badgeClassName: 'border-indigo-300/60 bg-indigo-100 text-indigo-700' };
+  return {
+    Icon: KeyRound,
+    iconClassName: isLight ? 'text-indigo-600' : 'text-indigo-200',
+    badgeClassName: isLight ? 'border-indigo-300/60 bg-indigo-100 text-indigo-700' : 'border-white/16 bg-white/7 text-indigo-200',
+  };
 }
 
 function SummaryCard({
@@ -112,15 +128,15 @@ function SummaryCard({
   return (
     <Card className={`relative overflow-hidden ring-1 ring-inset ${isLight ? 'p-4' : 'p-3.5'} ${accentClassName}`}>
       <div className={`absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent ${isLight ? 'via-white/30' : 'via-white/14'} to-transparent`} />
-      <p className={`font-semibold uppercase tracking-[0.16em] ${isLight ? 'text-xs text-slate-700/90' : 'text-[11px] text-slate-300/75'}`}>{title}</p>
+      <p className={`font-semibold uppercase tracking-[0.16em] ${isLight ? 'text-xs text-slate-700/90' : 'text-[10px] text-slate-300/72'}`}>{title}</p>
       <p
         className={`mt-3 text-2xl font-bold ${
-          isLight ? 'text-slate-900 drop-shadow-[0_0_8px_rgba(99,102,241,0.12)]' : 'text-[1.6rem] text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.06)]'
+          isLight ? 'text-slate-900 drop-shadow-[0_0_8px_rgba(99,102,241,0.12)]' : 'text-[1.35rem] text-white/95 drop-shadow-[0_0_8px_rgba(255,255,255,0.04)]'
         }`}
       >
         {value}
       </p>
-      <p className={`mt-1.5 text-sm ${isLight ? 'text-slate-700/80' : 'text-slate-300/68'}`}>{description}</p>
+      <p className={`mt-1.5 text-sm ${isLight ? 'text-slate-700/80' : 'text-[13px] text-slate-300/66'}`}>{description}</p>
     </Card>
   );
 }
@@ -234,14 +250,14 @@ export function PermissionGroupsPage() {
         label: t('groupName', { ns: 'access-control' }),
         sortable: true,
         render: (row) => {
-          const { Icon, badgeClassName, iconClassName } = getGroupNameIcon(row.name);
+          const { Icon, badgeClassName, iconClassName } = getGroupNameIcon(row.name, isLight);
 
           return (
             <span className="inline-flex items-center gap-2">
               <span className={`inline-flex size-7 items-center justify-center rounded-full border ${badgeClassName}`}>
                 <Icon className={`size-3.5 ${iconClassName}`} />
               </span>
-              <span className="font-semibold text-slate-900">{row.name}</span>
+              <span className={`font-semibold ${isLight ? 'text-slate-900' : 'text-slate-100'}`}>{row.name}</span>
             </span>
           );
         },
@@ -407,6 +423,7 @@ export function PermissionGroupsPage() {
           setPageSize(nextPageSize);
           setPageNumber(1);
         }}
+        compactFooterControls
         exportFileName="permission-groups"
         exportRows={(query.data?.data ?? []).map((group) => ({
           name: group.name,

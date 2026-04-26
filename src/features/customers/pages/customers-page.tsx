@@ -149,6 +149,7 @@ export function CustomersPage() {
           setPageSize(nextPageSize);
           setPageNumber(1);
         }}
+        compactFooterControls
         exportFileName="customers"
         exportRows={exportRows}
         filterColumns={[
