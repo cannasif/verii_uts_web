@@ -89,6 +89,7 @@ interface AppDataGridProps<TRow> {
   headerAction?: ReactNode;
   subheaderContent?: ReactNode;
   emptyStateContent?: ReactNode;
+  compactFooterControls?: boolean;
 }
 
 function useOutsideClose<T extends HTMLElement>(onClose: () => void) {
@@ -150,10 +151,12 @@ export function AppDataGrid<TRow>({
   headerAction,
   subheaderContent,
   emptyStateContent,
+  compactFooterControls = false,
 }: AppDataGridProps<TRow>) {
   const { t } = useTranslation('common');
   const theme = useUiStore((state) => state.theme);
   const isLight = theme === 'light';
+  const footerCondensed = compactFooterControls;
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [columnsOpen, setColumnsOpen] = useState(false);
   const [exportOpen, setExportOpen] = useState(false);
@@ -227,9 +230,9 @@ export function AppDataGrid<TRow>({
         <div className={cn('flex flex-col xl:flex-row xl:items-center xl:justify-between', isLight ? 'gap-4' : 'gap-3')}>
           <div className="flex flex-1 flex-col gap-3 sm:flex-row sm:items-center">
             <div className="relative w-full max-w-xl">
-              <Search className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
+              <Search className="pointer-events-none absolute left-3.5 top-1/2 size-3.5 -translate-y-1/2 text-slate-400" />
               <Input
-                className="pl-11"
+                className="h-10 rounded-xl pl-10 text-sm"
                 placeholder={searchPlaceholder}
                 value={searchValue}
                 onChange={(event) => onSearchValueChange(event.target.value)}
@@ -244,7 +247,7 @@ export function AppDataGrid<TRow>({
                 <Button
                   type="button"
                   variant="secondary"
-                  className={cn(appliedFilterCount > 0 && 'border border-indigo-200 bg-indigo-50 text-indigo-700')}
+                  className={cn('h-10 rounded-xl px-3 text-sm', appliedFilterCount > 0 && 'border border-indigo-200 bg-indigo-50 text-indigo-700')}
                   onClick={() => {
                     setFiltersOpen((current) => !current);
                     setColumnsOpen(false);
@@ -273,6 +276,7 @@ export function AppDataGrid<TRow>({
                         <Button
                           type="button"
                           variant="secondary"
+                          className="h-9 rounded-xl px-3 text-xs"
                           onClick={() =>
                             onDraftFilterRowsChange([
                               ...draftFilterRows,
@@ -283,11 +287,12 @@ export function AppDataGrid<TRow>({
                           <Plus className="mr-2 size-4" />
                           {t('addFilter')}
                         </Button>
-                        <Button type="button" variant="secondary" onClick={onClearFilters}>
+                        <Button type="button" variant="secondary" className="h-9 rounded-xl px-3 text-xs" onClick={onClearFilters}>
                           {t('clear')}
                         </Button>
                         <Button
                           type="button"
+                          className="h-9 rounded-xl px-3 text-xs"
                           onClick={() => {
                             onApplyFilters();
                             setFiltersOpen(false);
@@ -409,7 +414,7 @@ export function AppDataGrid<TRow>({
                             <Button
                               type="button"
                               variant="ghost"
-                              className="h-12"
+                              className="h-10 rounded-xl px-3"
                               onClick={() => onDraftFilterRowsChange(draftFilterRows.filter((item) => item.id !== row.id))}
                             >
                               <Trash2 className="size-4" />
@@ -427,6 +432,7 @@ export function AppDataGrid<TRow>({
               <Button
                 type="button"
                 variant="secondary"
+                className="h-10 rounded-xl px-3 text-sm"
                 onClick={() => {
                   setColumnsOpen((current) => !current);
                   setFiltersOpen(false);
@@ -479,6 +485,7 @@ export function AppDataGrid<TRow>({
               <Button
                 type="button"
                 variant="secondary"
+                className="h-10 rounded-xl px-3 text-sm"
                 onClick={() => {
                   setExportOpen((current) => !current);
                   setColumnsOpen(false);
@@ -604,7 +611,7 @@ export function AppDataGrid<TRow>({
                       <div className="flex items-center gap-2">
                         <input
                           type="checkbox"
-                          className="size-4 rounded border-slate-300 text-indigo-600"
+                          className="modern-checkbox"
                           checked={isSelected}
                           onChange={() => {
                             if (!onSelectedRowIdsChange) return;
@@ -645,7 +652,7 @@ export function AppDataGrid<TRow>({
                   <th className={cn('w-10', isLight ? 'px-4 py-3' : 'px-3 py-2')}>
                     <input
                       type="checkbox"
-                      className="size-4 rounded border-slate-300 text-indigo-600"
+                      className="modern-checkbox"
                       aria-label="select-all-rows"
                       checked={
                         rows.length > 0 &&
@@ -750,7 +757,7 @@ export function AppDataGrid<TRow>({
                         <td className={cn(isLight ? 'px-4 py-3' : 'px-3 py-2')}>
                           <input
                             type="checkbox"
-                            className="size-4 rounded border-slate-300 text-indigo-600"
+                            className="modern-checkbox"
                             checked={isSelected}
                             onChange={() => {
                               if (!onSelectedRowIdsChange) return;
@@ -777,7 +784,7 @@ export function AppDataGrid<TRow>({
 
         {!hidePagination && pagination && onPageNumberChange && onPageSizeChange ? (
         <div className={cn('flex flex-col gap-3 border-t pt-4 lg:flex-row lg:items-center lg:justify-between', isLight ? 'border-slate-200/80' : 'border-white/14')}>
-          <div className={cn('flex flex-wrap items-center gap-3 text-sm', isLight ? 'text-slate-600' : 'text-slate-300')}>
+          <div className={cn('flex flex-wrap items-center gap-3', footerCondensed ? 'text-xs' : 'text-sm', isLight ? 'text-slate-600' : 'text-slate-300')}>
             <span>
               {t('totalRecords')}: <span className={cn('font-semibold', isLight ? 'text-slate-900' : 'text-sky-100')}>{pagination.totalCount}</span>
             </span>
@@ -785,7 +792,8 @@ export function AppDataGrid<TRow>({
               <span>{t('pageSize')}</span>
               <select
                 className={cn(
-                  'h-10 rounded-2xl border px-3 text-sm outline-none backdrop-blur-xl',
+                  footerCondensed ? 'h-8 rounded-xl border px-2.5 text-xs' : 'h-9 rounded-xl border px-3 text-sm',
+                  'outline-none backdrop-blur-xl',
                   isLight
                     ? 'border-slate-200 bg-white text-slate-700'
                     : 'border-white/14 bg-[#120b1f]/58 text-slate-100',
@@ -802,22 +810,40 @@ export function AppDataGrid<TRow>({
             </div>
           </div>
 
-          <div className="flex items-center justify-between gap-2 sm:justify-end">
-            <Button type="button" variant="secondary" className="max-sm:flex-1" disabled={!pagination.hasPreviousPage} onClick={() => onPageNumberChange(Math.max(1, pagination.pageNumber - 1))}>
-              <ChevronLeft className="mr-1 size-4" />
+          <div className={cn('flex items-center justify-between', footerCondensed ? 'gap-1.5' : 'gap-2', 'sm:justify-end')}>
+            <Button
+              type="button"
+              variant="secondary"
+              className={cn(
+                footerCondensed ? 'h-8 rounded-xl px-2.5 text-xs' : 'h-10 rounded-xl px-3 text-sm',
+                'max-sm:flex-1',
+              )}
+              disabled={!pagination.hasPreviousPage}
+              onClick={() => onPageNumberChange(Math.max(1, pagination.pageNumber - 1))}
+            >
+              <ChevronLeft className={cn('mr-1', footerCondensed ? 'size-3' : 'size-4')} />
               {t('previous')}
             </Button>
             <div className={cn(
-              'rounded-2xl border px-3 py-2 text-center text-sm font-semibold backdrop-blur-xl sm:px-4',
+              footerCondensed ? 'rounded-xl border px-2.5 py-1 text-center text-xs font-semibold backdrop-blur-xl sm:px-2.5' : 'rounded-xl border px-3 py-1.5 text-center text-sm font-semibold backdrop-blur-xl sm:px-3.5',
               isLight
                 ? 'border-slate-200 bg-white text-slate-800 shadow-[inset_0_1px_0_rgba(148,163,184,0.12)]'
                 : 'border-white/14 bg-[#120b1f]/58 text-sky-100 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]',
             )}>
               {pagination.pageNumber} / {Math.max(pagination.totalPages, 1)}
             </div>
-            <Button type="button" variant="secondary" className="max-sm:flex-1" disabled={!pagination.hasNextPage} onClick={() => onPageNumberChange(pagination.pageNumber + 1)}>
+            <Button
+              type="button"
+              variant="secondary"
+              className={cn(
+                footerCondensed ? 'h-8 rounded-xl px-2.5 text-xs' : 'h-10 rounded-xl px-3 text-sm',
+                'max-sm:flex-1',
+              )}
+              disabled={!pagination.hasNextPage}
+              onClick={() => onPageNumberChange(pagination.pageNumber + 1)}
+            >
               {t('next')}
-              <ChevronRight className="ml-1 size-4" />
+              <ChevronRight className={cn('ml-1', footerCondensed ? 'size-3' : 'size-4')} />
             </Button>
           </div>
         </div>

@@ -65,7 +65,7 @@ export function Navbar() {
             <Search className={`pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 ${theme === 'light' ? 'text-[#5E626D]' : 'text-[#bba6c9]'}`} />
             <Input
               ref={searchRef}
-              className={`h-11 rounded-2xl pl-11 pr-16 ${theme === 'light' ? 'border-purple-200/50 bg-white/80 text-[#2A2C31] placeholder:text-[#5E626D] focus:border-purple-300/70 focus:bg-white' : 'border-[#ff7a55]/16 bg-[#1a0d2a]/80 text-[#f4effa] placeholder:text-[#9f8baa] focus:border-[#ff5f77] focus:bg-[#1b0d2c]'} focus:ring-0`}
+              className={`h-11 rounded-2xl pl-11 pr-16 ${theme === 'light' ? 'border-purple-200/50 bg-white/80 text-[#2A2C31] placeholder:text-[#5E626D] focus:border-purple-300/70 focus:bg-white' : 'border-white/10 bg-white/5 text-[#f4effa] backdrop-blur-xl placeholder:text-[#9f8baa] focus:border-cyan-300/35 focus:bg-white/8 focus:ring-0'} `}
               placeholder={t('menuSearch', { ns: 'common' })}
               value={searchQuery}
               onChange={(event) => {
@@ -92,7 +92,7 @@ export function Navbar() {
           <button
             type="button"
             onClick={toggleTheme}
-            className={`flex size-12 items-center justify-center rounded-2xl border transition ${theme === 'light' ? 'border-purple-200/50 bg-white/80 text-[#7C3AED] shadow-sm hover:bg-purple-50/60' : 'border-pink-400/30 bg-[#1b1230]/70 text-pink-200 hover:border-orange-400/60 hover:text-orange-200'}`}
+            className={`flex size-12 items-center justify-center rounded-2xl border transition ${theme === 'light' ? 'border-purple-200/50 bg-white/80 text-[#7C3AED] shadow-sm hover:bg-purple-50/60' : 'border-white/10 bg-white/5 text-pink-200 backdrop-blur-xl hover:border-white/20 hover:text-pink-100'}`}
             title={theme === 'light' ? 'Dark Mode' : 'Light Mode'}
           >
             {theme === 'light' ? <Moon className="size-5" /> : <Sun className="size-5" />}
@@ -101,14 +101,14 @@ export function Navbar() {
             <button
               type="button"
               onClick={() => setIsLanguageOpen(!isLanguageOpen)}
-              className={`flex size-12 items-center justify-center rounded-2xl border transition ${theme === 'light' ? 'border-purple-200/50 bg-white/80 text-[#5E626D] shadow-sm hover:bg-purple-50/60' : 'border-pink-400/30 bg-[#1b1230]/70 text-pink-200 hover:border-orange-400/60 hover:text-orange-200'}`}
+              className={`flex size-12 items-center justify-center rounded-2xl border transition ${theme === 'light' ? 'border-purple-200/50 bg-white/80 text-[#5E626D] shadow-sm hover:bg-purple-50/60' : 'border-white/10 bg-white/5 text-pink-200 backdrop-blur-xl hover:border-white/20 hover:text-pink-100'}`}
               title="Change Language"
             >
               <Globe className="size-5" />
             </button>
             {isLanguageOpen && (
               <div
-                className={`absolute right-0 top-full mt-2 rounded-2xl border shadow-lg ${theme === 'light' ? 'border-purple-200/50 bg-white/98' : 'border-[#ff7a55]/20 bg-[#1a0d2a]'}`}
+                className={`absolute right-0 top-full mt-2 rounded-2xl border shadow-lg ${theme === 'light' ? 'border-purple-200/50 bg-white/98' : 'border-white/10 bg-[#160f26]/95 backdrop-blur-xl'}`}
               >
                 <button
                   type="button"

@@ -16,41 +16,60 @@ import { searchRoles } from '@/features/roles/api/roles-api';
 import type { UserListItem } from '@/features/users/api/users-api';
 import { searchUsers } from '@/features/users/api/users-api';
 
-function getRoleBadgeMeta(roleName: string) {
+function getRoleBadgeMeta(roleName: string, isLight: boolean) {
   const normalized = roleName.trim().toLowerCase();
 
   if (normalized === 'admin') {
     return {
       Icon: Crown,
-      badgeClassName: 'border-fuchsia-300/60 bg-fuchsia-100/80 text-fuchsia-700 shadow-[0_0_18px_rgba(219,39,119,0.18)]',
-      iconClassName: 'text-fuchsia-600',
+      badgeClassName: isLight
+        ? 'border-fuchsia-300/60 bg-fuchsia-100/80 text-fuchsia-700 shadow-[0_0_18px_rgba(219,39,119,0.18)]'
+        : 'border-white/16 bg-white/8 text-fuchsia-200 shadow-[0_8px_22px_rgba(2,4,14,0.24)]',
+      iconClassName: isLight ? 'text-fuchsia-600' : 'text-fuchsia-200',
     };
   }
 
   if (normalized === 'user') {
     return {
       Icon: UserRound,
-      badgeClassName: 'border-orange-300/60 bg-orange-100/80 text-orange-700 shadow-[0_0_14px_rgba(249,115,22,0.14)]',
-      iconClassName: 'text-orange-600',
+      badgeClassName: isLight
+        ? 'border-orange-300/60 bg-orange-100/80 text-orange-700 shadow-[0_0_14px_rgba(249,115,22,0.14)]'
+        : 'border-white/16 bg-white/6 text-sky-200 shadow-[0_8px_22px_rgba(2,4,14,0.22)]',
+      iconClassName: isLight ? 'text-orange-600' : 'text-sky-200',
     };
   }
 
   if (normalized.includes('editor') || normalized.includes('manager')) {
     return {
       Icon: ShieldCheck,
-      badgeClassName: 'border-fuchsia-300/55 bg-fuchsia-100/75 text-fuchsia-700 shadow-[0_0_14px_rgba(236,72,153,0.12)]',
-      iconClassName: 'text-fuchsia-600',
+      badgeClassName: isLight
+        ? 'border-fuchsia-300/55 bg-fuchsia-100/75 text-fuchsia-700 shadow-[0_0_14px_rgba(236,72,153,0.12)]'
+        : 'border-white/16 bg-white/7 text-indigo-200 shadow-[0_8px_22px_rgba(2,4,14,0.22)]',
+      iconClassName: isLight ? 'text-fuchsia-600' : 'text-indigo-200',
     };
   }
 
   return {
     Icon: KeyRound,
-    badgeClassName: 'border-slate-300/60 bg-slate-100/80 text-slate-700 shadow-[0_0_12px_rgba(148,163,184,0.12)]',
-    iconClassName: 'text-slate-600',
+    badgeClassName: isLight
+      ? 'border-slate-300/60 bg-slate-100/80 text-slate-700 shadow-[0_0_12px_rgba(148,163,184,0.12)]'
+      : 'border-white/16 bg-white/6 text-slate-200 shadow-[0_8px_20px_rgba(2,4,14,0.2)]',
+    iconClassName: isLight ? 'text-slate-600' : 'text-slate-200',
   };
 }
 
-function getAvatarPalette(index: number) {
+function getAvatarPalette(index: number, isLight: boolean) {
+  if (!isLight) {
+    const darkPalettes = [
+      'border-white/16 bg-white/10 text-fuchsia-200',
+      'border-white/16 bg-white/8 text-sky-200',
+      'border-white/16 bg-white/8 text-emerald-200',
+      'border-white/16 bg-white/9 text-indigo-200',
+    ];
+
+    return darkPalettes[index % darkPalettes.length];
+  }
+
   const palettes = [
     'border-fuchsia-300/60 bg-fuchsia-100 text-fuchsia-700',
     'border-orange-300/60 bg-orange-100 text-orange-700',
@@ -72,10 +91,16 @@ function getRolePermissionKeys(roleName: string): Array<'read' | 'write' | 'dele
   return ['read'];
 }
 
-function getPermissionChipClass(permission: 'read' | 'write' | 'delete') {
-  if (permission === 'delete') return 'border-rose-300/60 bg-rose-100 text-rose-700';
-  if (permission === 'write') return 'border-amber-300/60 bg-amber-100 text-amber-700';
-  return 'border-emerald-300/60 bg-emerald-100 text-emerald-700';
+function getPermissionChipClass(permission: 'read' | 'write' | 'delete', isLight: boolean) {
+  if (isLight) {
+    if (permission === 'delete') return 'border-rose-300/60 bg-rose-100 text-rose-700';
+    if (permission === 'write') return 'border-amber-300/60 bg-amber-100 text-amber-700';
+    return 'border-emerald-300/60 bg-emerald-100 text-emerald-700';
+  }
+
+  if (permission === 'delete') return 'border-white/16 bg-rose-500/16 text-rose-200';
+  if (permission === 'write') return 'border-white/16 bg-amber-500/14 text-amber-200';
+  return 'border-white/16 bg-emerald-500/14 text-emerald-200';
 }
 
 export function RolesPage() {
@@ -174,7 +199,7 @@ export function RolesPage() {
       label: t('role', { ns: 'common' }),
       sortable: true,
       render: (row) => {
-        const { Icon, badgeClassName, iconClassName } = getRoleBadgeMeta(row.name);
+        const { Icon, badgeClassName, iconClassName } = getRoleBadgeMeta(row.name, isLight);
 
         return (
           <div className="flex items-center gap-3">
@@ -207,7 +232,7 @@ export function RolesPage() {
                   return (
                     <div
                       key={`${row.id}-${member.id}`}
-                      className={`grid place-items-center rounded-full border font-bold shadow-[0_0_12px_rgba(15,23,42,0.12)] ${isLight ? 'size-8 text-[10px]' : 'size-7 text-[9px]'} ${getAvatarPalette(index)}`}
+                      className={`grid place-items-center rounded-full border font-bold shadow-[0_0_12px_rgba(15,23,42,0.12)] ${isLight ? 'size-8 text-[10px]' : 'size-7 text-[9px]'} ${getAvatarPalette(index, isLight)}`}
                       title={`${member.firstName} ${member.lastName}`}
                     >
                       {initials}
@@ -243,7 +268,7 @@ export function RolesPage() {
               {permissionKeys.map((permission) => (
                 <span
                   key={`${row.id}-${permission}`}
-                  className={`inline-flex items-center rounded-full border font-semibold uppercase tracking-[0.14em] ${isLight ? 'px-2.5 py-1 text-[11px]' : 'px-2 py-0.5 text-[10px]'} ${getPermissionChipClass(permission)}`}
+                  className={`inline-flex items-center rounded-full border font-semibold uppercase tracking-[0.14em] ${isLight ? 'px-2.5 py-1 text-[11px]' : 'px-2 py-0.5 text-[10px]'} ${getPermissionChipClass(permission, isLight)}`}
                 >
                   {t(permission, { ns: 'common' })}
                 </span>
@@ -324,6 +349,7 @@ export function RolesPage() {
           setPageSize(nextPageSize);
           setPageNumber(1);
         }}
+        compactFooterControls
         exportFileName="roles"
         exportRows={(rolesQuery.data?.data ?? []).map((role) => ({ name: role.name, memberCount: roleMemberMap.get(role.name.trim().toLowerCase())?.length ?? 0, description: role.description }))}
         filterColumns={[

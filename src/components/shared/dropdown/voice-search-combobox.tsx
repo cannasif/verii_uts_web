@@ -239,7 +239,7 @@ export function VoiceSearchCombobox<TValue extends Primitive = Primitive>({
         variant="secondary"
         disabled={disabled}
         className={cn(
-          `h-12 w-full justify-between rounded-2xl border px-4 text-left text-sm font-medium ring-0 ${isLight ? 'border-fuchsia-200/70 bg-white/85 text-slate-800 hover:bg-white' : 'border-white/12 bg-[#160f26]/78 text-slate-100 hover:bg-[#201334]'}`,
+          `h-12 w-full justify-between rounded-2xl border px-4 text-left text-sm font-medium ring-0 ${isLight ? 'border-fuchsia-200/70 bg-white/85 text-slate-800 hover:bg-white' : 'border-white/10 bg-white/5 text-slate-100 backdrop-blur-xl hover:border-white/20 hover:bg-white/8'}`,
           !selectedOption && (isLight ? 'text-slate-400' : 'text-slate-400'),
         )}
         onClick={() => setOpen((current) => !current)}
@@ -249,13 +249,13 @@ export function VoiceSearchCombobox<TValue extends Primitive = Primitive>({
       </Button>
 
       {open ? (
-        <div className={`absolute z-50 mt-2 w-full overflow-hidden rounded-[1.5rem] border shadow-[0_24px_60px_rgba(15,23,42,0.18)] ${isLight ? 'border-fuchsia-200/70 bg-white' : 'border-white/12 bg-[#160f26]/95 shadow-[0_24px_60px_rgba(2,4,14,0.55)]'}`}>
+        <div className={`absolute z-50 mt-2 w-full overflow-hidden rounded-[1.5rem] border shadow-[0_24px_60px_rgba(15,23,42,0.18)] ${isLight ? 'border-fuchsia-200/70 bg-white' : 'border-white/10 bg-[#160f26]/95 shadow-[0_24px_60px_rgba(2,4,14,0.55)] backdrop-blur-xl'}`}>
           <div className={`border-b p-3 ${isLight ? 'border-slate-100' : 'border-white/10'}`}>
             <div className="relative">
               <Search className={`pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 ${isLight ? 'text-slate-400' : 'text-slate-500'}`} />
               <Input
                 autoFocus
-                className="pr-12 pl-11"
+                className={`${isLight ? 'pr-12 pl-11' : 'border-white/10 bg-white/5 pr-12 pl-11 text-slate-100 placeholder:text-slate-500 focus:border-cyan-300/35 focus:bg-white/8'}`}
                 placeholder={searchPlaceholder ?? t('search')}
                 value={searchQuery}
                 onChange={(event) => setSearchQuery(event.target.value)}

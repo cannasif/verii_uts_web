@@ -129,7 +129,7 @@ export function Sidebar() {
           isSidebarCollapsed && 'lg:w-20',
         )}
       >
-        <div className={`flex h-24 items-center border-b px-4 ${theme === 'light' ? 'border-purple-200/30 bg-white/50' : 'border-[#ff7a55]/14 bg-[#170a28]/72'} ${isSidebarCollapsed ? 'lg:justify-center' : 'justify-between'}`}>
+        <div className={`flex h-24 items-center border-b px-4 ${theme === 'light' ? 'border-purple-200/30 bg-white/50' : 'border-white/10 bg-[#11061d]/88'} ${isSidebarCollapsed ? 'lg:justify-center' : 'justify-between'}`}>
           <Link to="/" className="flex items-center gap-3">
             <div className={`flex size-11 items-center justify-center rounded-2xl text-lg font-bold text-white flex-shrink-0 ${theme === 'light' ? 'bg-linear-to-r from-purple-600 to-purple-500' : 'bg-linear-to-r from-[#ff2f92] via-[#ff5a63] to-[#ff7f2a]'}`}>V</div>
             {!isSidebarCollapsed && (

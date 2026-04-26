@@ -92,6 +92,71 @@ select {
   border-radius: 999px;
 }
 
+.modern-checkbox {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 1.05rem;
+  height: 1.05rem;
+  border-radius: 0.4rem;
+  border: 1px solid rgba(148, 163, 184, 0.55);
+  background: rgba(255, 255, 255, 0.92);
+  display: grid;
+  place-content: center;
+  cursor: pointer;
+  transition: border-color 180ms ease, background 180ms ease, box-shadow 180ms ease, transform 140ms ease;
+}
+
+.modern-checkbox::before {
+  content: '';
+  width: 0.3rem;
+  height: 0.55rem;
+  border-right: 2px solid #ffffff;
+  border-bottom: 2px solid #ffffff;
+  transform: rotate(45deg) scale(0);
+  transform-origin: center;
+  transition: transform 140ms ease;
+}
+
+.modern-checkbox:hover {
+  border-color: rgba(59, 130, 246, 0.55);
+}
+
+.modern-checkbox:checked {
+  border-color: rgba(37, 99, 235, 0.95);
+  background: linear-gradient(145deg, #3b82f6 0%, #2563eb 55%, #1d4ed8 100%);
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.28);
+}
+
+.modern-checkbox:checked::before {
+  transform: rotate(45deg) scale(1);
+}
+
+.modern-checkbox:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.24);
+}
+
+[data-theme='dark'] .modern-checkbox {
+  border-color: rgba(203, 213, 225, 0.32);
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+[data-theme='dark'] .modern-checkbox:hover {
+  border-color: rgba(96, 165, 250, 0.58);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme='dark'] .modern-checkbox:checked {
+  border-color: rgba(59, 130, 246, 0.95);
+  background: linear-gradient(145deg, #3b82f6 0%, #2563eb 55%, #1d4ed8 100%);
+  box-shadow: 0 8px 18px rgba(30, 64, 175, 0.42);
+}
+
+[data-theme='dark'] .modern-checkbox:focus-visible {
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
 .cyber-card .text-slate-900 {
   color: #f4ecff;
 }
@@ -152,15 +217,15 @@ select {
 }
 
 [data-theme='dark'] [class*='ring-cyan-'] {
-  --tw-ring-color: rgba(255, 114, 87, 0.28) !important;
+  --tw-ring-color: rgba(255, 255, 255, 0.06) !important;
 }
 
 [data-theme='dark'] [class*='focus:border-cyan-'] {
-  border-color: rgba(255, 111, 97, 0.6) !important;
+  border-color: rgba(255, 255, 255, 0.16) !important;
 }
 
 [data-theme='dark'] [class*='focus:ring-cyan-'] {
-  --tw-ring-color: rgba(255, 111, 97, 0.22) !important;
+  --tw-ring-color: rgba(255, 255, 255, 0.04) !important;
 }
 
 [data-theme='light'] .cyber-card {
@@ -194,6 +259,23 @@ select {
   color: #1A1A1A;
   backdrop-filter: blur(16px);
   box-shadow: 0 6px 18px rgba(15, 23, 42, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.68);
+}
+
+[data-theme='dark'] .cyber-input {
+  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  color: #f4effb;
+  backdrop-filter: blur(16px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+[data-theme='dark'] .cyber-input:focus {
+  border-color: rgba(255, 255, 255, 0.16);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+[data-theme='dark'] .cyber-input::placeholder {
+  color: #94a3b8;
 }
 
 [data-theme='light'] .cyber-input::placeholder {
