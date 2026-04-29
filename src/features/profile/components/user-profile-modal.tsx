@@ -1,8 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { ArrowRight, Globe, LogOut, Mail, Phone, ShieldCheck, UserCircle2, X } from 'lucide-react';
+import { ArrowRight, Check, ChevronDown, Globe, LogOut, Mail, Moon, Phone, ShieldCheck, Sun, UserCircle2, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { VoiceSearchCombobox } from '@/components/shared/dropdown/voice-search-combobox';
 import { Button } from '@/components/ui/button';
 import { getMyProfile } from '@/features/profile/api/profile-api';
 import { buildAssetUrl } from '@/lib/utils';
@@ -19,11 +18,13 @@ export function UserProfileModal({ open, onClose, onOpenProfileDetails }: UserPr
   const { i18n, t } = useTranslation(['user-detail-management', 'common']);
   const logout = useAuthStore((state) => state.logout);
   const authUser = useAuthStore((state) => state.user);
-  const theme = useUiStore((state) => state.theme);
+  const { theme, toggleTheme } = useUiStore();
   const isLight = theme === 'light';
   const [isRendered, setIsRendered] = useState(open);
   const [isVisible, setIsVisible] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
+  const [isLanguageOpen, setIsLanguageOpen] = useState(false);
+  const languageDropdownRef = useRef<HTMLDivElement>(null);
   const animationDuration = 450;
 
   useEffect(() => {
@@ -60,18 +61,38 @@ export function UserProfileModal({ open, onClose, onOpenProfileDetails }: UserPr
     {
       value: 'tr',
       label: 'TR',
-      description: t('turkish', { ns: 'common' }),
-      icon: <Globe className="size-4" />,
-      keywords: ['tr', 'turkce', 'turkish'],
+      description: 'Türkçe',
+      icon: '🇹🇷',
     },
     {
       value: 'en',
       label: 'EN',
-      description: t('english', { ns: 'common' }),
-      icon: <Globe className="size-4" />,
-      keywords: ['en', 'ingilizce', 'english'],
+      description: 'English',
+      icon: '🇬🇧',
     },
   ];
+
+  const currentLanguage = (i18n.language ?? i18n.resolvedLanguage ?? 'tr').split('-')[0].toLowerCase();
+  const selectedLanguage = languageOptions.find((option) => option.value === currentLanguage) ?? languageOptions[0];
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (languageDropdownRef.current && !languageDropdownRef.current.contains(event.target as Node)) {
+        setIsLanguageOpen(false);
+      }
+    };
+
+    if (isLanguageOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [isLanguageOpen]);
+
+  const handleLanguageChange = async (lang: string) => {
+    localStorage.setItem('verii_uts_lang', lang);
+    await i18n.changeLanguage(lang);
+    setIsLanguageOpen(false);
+  };
 
   if (!isRendered) return null;
 
@@ -157,32 +178,75 @@ export function UserProfileModal({ open, onClose, onOpenProfileDetails }: UserPr
               <ArrowRight className={`size-4 transition group-hover:translate-x-1 ${isLight ? 'text-slate-400' : 'text-slate-300'}`} />
             </button>
 
-            <div className={`flex items-center justify-between rounded-[1.6rem] border px-5 py-5 ${isLight ? 'border-slate-100 bg-slate-50/80' : 'border-white/10 bg-white/5'}`}>
-              <div className="flex items-center gap-4">
-                <div className={`rounded-2xl p-4 ${isLight ? 'bg-emerald-100 text-emerald-600' : 'bg-emerald-500/15 text-emerald-300'}`}>
-                  <ShieldCheck className="size-5" />
+            <div className={`rounded-[1.6rem] border p-5 ${isLight ? 'border-slate-100 bg-slate-50/80' : 'border-white/10 bg-white/5'} `}>
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex items-center gap-4">
+                  <div className={`rounded-2xl p-4 ${isLight ? 'bg-slate-100 text-slate-700' : 'bg-white/10 text-slate-100'}`}>
+                    {isLight ? <Sun className="size-5" /> : <Moon className="size-5" />}
+                  </div>
+                  <div className="text-left">
+                    <p className={`text-lg font-bold ${isLight ? 'text-slate-900' : 'text-white'}`}>{t('appearance', { ns: 'common' })}</p>
+                    <p className={`text-sm ${isLight ? 'text-slate-500' : 'text-slate-300'}`}>{t('selectThemeMode', { ns: 'common' })}</p>
+                  </div>
                 </div>
-                <div>
-                  <p className={`text-lg font-bold ${isLight ? 'text-slate-900' : 'text-white'}`}>{t('roleInformation', { ns: 'user-detail-management' })}</p>
-                  <p className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.08em] ${isLight ? 'bg-fuchsia-100 text-fuchsia-700' : 'bg-fuchsia-500/15 text-fuchsia-200'}`}>{role}</p>
-                </div>
+                <button
+                  type="button"
+                  onClick={toggleTheme}
+                  className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold transition ${isLight ? 'border-purple-200 bg-purple-600 text-white hover:bg-purple-700' : 'border-white/10 bg-white/10 text-white hover:bg-white/20'}`}
+                >
+                  {isLight ? <Moon className="size-4" /> : <Sun className="size-4" />}
+                  {isLight ? t('darkMode', { ns: 'common' }) : t('lightMode', { ns: 'common' })}
+                </button>
               </div>
-              <div className="w-40">
-                <VoiceSearchCombobox
-                  options={languageOptions}
-                  value={i18n.language}
-                  placeholder={t('language', { ns: 'common' })}
-                  searchPlaceholder={t('searchLanguage', { ns: 'common' })}
-                  onSelect={(nextValue) => {
-                    if (!nextValue) {
-                      return;
-                    }
+            </div>
 
-                    localStorage.setItem('verii_uts_lang', nextValue);
-                    void i18n.changeLanguage(nextValue);
-                  }}
-                />
+            <div className={`relative rounded-[1.6rem] border p-5 ${isLight ? 'border-slate-100 bg-slate-50/80' : 'border-white/10 bg-white/5'} `} ref={languageDropdownRef}>
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex items-center gap-4">
+                  <div className={`rounded-2xl p-4 ${isLight ? 'bg-slate-100 text-slate-700' : 'bg-white/10 text-slate-100'}`}>
+                    <Globe className="size-5" />
+                  </div>
+                  <div className="text-left">
+                    <p className={`text-lg font-bold ${isLight ? 'text-slate-900' : 'text-white'}`}>{t('language', { ns: 'common' })}</p>
+                    <p className={`text-sm ${isLight ? 'text-slate-500' : 'text-slate-300'}`}>{t('chooseLanguage', { ns: 'common' })}</p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setIsLanguageOpen((prev) => !prev)}
+                  className={`flex items-center gap-2 rounded-full border px-3 py-2 text-sm font-semibold transition ${isLight ? 'border-slate-200 bg-white text-slate-900 shadow-sm hover:bg-slate-100' : 'border-white/10 bg-[#110717] text-white shadow-sm hover:bg-white/10'}`}
+                >
+                  <span className="text-[0.85rem]">{selectedLanguage.label}</span>
+                  <ChevronDown className="size-4" />
+                </button>
               </div>
+
+              {isLanguageOpen && (
+                <div className={`absolute right-0 top-full z-10 mt-3 overflow-hidden rounded-[1.4rem] border ${isLight ? 'border-slate-200 bg-white shadow-xl' : 'border-white/10 bg-[#12061d] shadow-[0_15px_45px_rgba(0,0,0,0.3)]'}`} style={{ minWidth: '200px', maxWidth: '240px' }}>
+                  <div className="max-h-64 overflow-y-auto overscroll-contain">
+                    {languageOptions.map((language) => {
+                      const selected = currentLanguage === language.value;
+                      return (
+                        <button
+                          key={language.value}
+                          type="button"
+                          onClick={() => void handleLanguageChange(language.value)}
+                          className={`flex w-full items-center justify-between gap-3 px-3 py-2 text-left text-sm transition ${selected ? (isLight ? 'bg-purple-50 text-purple-800' : 'bg-pink-500/10 text-pink-100') : (isLight ? 'text-slate-700 hover:bg-slate-100' : 'text-slate-300 hover:bg-white/5')}`}
+                        >
+                          <div className="flex items-center gap-3">
+                            <span className="flex h-8 w-8 items-center justify-center rounded-2xl bg-[#1d142a] text-lg text-white">{language.icon}</span>
+                            <div>
+                              <p className="font-semibold leading-5">{language.description}</p>
+                              <p className="text-[0.65rem] uppercase tracking-[0.2em] opacity-70">{language.label}</p>
+                            </div>
+                          </div>
+                          {selected ? <Check className="size-4 text-emerald-400" /> : <div className="h-4 w-4" />}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 

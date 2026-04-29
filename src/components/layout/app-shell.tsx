@@ -17,7 +17,7 @@ export function AppShell() {
 
       <Sidebar />
 
-      <main className={`relative min-h-screen transition-all duration-300 ${isSidebarCollapsed ? 'lg:pl-20' : 'lg:pl-72'}`}>
+      <main className={`relative min-h-screen transition-all duration-300 ${isSidebarCollapsed ? 'lg:pl-24' : 'lg:pl-80'}`}>
         <div>
           <Navbar />
           <div className="px-3 py-4 sm:px-4 sm:py-6 lg:px-8">

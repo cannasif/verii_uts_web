@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Building2, ChevronDown, ChevronLeft, ChevronRight, Factory, FileStack, LayoutDashboard, Shield, X } from 'lucide-react';
+import { Building2, ChevronDown, ChevronLeft, ChevronRight, Factory, FileStack, LayoutDashboard, Menu, Shield, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
@@ -150,9 +150,9 @@ export function Sidebar() {
               toggleSidebarCollapsed();
             }}
             className={`rounded-xl p-2 ${theme === 'light' ? 'text-[#5E626D] hover:bg-purple-100/50 hover:text-[#7C3AED]' : 'text-[#c8b5d8] hover:bg-white/6 hover:text-[#ffd5bf]'}`}
-            aria-label={window.innerWidth < 1024 ? 'Close sidebar' : isSidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+            aria-label="Toggle sidebar"
           >
-            {window.innerWidth < 1024 ? <X className="size-5" /> : isSidebarCollapsed ? <ChevronRight className="size-5" /> : <ChevronLeft className="size-5" />}
+            <Menu className="size-5" />
           </button>
         </div>
 
