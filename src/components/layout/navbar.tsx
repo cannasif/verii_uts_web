@@ -1,26 +1,20 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { Bell, Globe, Moon, Search, Sun, X } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { Bell, Search, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/stores/auth-store';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 import { useUiStore } from '@/stores/ui-store';
 import { UserProfileModal } from '@/features/profile/components/user-profile-modal';
-import { loadLanguage } from '@/lib/i18n';
 
 export function Navbar() {
-  const { t, i18n } = useTranslation(['common', 'dashboard', 'user-management', 'role-management', 'access-control', 'user-detail-management', 'uts-verme-list-management', 'uts-uretim-list-management', 'uts-tverme-list-management', 'uts-tuketici-verme-list-management', 'uts-ithalat-list-management', 'uts-imha-list-management', 'uts-ihracat-list-management', 'uts-alma-list-management']);
+  const { t } = useTranslation(['common', 'dashboard', 'user-management', 'role-management', 'access-control', 'user-detail-management', 'uts-verme-list-management', 'uts-uretim-list-management', 'uts-tverme-list-management', 'uts-tuketici-verme-list-management', 'uts-ithalat-list-management', 'uts-imha-list-management', 'uts-ihracat-list-management', 'uts-alma-list-management']);
   const navigate = useNavigate();
   const location = useLocation();
   const user = useAuthStore((state) => state.user);
-  const { toggleSidebar, searchQuery, setSearchQuery, setSidebarOpen, theme, toggleTheme, isSidebarCollapsed } = useUiStore();
+  const { searchQuery, setSearchQuery, setSidebarOpen, theme } = useUiStore();
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
-  const [isLanguageOpen, setIsLanguageOpen] = useState(false);
   const searchRef = useRef<HTMLInputElement>(null);
-  const languageRef = useRef<HTMLDivElement>(null);
-  
-  const currentLanguage = (i18n.resolvedLanguage ?? i18n.language).split('-')[0];
   useEffect(() => {
     setSearchQuery('');
   }, [location.pathname, setSearchQuery]);
@@ -37,24 +31,6 @@ export function Navbar() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (languageRef.current && !languageRef.current.contains(event.target as Node)) {
-        setIsLanguageOpen(false);
-      }
-    };
-
-    if (isLanguageOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-      return () => document.removeEventListener('mousedown', handleClickOutside);
-    }
-  }, [isLanguageOpen]);
-
-  const handleLanguageChange = async (lang: string) => {
-    await loadLanguage(lang);
-    await i18n.changeLanguage(lang);
-    setIsLanguageOpen(false);
-  };
 
   return (
     <>
@@ -89,60 +65,6 @@ export function Navbar() {
           <button type="button" className={`hidden size-12 items-center justify-center rounded-2xl border sm:flex ${theme === 'light' ? 'border-purple-200/40 bg-white/70 text-[#5E626D] shadow-sm hover:bg-purple-50/50' : 'border-[#ff7a55]/16 bg-[#1a0d2a]/75 text-[#e7d4f4] hover:border-[#ff8a60]/36 hover:text-[#ffd5bf]'}`}>
             <Bell className="size-5" />
           </button>
-          <button
-            type="button"
-            onClick={toggleTheme}
-            className={`flex size-12 items-center justify-center rounded-2xl border transition ${theme === 'light' ? 'border-purple-200/50 bg-white/80 text-[#7C3AED] shadow-sm hover:bg-purple-50/60' : 'border-white/10 bg-white/5 text-pink-200 backdrop-blur-xl hover:border-white/20 hover:text-pink-100'}`}
-            title={theme === 'light' ? 'Dark Mode' : 'Light Mode'}
-          >
-            {theme === 'light' ? <Moon className="size-5" /> : <Sun className="size-5" />}
-          </button>
-          <div className="relative" ref={languageRef}>
-            <button
-              type="button"
-              onClick={() => setIsLanguageOpen(!isLanguageOpen)}
-              className={`flex size-12 items-center justify-center rounded-2xl border transition ${theme === 'light' ? 'border-purple-200/50 bg-white/80 text-[#5E626D] shadow-sm hover:bg-purple-50/60' : 'border-white/10 bg-white/5 text-pink-200 backdrop-blur-xl hover:border-white/20 hover:text-pink-100'}`}
-              title="Change Language"
-            >
-              <Globe className="size-5" />
-            </button>
-            {isLanguageOpen && (
-              <div
-                className={`absolute right-0 top-full mt-2 rounded-2xl border shadow-lg ${theme === 'light' ? 'border-purple-200/50 bg-white/98' : 'border-white/10 bg-[#160f26]/95 backdrop-blur-xl'}`}
-              >
-                <button
-                  type="button"
-                  onClick={() => handleLanguageChange('tr')}
-                  className={`block w-full px-4 py-2 text-left text-sm transition ${
-                    currentLanguage === 'tr'
-                      ? theme === 'light'
-                        ? 'bg-purple-100/70 text-[#7C3AED] font-semibold'
-                        : 'bg-pink-500/20 text-pink-200 font-semibold'
-                      : theme === 'light'
-                        ? 'text-[#2A2C31] hover:bg-purple-50/50'
-                        : 'text-slate-300 hover:bg-white/10'
-                  } first:rounded-t-xl`}
-                >
-                  Türkçe
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handleLanguageChange('en')}
-                  className={`block w-full px-4 py-2 text-left text-sm transition ${
-                    currentLanguage === 'en'
-                      ? theme === 'light'
-                        ? 'bg-purple-100/70 text-[#7C3AED] font-semibold'
-                        : 'bg-pink-500/20 text-pink-200 font-semibold'
-                      : theme === 'light'
-                        ? 'text-[#2A2C31] hover:bg-purple-50/50'
-                        : 'text-slate-300 hover:bg-white/10'
-                  } last:rounded-b-xl`}
-                >
-                  English
-                </button>
-              </div>
-            )}
-          </div>
           <button
             type="button"
             onClick={() => setIsProfileModalOpen(true)}

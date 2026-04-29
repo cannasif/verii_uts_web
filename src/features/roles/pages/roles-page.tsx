@@ -283,7 +283,7 @@ export function RolesPage() {
       label: t('actions', { ns: 'common' }),
       className: isLight ? 'w-[112px] text-right' : 'w-[96px] text-right',
       render: (row) => (
-        <div className="flex items-center justify-end gap-1.5 opacity-100 transition md:opacity-0 md:group-hover:opacity-100">
+        <div className="flex items-center justify-end gap-1.5">
           <button
             type="button"
             className={`rounded-lg border transition ${isLight ? 'p-1.5 border-indigo-200/80 bg-white/70 text-indigo-700 hover:bg-indigo-50' : 'p-1 border-cyan-300/30 bg-[#1a132b]/70 text-cyan-200 hover:border-red-300/50 hover:bg-red-500/10 hover:text-white'}`}
