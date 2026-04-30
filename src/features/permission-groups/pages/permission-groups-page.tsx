@@ -126,7 +126,7 @@ function SummaryCard({
   isLight: boolean;
 }) {
   return (
-    <Card className={`relative overflow-hidden ring-1 ring-inset ${isLight ? 'p-4' : 'p-3.5'} ${accentClassName}`}>
+    <Card className={`relative overflow-hidden ${isLight ? 'p-3.5' : 'p-3.5'} ${accentClassName}`}>
       <div className={`absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent ${isLight ? 'via-white/30' : 'via-white/14'} to-transparent`} />
       <p className={`font-semibold uppercase tracking-[0.16em] ${isLight ? 'text-xs text-slate-700/90' : 'text-[10px] text-slate-300/72'}`}>{title}</p>
       <p
@@ -349,7 +349,7 @@ export function PermissionGroupsPage() {
           title={t('totalPermissionGroupLabel', { ns: 'access-control' })}
           value={String(summaryGroupCount)}
           description={t('totalPermissionGroupDescription', { ns: 'access-control' })}
-          accentClassName={isLight ? 'border border-white/10 bg-white/10 shadow-none backdrop-blur-sm transition hover:bg-red-500/10 hover:shadow-[0_0_24px_rgba(239,68,68,0.08)]' : 'management-stat-card'}
+          accentClassName={isLight ? 'border border-slate-200/30 bg-white/80 shadow-none transition hover:bg-red-50' : 'management-stat-card'}
           isLight={isLight}
         />
         <SummaryCard
@@ -363,18 +363,14 @@ export function PermissionGroupsPage() {
                 })
               : t('summaryLoadingDescription', { ns: 'access-control' })
           }
-          accentClassName={isLight ? 'border border-white/10 bg-white/10 shadow-none backdrop-blur-sm transition hover:bg-red-500/10 hover:shadow-[0_0_24px_rgba(239,68,68,0.08)]' : 'management-stat-card'}
+          accentClassName={isLight ? 'border border-slate-200/30 bg-white/80 shadow-none transition hover:bg-red-50' : 'management-stat-card'}
           isLight={isLight}
         />
         <SummaryCard
           title={t('systemCriticalRolesLabel', { ns: 'access-control' })}
           value={String(systemCriticalRoleCount)}
           description={t('systemCriticalRolesDescription', { ns: 'access-control' })}
-          accentClassName={
-            isLight
-              ? 'border-sky-200/80 bg-linear-to-br from-sky-50 via-white to-cyan-50 shadow-[0_12px_28px_rgba(14,165,233,0.12)]'
-              : 'management-stat-card'
-          }
+          accentClassName={isLight ? 'border border-slate-200/30 bg-white/80 shadow-none transition hover:bg-red-50' : 'management-stat-card'}
           isLight={isLight}
         />
       </div>
