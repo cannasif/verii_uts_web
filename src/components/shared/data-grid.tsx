@@ -247,7 +247,7 @@ export function AppDataGrid<TRow>({
                 <Button
                   type="button"
                   variant="secondary"
-                  className={cn('h-10 rounded-xl px-3 text-sm', appliedFilterCount > 0 && 'border border-indigo-200 bg-indigo-50 text-indigo-700')}
+                  className={cn('h-9 rounded-[10px] px-4 text-sm shadow-none', appliedFilterCount > 0 && 'border border-indigo-200 bg-indigo-50 text-indigo-700')}
                   onClick={() => {
                     setFiltersOpen((current) => !current);
                     setColumnsOpen(false);
@@ -276,7 +276,7 @@ export function AppDataGrid<TRow>({
                         <Button
                           type="button"
                           variant="secondary"
-                          className="h-9 rounded-xl px-3 text-xs"
+                          className="h-9 rounded-[10px] px-4 text-xs shadow-none"
                           onClick={() =>
                             onDraftFilterRowsChange([
                               ...draftFilterRows,
@@ -287,12 +287,12 @@ export function AppDataGrid<TRow>({
                           <Plus className="mr-2 size-4" />
                           {t('addFilter')}
                         </Button>
-                        <Button type="button" variant="secondary" className="h-9 rounded-xl px-3 text-xs" onClick={onClearFilters}>
+                        <Button type="button" variant="secondary" className="h-9 rounded-[10px] px-4 text-xs shadow-none" onClick={onClearFilters}>
                           {t('clear')}
                         </Button>
                         <Button
                           type="button"
-                          className="h-9 rounded-xl px-3 text-xs"
+                          className="h-9 rounded-[10px] px-4 text-xs shadow-[0_6px_14px_rgba(255,95,119,0.16)]"
                           onClick={() => {
                             onApplyFilters();
                             setFiltersOpen(false);
@@ -414,7 +414,7 @@ export function AppDataGrid<TRow>({
                             <Button
                               type="button"
                               variant="ghost"
-                              className="h-10 rounded-xl px-3"
+                              className="h-9 rounded-[10px] px-3 shadow-none"
                               onClick={() => onDraftFilterRowsChange(draftFilterRows.filter((item) => item.id !== row.id))}
                             >
                               <Trash2 className="size-4" />
@@ -432,7 +432,7 @@ export function AppDataGrid<TRow>({
               <Button
                 type="button"
                 variant="secondary"
-                className="h-10 rounded-xl px-3 text-sm"
+                className="h-9 rounded-[10px] px-4 text-sm shadow-none"
                 onClick={() => {
                   setColumnsOpen((current) => !current);
                   setFiltersOpen(false);
@@ -457,12 +457,12 @@ export function AppDataGrid<TRow>({
                       return (
                         <div key={column.key} className={cn('flex items-center gap-2 rounded-2xl px-2 py-2', isLight ? 'hover:bg-slate-100' : 'hover:bg-white/10')}>
                           <div className="flex flex-1 items-center gap-2">
-                            <button type="button" className={cn('rounded-lg p-1', isLight ? 'hover:bg-slate-100' : 'hover:bg-white/10')} onClick={() => moveColumn(column.key, 'up')} disabled={index === 0}>
+                            <button type="button" className={cn('rounded-lg p-1 transition hover:brightness-110', isLight ? 'hover:bg-slate-100' : 'hover:bg-white/10')} onClick={() => moveColumn(column.key, 'up')} disabled={index === 0}>
                               <ArrowUp className={cn('size-3.5', isLight ? 'text-slate-500' : 'text-slate-300')} />
                             </button>
                             <button
                               type="button"
-                              className={cn('rounded-lg p-1', isLight ? 'hover:bg-slate-100' : 'hover:bg-white/10')}
+                              className={cn('rounded-lg p-1 transition hover:brightness-110', isLight ? 'hover:bg-slate-100' : 'hover:bg-white/10')}
                               onClick={() => moveColumn(column.key, 'down')}
                               disabled={index === orderedColumns.length - 1}
                             >
@@ -470,7 +470,7 @@ export function AppDataGrid<TRow>({
                             </button>
                             <span className={cn('truncate text-sm', isLight ? 'text-slate-700' : 'text-slate-200')}>{column.label}</span>
                           </div>
-                          <button type="button" className={cn('rounded-lg p-1', isLight ? 'hover:bg-slate-100' : 'hover:bg-white/10')} onClick={() => toggleColumn(column.key)}>
+                          <button type="button" className={cn('rounded-lg p-1 transition hover:brightness-110', isLight ? 'hover:bg-slate-100' : 'hover:bg-white/10')} onClick={() => toggleColumn(column.key)}>
                             {isVisible ? <EyeOff className={cn('size-4', isLight ? 'text-slate-500' : 'text-slate-300')} /> : <Eye className={cn('size-4', isLight ? 'text-slate-500' : 'text-slate-300')} />}
                           </button>
                         </div>
@@ -485,7 +485,7 @@ export function AppDataGrid<TRow>({
               <Button
                 type="button"
                 variant="secondary"
-                className="h-10 rounded-xl px-3 text-sm"
+                className="h-9 rounded-[10px] px-4 text-sm shadow-none"
                 onClick={() => {
                   setExportOpen((current) => !current);
                   setColumnsOpen(false);
@@ -506,7 +506,7 @@ export function AppDataGrid<TRow>({
                   <button
                     type="button"
                     className={cn(
-                      'flex w-full items-center gap-3 rounded-2xl px-3 py-3 text-left text-sm transition disabled:opacity-50',
+                      'flex w-full items-center gap-3 rounded-[10px] px-3 py-2.5 text-left text-sm transition disabled:opacity-50 hover:brightness-105',
                       isLight ? 'text-slate-700 hover:bg-slate-100' : 'text-slate-200 hover:bg-white/8',
                     )}
                     disabled={resolvedExportRows.length === 0}
@@ -525,7 +525,7 @@ export function AppDataGrid<TRow>({
                   <button
                     type="button"
                     className={cn(
-                      'flex w-full items-center gap-3 rounded-2xl px-3 py-3 text-left text-sm transition disabled:opacity-50',
+                      'flex w-full items-center gap-3 rounded-[10px] px-3 py-2.5 text-left text-sm transition disabled:opacity-50 hover:brightness-105',
                       isLight ? 'text-slate-700 hover:bg-slate-100' : 'text-slate-200 hover:bg-white/8',
                     )}
                     disabled={resolvedExportRows.length === 0}

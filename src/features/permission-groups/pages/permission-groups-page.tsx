@@ -342,12 +342,6 @@ export function PermissionGroupsPage() {
       <PageHeader
         title={t('permissionGroupsTitle', { ns: 'access-control' })}
         description={t('permissionGroupsDescription', { ns: 'access-control' })}
-        action={
-          <Button className={isLight ? undefined : 'create-action-button'} onClick={() => setIsCreatePanelOpen(true)}>
-            <Plus className="mr-2 size-4" />
-            {t('newPermissionGroup', { ns: 'access-control' })}
-          </Button>
-        }
       />
 
       <div className="grid gap-4 md:grid-cols-3">
@@ -432,6 +426,12 @@ export function PermissionGroupsPage() {
           assignedUserCount: group.assignedUserCount,
           isSystem: group.isSystem ? t('yes', { ns: 'common' }) : t('no', { ns: 'common' }),
         }))}
+        headerAction={
+          <Button className={isLight ? undefined : 'create-action-button'} onClick={() => setIsCreatePanelOpen(true)}>
+            <Plus className="mr-2 size-4" />
+            {t('newPermissionGroup', { ns: 'access-control' })}
+          </Button>
+        }
         filterColumns={[
           { value: 'name', label: t('groupName', { ns: 'access-control' }), type: 'string' },
           { value: 'description', label: t('descriptionColumn', { ns: 'access-control' }), type: 'string' },

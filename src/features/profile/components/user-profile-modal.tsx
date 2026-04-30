@@ -122,9 +122,9 @@ export function UserProfileModal({ open, onClose, onOpenProfileDetails }: UserPr
           <X className="size-4" />
         </button>
 
-        <div className="relative flex flex-col items-center justify-center gap-5 bg-linear-to-b from-[#1a1025] to-[#120c18] px-8 py-10 text-white">
-          <div className="absolute left-[-20%] top-[-20%] h-64 w-64 rounded-full bg-pink-500/10 blur-[80px]" />
-          <div className="relative flex size-32 items-center justify-center rounded-[2rem] bg-linear-to-br from-pink-500 via-purple-600 to-orange-500 text-4xl font-black">
+        <div className={`relative flex flex-col items-center justify-center gap-5 px-8 py-10 ${isLight ? 'bg-linear-to-b from-[#fff8f1] via-[#fffdfb] to-[#fff2e4] text-[#1f2430]' : 'bg-linear-to-b from-[#1a1025] to-[#120c18] text-white'}`}>
+          <div className={`absolute left-[-20%] top-[-20%] h-64 w-64 rounded-full blur-[80px] ${isLight ? 'bg-[#ff9f2a]/10' : 'bg-pink-500/10'}`} />
+          <div className={`relative flex size-32 items-center justify-center rounded-[2rem] text-4xl font-black ${isLight ? 'bg-linear-to-br from-[#ff8a2a] via-[#ff5f40] to-[#ffb347] text-white shadow-[0_18px_40px_rgba(255,127,42,0.2)]' : 'bg-linear-to-br from-pink-500 via-purple-600 to-orange-500 text-white'}`}>
             {profile?.profilePictureUrl ? (
               <img alt="profile" className="h-full w-full rounded-[2rem] object-cover" src={buildAssetUrl(profile.profilePictureUrl) || ''} />
             ) : (
@@ -132,19 +132,19 @@ export function UserProfileModal({ open, onClose, onOpenProfileDetails }: UserPr
             )}
           </div>
           <div className="relative text-center">
-            <h2 className="text-3xl font-black">{firstName} {lastName}</h2>
-            <p className="mt-2 inline-flex rounded-full border border-pink-400/30 bg-pink-500/15 px-4 py-1 text-xs font-bold uppercase tracking-[0.2em] text-pink-200">
+            <h2 className={`text-3xl font-black ${isLight ? 'text-[#101828]' : 'text-white'}`}>{firstName} {lastName}</h2>
+            <p className={`mt-2 inline-flex rounded-full border px-4 py-1 text-xs font-bold uppercase tracking-[0.2em] ${isLight ? 'border-[rgba(255,138,196,0.38)] bg-linear-to-r from-[#ff8ac4]/14 via-[#ff5f40]/12 to-[#ff9f2a]/14 text-[#ff5f40]' : 'border-pink-400/30 bg-pink-500/15 text-pink-200'}`}>
               {role}
             </p>
           </div>
           <div className="relative w-full space-y-3">
-            <div className="flex items-center gap-3 rounded-2xl bg-white/5 px-4 py-3 text-sm text-white/90">
-              <Mail className="size-4 text-pink-400" />
+            <div className={`flex items-center gap-3 rounded-2xl px-4 py-3 text-sm ${isLight ? 'bg-white/80 text-[#1f2430] shadow-[0_10px_24px_rgba(255,159,42,0.08)]' : 'bg-white/5 text-white/90'}`}>
+              <Mail className={`size-4 ${isLight ? 'text-[#ff5f40]' : 'text-pink-400'}`} />
               <span className="truncate">{email}</span>
             </div>
             {phoneNumber && (
-              <div className="flex items-center gap-3 rounded-2xl bg-white/5 px-4 py-3 text-sm text-white/90">
-                <Phone className="size-4 text-pink-400" />
+              <div className={`flex items-center gap-3 rounded-2xl px-4 py-3 text-sm ${isLight ? 'bg-white/80 text-[#1f2430] shadow-[0_10px_24px_rgba(255,159,42,0.08)]' : 'bg-white/5 text-white/90'}`}>
+                <Phone className={`size-4 ${isLight ? 'text-[#ff5f40]' : 'text-pink-400'}`} />
                 <span className="truncate">{phoneNumber}</span>
               </div>
             )}
@@ -167,7 +167,7 @@ export function UserProfileModal({ open, onClose, onOpenProfileDetails }: UserPr
               }}
             >
               <div className="flex items-center gap-4">
-                <div className={`rounded-2xl p-4 ${isLight ? 'bg-purple-100 text-purple-600' : 'bg-purple-500/15 text-purple-200'}`}>
+                <div className={`rounded-2xl p-4 ${isLight ? 'bg-linear-to-br from-[#ff8ac4]/14 to-[#ff9f2a]/14 text-[#ff5f40]' : 'bg-purple-500/15 text-purple-200'}`}>
                   <UserCircle2 className="size-5" />
                 </div>
                 <div className="text-left">
@@ -181,7 +181,7 @@ export function UserProfileModal({ open, onClose, onOpenProfileDetails }: UserPr
             <div className={`rounded-[1.6rem] border p-5 ${isLight ? 'border-slate-100 bg-slate-50/80' : 'border-white/10 bg-white/5'} `}>
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex items-center gap-4">
-                  <div className={`rounded-2xl p-4 ${isLight ? 'bg-slate-100 text-slate-700' : 'bg-white/10 text-slate-100'}`}>
+                  <div className={`rounded-2xl p-4 ${isLight ? 'bg-linear-to-br from-[#ff8ac4]/12 to-[#ff9f2a]/12 text-[#ff5f40]' : 'bg-white/10 text-slate-100'}`}>
                     {isLight ? <Sun className="size-5" /> : <Moon className="size-5" />}
                   </div>
                   <div className="text-left">
@@ -192,7 +192,7 @@ export function UserProfileModal({ open, onClose, onOpenProfileDetails }: UserPr
                 <button
                   type="button"
                   onClick={toggleTheme}
-                  className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold transition ${isLight ? 'border-purple-200 bg-purple-600 text-white hover:bg-purple-700' : 'border-white/10 bg-white/10 text-white hover:bg-white/20'}`}
+                  className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold transition ${isLight ? 'border-[rgba(255,138,196,0.36)] bg-linear-to-r from-[#ff3a9b] via-[#ff5f40] to-[#ff9f2a] text-white hover:brightness-105' : 'border-white/10 bg-white/10 text-white hover:bg-white/20'}`}
                 >
                   {isLight ? <Moon className="size-4" /> : <Sun className="size-4" />}
                   {isLight ? t('darkMode', { ns: 'common' }) : t('lightMode', { ns: 'common' })}
@@ -214,7 +214,7 @@ export function UserProfileModal({ open, onClose, onOpenProfileDetails }: UserPr
                 <button
                   type="button"
                   onClick={() => setIsLanguageOpen((prev) => !prev)}
-                  className={`flex items-center gap-2 rounded-full border px-3 py-2 text-sm font-semibold transition ${isLight ? 'border-slate-200 bg-white text-slate-900 shadow-sm hover:bg-slate-100' : 'border-white/10 bg-[#110717] text-white shadow-sm hover:bg-white/10'}`}
+                  className={`flex items-center gap-2 rounded-full border px-3 py-2 text-sm font-semibold transition ${isLight ? 'border-[rgba(255,138,196,0.28)] bg-white text-[#2A2C31] shadow-sm hover:bg-[rgba(255,90,99,0.06)] hover:text-[#ff5f40]' : 'border-white/10 bg-[#110717] text-white shadow-sm hover:bg-white/10'}`}
                 >
                   <span className="text-[0.85rem]">{selectedLanguage.label}</span>
                   <ChevronDown className="size-4" />
@@ -222,7 +222,7 @@ export function UserProfileModal({ open, onClose, onOpenProfileDetails }: UserPr
               </div>
 
               {isLanguageOpen && (
-                <div className={`absolute right-0 top-full z-10 mt-3 overflow-hidden rounded-[1.4rem] border ${isLight ? 'border-slate-200 bg-white shadow-xl' : 'border-white/10 bg-[#12061d] shadow-[0_15px_45px_rgba(0,0,0,0.3)]'}`} style={{ minWidth: '200px', maxWidth: '240px' }}>
+                <div className={`absolute right-0 top-full z-10 mt-3 overflow-hidden rounded-[1.4rem] border ${isLight ? 'border-[rgba(255,138,196,0.24)] bg-white shadow-xl' : 'border-white/10 bg-[#12061d] shadow-[0_15px_45px_rgba(0,0,0,0.3)]'}`} style={{ minWidth: '200px', maxWidth: '240px' }}>
                   <div className="max-h-64 overflow-y-auto overscroll-contain">
                     {languageOptions.map((language) => {
                       const selected = currentLanguage === language.value;
@@ -231,7 +231,7 @@ export function UserProfileModal({ open, onClose, onOpenProfileDetails }: UserPr
                           key={language.value}
                           type="button"
                           onClick={() => void handleLanguageChange(language.value)}
-                          className={`flex w-full items-center justify-between gap-3 px-3 py-2 text-left text-sm transition ${selected ? (isLight ? 'bg-purple-50 text-purple-800' : 'bg-pink-500/10 text-pink-100') : (isLight ? 'text-slate-700 hover:bg-slate-100' : 'text-slate-300 hover:bg-white/5')}`}
+                          className={`flex w-full items-center justify-between gap-3 px-3 py-2 text-left text-sm transition ${selected ? (isLight ? 'bg-linear-to-r from-[#ff8ac4]/14 via-[#ff5f40]/12 to-[#ff9f2a]/14 text-[#ff5f40]' : 'bg-pink-500/10 text-pink-100') : (isLight ? 'text-slate-700 hover:bg-[rgba(255,90,99,0.06)]' : 'text-slate-300 hover:bg-white/5')}`}
                         >
                           <div className="flex items-center gap-3">
                             <span className="flex h-8 w-8 items-center justify-center rounded-2xl bg-[#1d142a] text-lg text-white">{language.icon}</span>

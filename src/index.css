@@ -66,6 +66,12 @@ body {
   background: #FDFDFD;
 }
 
+[data-theme='light'] {
+  --primary-color: #ff3a9b;
+  --accent-color: #ff9f2a;
+  --primary-gradient: linear-gradient(135deg, #ff3a9b 0%, #ff5f40 45%, #ff9f2a 100%);
+}
+
 [data-theme='light'] ::selection {
   background: rgba(124, 58, 237, 0.2);
   color: #2A2C31;
@@ -76,6 +82,15 @@ button,
 input,
 select {
   font: inherit;
+}
+
+button:not(:disabled),
+[role='button']:not(:disabled) {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
 }
 
 .custom-scrollbar {
@@ -297,15 +312,16 @@ select {
 }
 
 [data-theme='light'] .cyber-btn-ghost:hover {
-  background: rgba(124, 58, 237, 0.08);
+  background: rgba(255, 90, 99, 0.08);
 }
 
 [data-theme='light'] .cyber-btn-primary {
-  box-shadow: 0 8px 18px rgba(99, 102, 241, 0.16);
+  background: var(--primary-gradient);
+  box-shadow: 0 8px 18px rgba(255, 90, 99, 0.16);
 }
 
 [data-theme='light'] .cyber-btn-primary:hover {
-  box-shadow: 0 10px 22px rgba(99, 102, 241, 0.2);
+  box-shadow: 0 10px 22px rgba(255, 90, 99, 0.2);
 }
 
 [data-theme='dark'] .cyber-btn-primary {
@@ -410,7 +426,7 @@ select {
 }
 
 [data-theme='light'] .cyber-grid table tbody tr:hover {
-  background: rgba(237, 233, 254, 0.55) !important;
+  background: rgba(255, 90, 99, 0.08) !important;
 }
 
 [data-theme='light'] .cyber-grid table th,
@@ -424,17 +440,17 @@ select {
 }
 
 [data-theme='light'] .light-gradient-accent {
-  background: #8B5CF6;
+  background: var(--primary-gradient);
   color: #ffffff;
-  box-shadow: 0 10px 24px rgba(139, 92, 246, 0.28);
+  box-shadow: 0 10px 24px rgba(255, 90, 99, 0.22);
 }
 
 [data-theme='light'] .light-gradient-accent:hover {
-  box-shadow: 0 14px 28px rgba(139, 92, 246, 0.34);
+  box-shadow: 0 14px 28px rgba(255, 90, 99, 0.28);
 }
 
 [data-theme='light'] .cyber-grid [class*='text-rose-300'] {
-  color: #b45309 !important;
+  color: #ff5f40 !important;
 }
 
 [data-theme='light'] .cyber-grid [class*='text-emerald-600'] {
