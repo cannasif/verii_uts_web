@@ -124,18 +124,18 @@ export function Sidebar() {
       )}
       <aside
         className={cn(
-          `fixed left-0 top-0 z-40 flex h-screen max-w-[88vw] flex-col overflow-hidden border-r shadow-2xl backdrop-blur-xl transition-all duration-300 ${theme === 'light' ? 'border-purple-200/30 bg-white/95 shadow-purple-500/5' : 'border-[#ff7a55]/16 bg-[#11061d]/90'}`,
+          `fixed left-0 top-0 z-40 flex h-screen max-w-[88vw] flex-col overflow-hidden border-transparent shadow-2xl backdrop-blur-xl transition-all duration-300 after:pointer-events-none after:absolute after:inset-y-0 after:right-0 after:w-px after:bg-linear-to-b after:from-transparent after:via-white/10 after:to-transparent ${theme === 'light' ? 'bg-white/95 shadow-purple-500/5' : 'bg-[#11061d]/90'}`,
           isSidebarOpen ? 'w-[18rem] translate-x-0' : '-translate-x-full lg:translate-x-0',
           isSidebarCollapsed && 'lg:w-20',
         )}
       >
-        <div className={`flex h-24 items-center border-b px-4 ${theme === 'light' ? 'border-purple-200/30 bg-white/50' : 'border-white/10 bg-[#11061d]/88'} ${isSidebarCollapsed ? 'lg:justify-center' : 'justify-between'}`}>
+        <div className={`relative flex h-24 items-center border-transparent px-4 after:pointer-events-none after:absolute after:inset-x-0 after:bottom-0 after:h-px after:bg-linear-to-r after:from-transparent after:via-white/10 after:to-transparent ${theme === 'light' ? 'bg-white/50' : 'bg-[#11061d]/88'} ${isSidebarCollapsed ? 'lg:justify-center' : 'justify-between'}`}>
           <Link to="/" className="flex items-center gap-3">
-            <div className={`flex size-11 items-center justify-center rounded-2xl text-lg font-bold text-white flex-shrink-0 ${theme === 'light' ? 'bg-linear-to-r from-purple-600 to-purple-500' : 'bg-linear-to-r from-[#ff2f92] via-[#ff5a63] to-[#ff7f2a]'}`}>V</div>
+            <div className={`flex size-11 items-center justify-center rounded-2xl text-lg font-bold text-white flex-shrink-0 ${theme === 'light' ? 'bg-linear-to-r from-[#ff8a2a] via-[#ff5f40] to-[#ffb347]' : 'bg-linear-to-r from-[#ff2f92] via-[#ff5a63] to-[#ff7f2a]'}`}>V</div>
             {!isSidebarCollapsed && (
               <div>
-                <p className={`text-xs font-semibold uppercase tracking-[0.24em] ${theme === 'light' ? 'text-[#7C3AED]' : 'bg-linear-to-r from-[#ff8ac4] to-[#ffb067] bg-clip-text text-transparent'}`}>Verii</p>
-                <p className={`text-base font-semibold ${theme === 'light' ? 'text-[#2A2C31]' : 'bg-linear-to-r from-[#ffc4de] via-[#ff9f9f] to-[#ffc58e] bg-clip-text text-transparent'}`}>{t('utsPanel')}</p>
+                <p className={`text-xs font-semibold uppercase tracking-[0.24em] ${theme === 'light' ? 'bg-linear-to-r from-[#ff8a2a] via-[#ff5f40] to-[#ffb347] bg-clip-text text-transparent' : 'bg-linear-to-r from-[#ff8ac4] to-[#ffb067] bg-clip-text text-transparent'}`}>Verii</p>
+                <p className={`text-base font-semibold ${theme === 'light' ? 'bg-linear-to-r from-[#ff8a2a] via-[#ff5f40] to-[#ffb347] bg-clip-text text-transparent' : 'bg-linear-to-r from-[#ffc4de] via-[#ff9f9f] to-[#ffc58e] bg-clip-text text-transparent'}`}>{t('utsPanel')}</p>
               </div>
             )}
           </Link>
@@ -149,7 +149,7 @@ export function Sidebar() {
 
               toggleSidebarCollapsed();
             }}
-            className={`rounded-xl p-2 ${theme === 'light' ? 'text-[#5E626D] hover:bg-purple-100/50 hover:text-[#7C3AED]' : 'text-[#c8b5d8] hover:bg-white/6 hover:text-[#ffd5bf]'}`}
+            className={`rounded-xl p-2 ${theme === 'light' ? 'text-[#5E626D] hover:bg-[rgba(255,90,99,0.08)] hover:text-[#ff5f40]' : 'text-[#c8b5d8] hover:bg-white/6 hover:text-[#ffd5bf]'}`}
             aria-label="Toggle sidebar"
           >
             <Menu className="size-5" />
@@ -173,10 +173,10 @@ export function Sidebar() {
                     'px-3 py-2',
                     hasActiveChild
                       ? theme === 'light'
-                        ? 'bg-purple-100/50'
+                        ? 'bg-linear-to-r from-[#ff8ac4]/12 via-[#ff5f40]/10 to-[#ff9f2a]/12'
                         : 'bg-pink-500/15'
                       : theme === 'light'
-                        ? 'hover:bg-purple-50/60'
+                        ? 'hover:bg-[rgba(255,90,99,0.06)]'
                         : 'hover:bg-white/5',
                   )}
                   title={isSidebarCollapsed ? t(item.title) : undefined}
@@ -186,10 +186,10 @@ export function Sidebar() {
                       'flex size-9 items-center justify-center rounded-lg',
                       hasActiveChild
                         ? theme === 'light'
-                          ? 'bg-purple-200/60 text-[#7C3AED]'
+                          ? 'bg-linear-to-br from-[#ff8ac4]/18 to-[#ff9f2a]/18 text-[#ff5f40]'
                           : 'bg-pink-500/20 text-pink-300'
                         : theme === 'light'
-                          ? 'border border-purple-200/40 bg-white/60 text-[#5E626D]'
+                          ? 'border border-[rgba(255,138,196,0.28)] bg-white/60 text-[#ff5f40]'
                           : 'border border-[#ff7a55]/14 bg-[#1a0d2a]/68 text-[#d7c5e5]',
                     )}
                   >
@@ -200,7 +200,7 @@ export function Sidebar() {
                       'text-sm font-semibold',
                       isSidebarCollapsed ? 'hidden' : 'flex-1',
                       hasActiveChild
-                        ? 'text-[#7C3AED]'
+                        ? 'text-[#ff5f40]'
                         : theme === 'light'
                           ? 'text-[#2A2C31]'
                           : 'text-[#d9c9e8]',
@@ -220,7 +220,7 @@ export function Sidebar() {
                 </button>
 
                 {isExpanded && !isSidebarCollapsed && (
-                  <div className={`ml-12 mt-2 space-y-1 border-l pl-3 ${theme === 'light' ? 'border-purple-200/40' : 'border-white/10'}`}>
+                  <div className={`ml-12 mt-2 space-y-1 border-l pl-3 ${theme === 'light' ? 'border-[rgba(255,138,196,0.28)]' : 'border-white/10'}`}>
                     {item.children?.map((child) =>
                       child.href ? (
                         <Link
@@ -230,10 +230,10 @@ export function Sidebar() {
                             'flex items-center justify-between rounded-lg px-3 py-2 text-sm transition-colors',
                             location.pathname === child.href
                               ? theme === 'light'
-                                ? 'bg-purple-100/60 text-[#7C3AED] font-semibold'
+                                ? 'bg-linear-to-r from-[#ff8ac4]/14 via-[#ff5f40]/12 to-[#ff9f2a]/14 text-[#ff5f40] font-semibold'
                                 : 'bg-pink-500/15 bg-linear-to-r from-[#ff8bc7] to-[#ffb16b] bg-clip-text font-semibold text-transparent'
                               : theme === 'light'
-                                ? 'text-[#2A2C31] hover:bg-purple-50/60 hover:text-[#7C3AED]'
+                                ? 'text-[#2A2C31] hover:bg-[rgba(255,90,99,0.06)] hover:text-[#ff5f40]'
                                   : 'text-[#cfbfde] hover:bg-white/6 hover:text-[#ffd2bb]',
                           )}
                           onClick={() => {

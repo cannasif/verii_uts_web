@@ -24,14 +24,14 @@ function StatCard({ title, value, tone = 'default', isLight }: { title: string; 
   const colorClassName =
     tone === 'danger'
       ? isLight
-        ? 'text-rose-600'
+        ? 'text-[#ff5f40]'
         : 'text-rose-300'
       : tone === 'success'
         ? isLight
-          ? 'text-emerald-600'
+          ? 'text-[#ff9f2a]'
           : 'text-emerald-300'
         : isLight
-          ? 'text-fuchsia-700'
+          ? 'text-[#ff7a18]'
           : 'text-sky-100';
 
   return (
@@ -102,7 +102,7 @@ export function HangfireMonitoringPage() {
           <Card className="p-5">
             <div className="mb-4 flex items-center justify-between">
               <div>
-                <h2 className="bg-linear-to-r from-pink-200 to-cyan-200 bg-clip-text text-lg font-semibold text-transparent">{t('failed.title')}</h2>
+                <h2 className={`text-lg font-semibold ${isLight ? 'bg-linear-to-r from-[#ff8a2a] via-[#ff5f40] to-[#ffb347] bg-clip-text text-transparent' : 'bg-linear-to-r from-pink-200 to-cyan-200 bg-clip-text text-transparent'}`}>{t('failed.title')}</h2>
                 <p className={`mt-1 text-sm ${isLight ? 'text-slate-600' : 'text-slate-300'}`}>{t('failed.description')}</p>
               </div>
               <span className={`text-sm ${isLight ? 'text-slate-600' : 'text-slate-300'}`}>
@@ -110,19 +110,19 @@ export function HangfireMonitoringPage() {
               </span>
             </div>
 
-            <div className={`overflow-hidden rounded-3xl border ${isLight ? 'border-fuchsia-200/70 bg-[#f5eeff]/82' : 'border-white/12 bg-[#140d24]/72'}`}>
+            <div className={`overflow-hidden rounded-3xl border ${isLight ? 'border-[rgba(255,138,42,0.24)] bg-[#fff6eb]/88' : 'border-white/12 bg-[#140d24]/72'}`}>
               <div className="overflow-x-auto">
-                <table className={`min-w-full divide-y ${isLight ? 'divide-fuchsia-200/60' : 'divide-white/10'}`}>
-                  <thead className={isLight ? 'bg-[#ece0ff]/80' : 'bg-[#1f1432]/80'}>
+                <table className={`min-w-full divide-y ${isLight ? 'divide-[rgba(255,138,42,0.18)]' : 'divide-white/10'}`}>
+                  <thead className={isLight ? 'bg-[#ffe8cf]/80' : 'bg-[#1f1432]/80'}>
                     <tr>
-                      <th className={`px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide ${isLight ? 'text-fuchsia-700' : 'text-sky-200'}`}>{t('table.jobId')}</th>
-                      <th className={`px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide ${isLight ? 'text-fuchsia-700' : 'text-sky-200'}`}>{t('table.jobName')}</th>
-                      <th className={`px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide ${isLight ? 'text-fuchsia-700' : 'text-sky-200'}`}>{t('table.state')}</th>
-                      <th className={`px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide ${isLight ? 'text-fuchsia-700' : 'text-sky-200'}`}>{t('table.time')}</th>
-                      <th className={`px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide ${isLight ? 'text-fuchsia-700' : 'text-sky-200'}`}>{t('table.reason')}</th>
+                      <th className={`px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide ${isLight ? 'text-[#ff7a18]' : 'text-sky-200'}`}>{t('table.jobId')}</th>
+                      <th className={`px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide ${isLight ? 'text-[#ff7a18]' : 'text-sky-200'}`}>{t('table.jobName')}</th>
+                      <th className={`px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide ${isLight ? 'text-[#ff7a18]' : 'text-sky-200'}`}>{t('table.state')}</th>
+                      <th className={`px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide ${isLight ? 'text-[#ff7a18]' : 'text-sky-200'}`}>{t('table.time')}</th>
+                      <th className={`px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide ${isLight ? 'text-[#ff7a18]' : 'text-sky-200'}`}>{t('table.reason')}</th>
                     </tr>
                   </thead>
-                  <tbody className={`divide-y ${isLight ? 'divide-fuchsia-200/60 bg-[#f8f2ff]/90' : 'divide-white/10 bg-[#140d24]/72'}`}>
+                  <tbody className={`divide-y ${isLight ? 'divide-[rgba(255,138,42,0.14)] bg-[#fffaf4]/92' : 'divide-white/10 bg-[#140d24]/72'}`}>
                     {(failedQuery.data?.data.items ?? []).length === 0 ? (
                       <tr>
                         <td className={`px-4 py-8 text-center text-sm ${isLight ? 'text-slate-600' : 'text-slate-300'}`} colSpan={5}>
@@ -134,7 +134,7 @@ export function HangfireMonitoringPage() {
                         <tr key={`${item.jobId}-${item.failedAt ?? item.enqueuedAt ?? 'failed'}`}>
                           <td className={`px-4 py-3 text-xs ${isLight ? 'text-slate-600' : 'text-slate-300'}`}>{item.jobId}</td>
                           <td className={`px-4 py-3 text-sm font-medium ${isLight ? 'text-slate-800' : 'text-slate-100'}`}>{item.jobName}</td>
-                          <td className={`px-4 py-3 text-sm ${isLight ? 'text-rose-600' : 'text-rose-300'}`}>{item.state || t('table.failedState')}</td>
+                          <td className={`px-4 py-3 text-sm ${isLight ? 'text-[#ff5f40]' : 'text-rose-300'}`}>{item.state || t('table.failedState')}</td>
                           <td className={`px-4 py-3 text-sm ${isLight ? 'text-slate-600' : 'text-slate-300'}`}>{formatDate(item.failedAt)}</td>
                           <td className={`max-w-[360px] truncate px-4 py-3 text-sm ${isLight ? 'text-slate-600' : 'text-slate-300'}`} title={item.reason}>
                             {item.reason || '-'}
@@ -160,7 +160,7 @@ export function HangfireMonitoringPage() {
           <Card className="p-5">
             <div className="mb-4 flex items-center justify-between">
               <div>
-                <h2 className="bg-linear-to-r from-pink-200 to-cyan-200 bg-clip-text text-lg font-semibold text-transparent">{t('deadLetter.title')}</h2>
+                <h2 className={`text-lg font-semibold ${isLight ? 'bg-linear-to-r from-[#ff8a2a] via-[#ff5f40] to-[#ffb347] bg-clip-text text-transparent' : 'bg-linear-to-r from-pink-200 to-cyan-200 bg-clip-text text-transparent'}`}>{t('deadLetter.title')}</h2>
                 <p className={`mt-1 text-sm ${isLight ? 'text-slate-600' : 'text-slate-300'}`}>{t('deadLetter.description')}</p>
               </div>
               <span className={`text-sm ${isLight ? 'text-slate-600' : 'text-slate-300'}`}>
@@ -168,19 +168,19 @@ export function HangfireMonitoringPage() {
               </span>
             </div>
 
-            <div className={`overflow-hidden rounded-3xl border ${isLight ? 'border-fuchsia-200/70 bg-[#f5eeff]/82' : 'border-white/12 bg-[#140d24]/72'}`}>
+            <div className={`overflow-hidden rounded-3xl border ${isLight ? 'border-[rgba(255,138,42,0.24)] bg-[#fff6eb]/88' : 'border-white/12 bg-[#140d24]/72'}`}>
               <div className="overflow-x-auto">
-                <table className={`min-w-full divide-y ${isLight ? 'divide-fuchsia-200/60' : 'divide-white/10'}`}>
-                  <thead className={isLight ? 'bg-[#ece0ff]/80' : 'bg-[#1f1432]/80'}>
+                <table className={`min-w-full divide-y ${isLight ? 'divide-[rgba(255,138,42,0.18)]' : 'divide-white/10'}`}>
+                  <thead className={isLight ? 'bg-[#ffe8cf]/80' : 'bg-[#1f1432]/80'}>
                     <tr>
-                      <th className={`px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide ${isLight ? 'text-fuchsia-700' : 'text-sky-200'}`}>{t('table.jobId')}</th>
-                      <th className={`px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide ${isLight ? 'text-fuchsia-700' : 'text-sky-200'}`}>{t('table.jobName')}</th>
-                      <th className={`px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide ${isLight ? 'text-fuchsia-700' : 'text-sky-200'}`}>{t('table.state')}</th>
-                      <th className={`px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide ${isLight ? 'text-fuchsia-700' : 'text-sky-200'}`}>{t('table.time')}</th>
-                      <th className={`px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide ${isLight ? 'text-fuchsia-700' : 'text-sky-200'}`}>{t('table.reason')}</th>
+                      <th className={`px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide ${isLight ? 'text-[#ff7a18]' : 'text-sky-200'}`}>{t('table.jobId')}</th>
+                      <th className={`px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide ${isLight ? 'text-[#ff7a18]' : 'text-sky-200'}`}>{t('table.jobName')}</th>
+                      <th className={`px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide ${isLight ? 'text-[#ff7a18]' : 'text-sky-200'}`}>{t('table.state')}</th>
+                      <th className={`px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide ${isLight ? 'text-[#ff7a18]' : 'text-sky-200'}`}>{t('table.time')}</th>
+                      <th className={`px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide ${isLight ? 'text-[#ff7a18]' : 'text-sky-200'}`}>{t('table.reason')}</th>
                     </tr>
                   </thead>
-                  <tbody className={`divide-y ${isLight ? 'divide-fuchsia-200/60 bg-[#f8f2ff]/90' : 'divide-white/10 bg-[#140d24]/72'}`}>
+                  <tbody className={`divide-y ${isLight ? 'divide-[rgba(255,138,42,0.14)] bg-[#fffaf4]/92' : 'divide-white/10 bg-[#140d24]/72'}`}>
                     {(deadLetterQuery.data?.data.items ?? []).length === 0 ? (
                       <tr>
                         <td className={`px-4 py-8 text-center text-sm ${isLight ? 'text-slate-600' : 'text-slate-300'}`} colSpan={5}>
@@ -192,7 +192,7 @@ export function HangfireMonitoringPage() {
                         <tr key={`${item.jobId}-${item.enqueuedAt ?? 'dead-letter'}`}>
                           <td className={`px-4 py-3 text-xs ${isLight ? 'text-slate-600' : 'text-slate-300'}`}>{item.jobId}</td>
                           <td className={`px-4 py-3 text-sm font-medium ${isLight ? 'text-slate-800' : 'text-slate-100'}`}>{item.jobName}</td>
-                          <td className={`px-4 py-3 text-sm ${isLight ? 'text-amber-600' : 'text-amber-300'}`}>{item.state || t('table.enqueuedState')}</td>
+                          <td className={`px-4 py-3 text-sm ${isLight ? 'text-[#ff9f2a]' : 'text-amber-300'}`}>{item.state || t('table.enqueuedState')}</td>
                           <td className={`px-4 py-3 text-sm ${isLight ? 'text-slate-600' : 'text-slate-300'}`}>{formatDate(item.enqueuedAt)}</td>
                           <td className={`max-w-[360px] truncate px-4 py-3 text-sm ${isLight ? 'text-slate-600' : 'text-slate-300'}`} title={item.reason}>
                             {item.reason || '-'}

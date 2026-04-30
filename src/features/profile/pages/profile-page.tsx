@@ -73,9 +73,9 @@ export function ProfilePage() {
         description={t('profileDetailsDescription', { ns: 'user-detail-management' })}
       />
 
-      <Card className="p-4 sm:p-6">
-        <div className={`mb-8 flex flex-col items-center gap-4 rounded-[2rem] p-6 ${isLight ? 'bg-slate-50/80' : 'bg-[#120b1f]/70 border border-white/10'}`}>
-          <div className={`flex size-28 items-center justify-center overflow-hidden rounded-[2rem] text-3xl font-black text-white ${isLight ? 'bg-linear-to-br from-purple-600 to-purple-500' : 'bg-linear-to-br from-pink-500 via-purple-600 to-orange-500'}`}>
+      <Card className={`p-4 sm:p-6 ${isLight ? 'border border-[rgba(255,138,42,0.14)] bg-linear-to-br from-white via-[#fffaf5] to-[#fff2e4] shadow-[0_18px_45px_rgba(255,159,42,0.08)]' : ''}`}>
+        <div className={`mb-8 flex flex-col items-center gap-4 rounded-[2rem] p-6 ${isLight ? 'border border-[rgba(255,138,42,0.12)] bg-white/80 shadow-[0_18px_40px_rgba(255,159,42,0.08)]' : 'bg-[#120b1f]/70 border border-white/10'}`}>
+          <div className={`flex size-28 items-center justify-center overflow-hidden rounded-[2rem] text-3xl font-black text-white ${isLight ? 'bg-linear-to-br from-[#ff8a2a] via-[#ff5f40] to-[#ffb347] shadow-[0_16px_38px_rgba(255,127,42,0.22)]' : 'bg-linear-to-br from-pink-500 via-purple-600 to-orange-500'}`}>
             {localPreviewUrl || profileQuery.data?.data.profilePictureUrl ? (
               <img
                 alt="profile"
@@ -86,7 +86,7 @@ export function ProfilePage() {
               `${profileQuery.data?.data.firstName?.[0] ?? ''}${profileQuery.data?.data.lastName?.[0] ?? ''}`
             )}
           </div>
-          <label className={`inline-flex cursor-pointer items-center gap-2 rounded-2xl border px-4 py-2 text-sm font-medium transition ${isLight ? 'border-purple-200/50 bg-white text-slate-700 hover:border-purple-300 hover:text-[#7C3AED]' : 'border-white/12 bg-[#1a132b]/85 text-slate-200 hover:border-pink-400/50 hover:text-pink-300'}`}>
+          <label className={`inline-flex cursor-pointer items-center gap-2 rounded-2xl border px-4 py-2 text-sm font-medium transition ${isLight ? 'border-[rgba(255,138,42,0.18)] bg-white text-[#2A2C31] shadow-[0_10px_24px_rgba(255,159,42,0.08)] hover:border-[rgba(255,138,42,0.32)] hover:text-[#ff5f40]' : 'border-white/12 bg-[#1a132b]/85 text-slate-200 hover:border-pink-400/50 hover:text-pink-300'}`}>
             <Camera className="size-4" />
             {t('uploadImage', { ns: 'common' })}
             <input
@@ -108,22 +108,31 @@ export function ProfilePage() {
           className="grid gap-5 lg:grid-cols-2"
           onSubmit={handleSubmit((values) => updateMutation.mutate(values))}
         >
-          <div>
+          <div className={`rounded-[1.4rem] p-4 ${isLight ? 'border border-[rgba(255,138,42,0.32)] bg-[#fff7ed] ring-1 ring-[rgba(255,138,42,0.08)] shadow-[0_12px_26px_rgba(255,159,42,0.09)]' : ''}`}>
             <label className={`mb-2 block text-sm font-medium ${isLight ? 'text-slate-700' : 'text-slate-200'}`}>{t('phone', { ns: 'common' })}</label>
-            <Input {...register('phoneNumber')} />
+            <Input
+              {...register('phoneNumber')}
+              className={isLight ? 'border-[rgba(255,138,42,0.42)] bg-[#fffdf8] text-[#101828] shadow-[inset_0_1px_0_rgba(255,255,255,0.98),0_8px_18px_rgba(255,159,42,0.08)] placeholder:text-slate-400 focus:border-[#ff9f2a] focus:bg-white' : undefined}
+            />
           </div>
-          <div>
+          <div className={`rounded-[1.4rem] p-4 ${isLight ? 'border border-[rgba(255,138,42,0.32)] bg-[#fff7ed] ring-1 ring-[rgba(255,138,42,0.08)] shadow-[0_12px_26px_rgba(255,159,42,0.09)]' : ''}`}>
             <label className={`mb-2 block text-sm font-medium ${isLight ? 'text-slate-700' : 'text-slate-200'}`}>{t('jobTitle', { ns: 'common' })}</label>
-            <Input {...register('jobTitle')} />
+            <Input
+              {...register('jobTitle')}
+              className={isLight ? 'border-[rgba(255,138,42,0.42)] bg-[#fffdf8] text-[#101828] shadow-[inset_0_1px_0_rgba(255,255,255,0.98),0_8px_18px_rgba(255,159,42,0.08)] placeholder:text-slate-400 focus:border-[#ff9f2a] focus:bg-white' : undefined}
+            />
           </div>
-          <div>
+          <div className={`rounded-[1.4rem] p-4 ${isLight ? 'border border-[rgba(255,138,42,0.32)] bg-[#fff7ed] ring-1 ring-[rgba(255,138,42,0.08)] shadow-[0_12px_26px_rgba(255,159,42,0.09)]' : ''}`}>
             <label className={`mb-2 block text-sm font-medium ${isLight ? 'text-slate-700' : 'text-slate-200'}`}>{t('department', { ns: 'common' })}</label>
-            <Input {...register('department')} />
+            <Input
+              {...register('department')}
+              className={isLight ? 'border-[rgba(255,138,42,0.42)] bg-[#fffdf8] text-[#101828] shadow-[inset_0_1px_0_rgba(255,255,255,0.98),0_8px_18px_rgba(255,159,42,0.08)] placeholder:text-slate-400 focus:border-[#ff9f2a] focus:bg-white' : undefined}
+            />
           </div>
-          <div className="lg:col-span-2">
+          <div className={`lg:col-span-2 rounded-[1.4rem] p-4 ${isLight ? 'border border-[rgba(255,138,42,0.32)] bg-[#fff7ed] ring-1 ring-[rgba(255,138,42,0.08)] shadow-[0_12px_26px_rgba(255,159,42,0.09)]' : ''}`}>
             <label className={`mb-2 block text-sm font-medium ${isLight ? 'text-slate-700' : 'text-slate-200'}`}>{t('bio', { ns: 'common' })}</label>
             <textarea
-              className={`min-h-36 w-full rounded-2xl border px-4 py-3 text-sm outline-none transition ${isLight ? 'border-slate-200 bg-white/90 text-slate-900 focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100' : 'border-white/12 bg-[#120b1f]/82 text-slate-100 focus:border-pink-400/60 focus:ring-4 focus:ring-pink-500/20'}`}
+              className={`min-h-36 w-full rounded-2xl border px-4 py-3 text-sm outline-none transition ${isLight ? 'border-[rgba(255,138,42,0.42)] bg-[#fffdf8] text-[#101828] shadow-[inset_0_1px_0_rgba(255,255,255,0.98),0_10px_24px_rgba(255,159,42,0.08)] focus:border-[#ff9f2a] focus:ring-4 focus:ring-[rgba(255,159,42,0.16)]' : 'border-white/12 bg-[#120b1f]/82 text-slate-100 focus:border-pink-400/60 focus:ring-4 focus:ring-pink-500/20'}`}
               {...register('bio')}
             />
           </div>
