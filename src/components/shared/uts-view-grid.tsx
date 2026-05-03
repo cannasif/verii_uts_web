@@ -110,6 +110,9 @@ export function UtsViewGrid<TRow>({
   return (
     <AppDataGrid
       pageKey={pageKey}
+      tableSurface="glass"
+      surfaceTone="airy"
+      controlChrome="connection-glass"
       userId={userId}
       searchValue={searchValue}
       onSearchValueChange={setSearchValue}

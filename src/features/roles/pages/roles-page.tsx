@@ -33,9 +33,9 @@ function getRoleBadgeMeta(roleName: string, isLight: boolean) {
     return {
       Icon: UserRound,
       badgeClassName: isLight
-        ? 'border-orange-300/60 bg-orange-100/80 text-orange-700 shadow-[0_0_14px_rgba(249,115,22,0.14)]'
+        ? 'border-violet-300/60 bg-violet-100/90 text-violet-800 shadow-[0_0_14px_rgba(139,92,246,0.14)]'
         : 'border-white/16 bg-white/6 text-sky-200 shadow-[0_8px_22px_rgba(2,4,14,0.22)]',
-      iconClassName: isLight ? 'text-orange-600' : 'text-sky-200',
+      iconClassName: isLight ? 'text-violet-600' : 'text-sky-200',
     };
   }
 
@@ -72,9 +72,9 @@ function getAvatarPalette(index: number, isLight: boolean) {
 
   const palettes = [
     'border-fuchsia-300/60 bg-fuchsia-100 text-fuchsia-700',
-    'border-orange-300/60 bg-orange-100 text-orange-700',
-    'border-cyan-300/60 bg-cyan-100 text-cyan-700',
-    'border-violet-300/60 bg-violet-100 text-violet-700',
+    'border-indigo-300/60 bg-indigo-100 text-indigo-800',
+    'border-cyan-300/60 bg-cyan-100 text-cyan-800',
+    'border-violet-300/60 bg-violet-100 text-violet-800',
   ];
 
   return palettes[index % palettes.length];
@@ -94,7 +94,7 @@ function getRolePermissionKeys(roleName: string): Array<'read' | 'write' | 'dele
 function getPermissionChipClass(permission: 'read' | 'write' | 'delete', isLight: boolean) {
   if (isLight) {
     if (permission === 'delete') return 'border-rose-300/60 bg-rose-100 text-rose-700';
-    if (permission === 'write') return 'border-amber-300/60 bg-amber-100 text-amber-700';
+    if (permission === 'write') return 'border-sky-300/60 bg-sky-100 text-sky-800';
     return 'border-emerald-300/60 bg-emerald-100 text-emerald-700';
   }
 
@@ -118,6 +118,7 @@ export function RolesPage() {
   const defaultColumnOrder = ['name', 'memberCount', 'description', 'actions'];
   const [visibleColumnKeys, setVisibleColumnKeys] = useState<string[]>(defaultColumnOrder);
   const [columnOrder, setColumnOrder] = useState<string[]>(defaultColumnOrder);
+  const querySortBy = sortBy === 'memberCount' ? 'name' : sortBy;
 
   useEffect(() => {
     const preferences = loadColumnPreferences('roles-grid', user?.id, defaultColumnOrder);
@@ -156,13 +157,13 @@ export function RolesPage() {
   }, [columnOrder, visibleColumnKeys]);
 
   const rolesQuery = useQuery({
-    queryKey: ['roles', pageNumber, pageSize, search, sortBy, sortDirection, appliedFilterRows],
+    queryKey: ['roles', pageNumber, pageSize, search, querySortBy, sortDirection, appliedFilterRows],
     queryFn: () =>
       searchRoles({
         pageNumber,
         pageSize,
         search,
-        sortBy,
+        sortBy: querySortBy,
         sortDirection,
         filters: rowsToBackendFilters(appliedFilterRows),
         filterLogic: 'and',
@@ -193,7 +194,14 @@ export function RolesPage() {
     return map;
   }, [usersForRoleCountsQuery.data?.data]);
 
-  const columns = useMemo<DataGridColumn<Role>[]>(() => [
+  const rolesWithMemberCount = useMemo(() => {
+    return (rolesQuery.data?.data ?? []).map((role) => ({
+      ...role,
+      memberCount: roleMemberMap.get(role.name.trim().toLowerCase())?.length ?? 0,
+    }));
+  }, [roleMemberMap, rolesQuery.data?.data]);
+
+  const columns = useMemo<DataGridColumn<Role & { memberCount: number }>[]>(() => [
     {
       key: 'name',
       label: t('role', { ns: 'common' }),
@@ -218,6 +226,7 @@ export function RolesPage() {
     {
       key: 'memberCount',
       label: t('memberCount', { ns: 'role-management' }),
+      sortable: true,
       render: (row) => {
         const members = roleMemberMap.get(row.name.trim().toLowerCase()) ?? [];
         const previewMembers = members.slice(0, 4);
@@ -252,7 +261,7 @@ export function RolesPage() {
           </div>
         );
       },
-      exportValue: (row) => roleMemberMap.get(row.name.trim().toLowerCase())?.length ?? 0,
+      exportValue: (row) => row.memberCount,
     },
     {
       key: 'description',
@@ -313,6 +322,10 @@ export function RolesPage() {
       />
       <AppDataGrid
         pageKey="roles-grid"
+        tableSurface="glass"
+        surfaceTone="airy"
+        rowDensity="compact"
+        controlChrome="connection-glass"
         userId={user?.id}
         searchValue={search}
         onSearchValueChange={(value) => {
@@ -325,7 +338,7 @@ export function RolesPage() {
         columnOrder={columnOrder}
         onVisibleColumnKeysChange={setVisibleColumnKeys}
         onColumnOrderChange={setColumnOrder}
-        rows={rolesQuery.data?.data ?? []}
+        rows={rolesWithMemberCount}
         rowKey={(row) => row.id}
         sortBy={sortBy}
         sortDirection={sortDirection}
@@ -351,7 +364,7 @@ export function RolesPage() {
         }}
         compactFooterControls
         exportFileName="roles"
-        exportRows={(rolesQuery.data?.data ?? []).map((role) => ({ name: role.name, memberCount: roleMemberMap.get(role.name.trim().toLowerCase())?.length ?? 0, description: role.description }))}
+        exportRows={rolesWithMemberCount.map((role) => ({ name: role.name, memberCount: role.memberCount, description: role.description }))}
         filterColumns={[
           { value: 'name', label: t('role', { ns: 'common' }), type: 'string' },
           { value: 'description', label: t('descriptionColumn', { ns: 'role-management' }), type: 'string' },

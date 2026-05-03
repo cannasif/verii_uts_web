@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import i18n from '@/lib/i18n';
+import { cn } from '@/lib/utils';
 import { createUser } from '@/features/users/api/users-api';
 import { searchRoles } from '@/features/roles/api/roles-api';
 import { searchPermissionGroups } from '@/features/permission-groups/api/permission-groups-api';
@@ -28,6 +29,12 @@ const schema = z.object({
 });
 
 type FormValues = z.infer<typeof schema>;
+
+const inputLight =
+  'border-slate-300/45 bg-white/78 text-[#1a1525] shadow-[inset_0_1px_0_rgba(255,255,255,0.55),0_4px_14px_rgba(15,23,42,0.04)] placeholder:text-slate-400 focus:border-fuchsia-400/45 focus:ring-2 focus:ring-fuchsia-500/11';
+
+const inputDark =
+  '!h-12 !rounded-xl !border-white/[0.07] !bg-[rgba(10,8,16,0.48)] !text-slate-100 !backdrop-blur-xl placeholder:!text-slate-500 !shadow-none focus:!border-pink-400/32 focus:!shadow-[0_0_0_1px_rgba(236,72,153,0.1)] focus:!ring-0';
 
 interface CreateUserPanelProps {
   open: boolean;
@@ -107,57 +114,90 @@ export function CreateUserPanel({ open, onClose }: CreateUserPanelProps) {
 
   const requiredMark = <span className="ml-1 text-rose-500">*</span>;
 
+  const fieldLabel = isLight ? 'text-[#5E626D]' : 'text-slate-300';
+
   return (
-    <div className={`fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 ${isLight ? 'bg-slate-950/30' : 'bg-[#04010a]/68 backdrop-blur-[3px]'}`}>
-      <Card className={`custom-scrollbar w-full max-w-2xl overflow-y-auto p-5 sm:p-7 ${isLight ? 'max-h-[92vh]' : 'max-h-[90vh] border-white/12 bg-[#120b1f]/90 shadow-[0_28px_80px_rgba(2,4,14,0.6)] backdrop-blur-2xl'}`}>
-          <div className="flex items-start justify-between gap-4">
+    <div
+      className={cn(
+        'fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6',
+        isLight ? 'bg-slate-900/28 backdrop-blur-sm' : 'bg-[#06030f]/58 backdrop-blur-md',
+      )}
+      role="presentation"
+    >
+      <Card
+        className={cn(
+          'custom-scrollbar relative isolate w-full max-w-2xl overflow-y-auto rounded-[18px] p-5 sm:p-7 max-h-[92vh]',
+          isLight
+            ? 'border border-slate-200/22 bg-white/52 shadow-[0_20px_56px_rgba(15,23,42,0.09),inset_0_1px_0_rgba(255,255,255,0.34)] backdrop-blur-xl'
+            : 'dashboard-section-panel border border-white/[0.06] shadow-[0_28px_72px_rgba(0,0,0,0.42)] backdrop-blur-xl',
+        )}
+      >
+        {!isLight ? (
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-white/[0.14] to-transparent"
+          />
+        ) : null}
+
+        <div className="relative flex items-start justify-between gap-4">
           <div>
-            <h2 className={`text-xl font-semibold ${isLight ? 'text-slate-900' : 'text-slate-100'}`}>{t('newUser', { ns: 'common' })}</h2>
-            <p className={`mt-1 text-sm ${isLight ? 'text-slate-500' : 'text-slate-400'}`}>{t('createUserDescription', { ns: 'user-management' })}</p>
+            <h2 className={cn('text-xl font-semibold', isLight ? 'text-slate-900' : 'text-slate-100')}>{t('newUser', { ns: 'common' })}</h2>
+            <p className={cn('mt-1 text-sm', isLight ? 'text-slate-600' : 'text-slate-400')}>{t('createUserDescription', { ns: 'user-management' })}</p>
           </div>
-          <Button variant="ghost" onClick={onClose}>{t('close', { ns: 'common' })}</Button>
+          <Button
+            variant="ghost"
+            className={cn(
+              'shrink-0 rounded-xl',
+              isLight ? 'text-slate-600 hover:bg-slate-100' : 'text-slate-300 hover:bg-white/[0.06] hover:text-white',
+            )}
+            onClick={onClose}
+          >
+            {t('close', { ns: 'common' })}
+          </Button>
         </div>
 
-        <form
-          className="mt-6 space-y-5"
-          onSubmit={handleSubmit((values) => createMutation.mutate(values))}
-        >
+        <form className="relative mt-6 space-y-5" onSubmit={handleSubmit((values) => createMutation.mutate(values))}>
           <div className="grid gap-5 md:grid-cols-2">
             <div>
-              <label className={`mb-2 block text-sm font-medium ${isLight ? 'text-slate-700' : 'text-slate-200'}`}>
-                {t('firstName', { ns: 'common' })}{requiredMark}
+              <label className={cn('mb-2 block text-sm font-medium', fieldLabel)}>
+                {t('firstName', { ns: 'common' })}
+                {requiredMark}
               </label>
-              <Input {...register('firstName')} />
+              <Input {...register('firstName')} className={isLight ? inputLight : inputDark} />
               {errors.firstName && <p className="mt-2 text-sm text-rose-500">{errors.firstName.message}</p>}
             </div>
             <div>
-              <label className={`mb-2 block text-sm font-medium ${isLight ? 'text-slate-700' : 'text-slate-200'}`}>
-                {t('lastName', { ns: 'common' })}{requiredMark}
+              <label className={cn('mb-2 block text-sm font-medium', fieldLabel)}>
+                {t('lastName', { ns: 'common' })}
+                {requiredMark}
               </label>
-              <Input {...register('lastName')} />
+              <Input {...register('lastName')} className={isLight ? inputLight : inputDark} />
               {errors.lastName && <p className="mt-2 text-sm text-rose-500">{errors.lastName.message}</p>}
             </div>
           </div>
 
           <div>
-            <label className={`mb-2 block text-sm font-medium ${isLight ? 'text-slate-700' : 'text-slate-200'}`}>
-              {t('email', { ns: 'common' })}{requiredMark}
+            <label className={cn('mb-2 block text-sm font-medium', fieldLabel)}>
+              {t('email', { ns: 'common' })}
+              {requiredMark}
             </label>
-            <Input {...register('email')} />
+            <Input {...register('email')} className={isLight ? inputLight : inputDark} />
             {errors.email && <p className="mt-2 text-sm text-rose-500">{errors.email.message}</p>}
           </div>
 
           <div>
-            <label className={`mb-2 block text-sm font-medium ${isLight ? 'text-slate-700' : 'text-slate-200'}`}>
-              {t('password', { ns: 'common' })}{requiredMark}
+            <label className={cn('mb-2 block text-sm font-medium', fieldLabel)}>
+              {t('password', { ns: 'common' })}
+              {requiredMark}
             </label>
-            <Input {...register('password')} type="password" />
+            <Input {...register('password')} className={isLight ? inputLight : inputDark} type="password" />
             {errors.password && <p className="mt-2 text-sm text-rose-500">{errors.password.message}</p>}
           </div>
 
           <div>
-            <label className={`mb-2 block text-sm font-medium ${isLight ? 'text-slate-700' : 'text-slate-200'}`}>
-              {t('role', { ns: 'common' })}{requiredMark}
+            <label className={cn('mb-2 block text-sm font-medium', fieldLabel)}>
+              {t('role', { ns: 'common' })}
+              {requiredMark}
             </label>
             <input type="hidden" {...register('roleId', { valueAsNumber: true })} />
             <VoiceSearchCombobox
@@ -184,14 +224,19 @@ export function CreateUserPanel({ open, onClose }: CreateUserPanelProps) {
           </div>
 
           <div>
-            <label className={`mb-2 block text-sm font-medium ${isLight ? 'text-slate-700' : 'text-slate-200'}`}>{t('permissionGroupsLabel', { ns: 'common' })}</label>
+            <label className={cn('mb-2 block text-sm font-medium', fieldLabel)}>{t('permissionGroupsLabel', { ns: 'common' })}</label>
             <div className="grid gap-3">
               {permissionGroups.map((group) => {
                 const checked = selectedPermissionGroupIds.includes(group.id);
                 return (
                   <label
                     key={group.id}
-                    className={`flex items-start gap-3 rounded-2xl border px-4 py-3 ${isLight ? 'border-fuchsia-200/70 bg-fuchsia-50/75' : 'border-white/12 bg-[#160f26]/78'}`}
+                    className={cn(
+                      'flex items-start gap-3 rounded-xl border px-4 py-3 backdrop-blur-md transition-colors',
+                      isLight
+                        ? 'border-slate-300/35 bg-white/70 hover:border-fuchsia-300/40'
+                        : 'border-white/[0.06] bg-[rgba(14,12,22,0.42)] hover:border-pink-400/22',
+                    )}
                   >
                     <input
                       checked={checked}
@@ -205,8 +250,8 @@ export function CreateUserPanel({ open, onClose }: CreateUserPanelProps) {
                       }}
                     />
                     <span>
-                      <span className={`block text-sm font-semibold ${isLight ? 'text-slate-800' : 'text-slate-100'}`}>{group.name}</span>
-                      <span className={`mt-1 block text-xs ${isLight ? 'text-slate-600' : 'text-slate-300'}`}>{group.description}</span>
+                      <span className={cn('block text-sm font-semibold', isLight ? 'text-slate-800' : 'text-slate-100')}>{group.name}</span>
+                      <span className={cn('mt-1 block text-xs', isLight ? 'text-slate-600' : 'text-slate-400')}>{group.description}</span>
                     </span>
                   </label>
                 );
@@ -215,10 +260,19 @@ export function CreateUserPanel({ open, onClose }: CreateUserPanelProps) {
           </div>
 
           <div className="flex flex-col-reverse justify-end gap-3 sm:flex-row">
-            <Button type="button" variant="secondary" onClick={onClose}>
+            <Button
+              type="button"
+              variant="secondary"
+              className={cn(isLight ? undefined : 'border-white/[0.08] bg-[rgba(10,8,16,0.45)] hover:bg-[rgba(22,18,34,0.55)]')}
+              onClick={onClose}
+            >
               {t('cancel', { ns: 'common' })}
             </Button>
-            <Button disabled={createMutation.isPending || !isValid} type="submit">
+            <Button
+              className={cn(isLight ? 'light-gradient-accent' : 'create-action-button')}
+              disabled={createMutation.isPending || !isValid}
+              type="submit"
+            >
               {createMutation.isPending ? t('saving', { ns: 'common' }) : t('createUser', { ns: 'common' })}
             </Button>
           </div>

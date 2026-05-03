@@ -2,14 +2,18 @@ import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { type DataGridColumn } from '@/components/shared/data-grid';
+import { createDataGridEditActionsColumn, getUtsGridRowLabel } from '@/components/shared/data-grid-edit-actions-column';
 import { UtsViewGrid } from '@/components/shared/uts-view-grid';
 import { PageHeader } from '@/components/ui/page-header';
 import { getAllUtsUretimList, type UtsUretimListItem } from '@/features/uts-uretim-list/api/uts-uretim-list-api';
 import { useAuthStore } from '@/stores/auth-store';
+import { useUiStore } from '@/stores/ui-store';
 
 export function UtsUretimListPage() {
   const { t } = useTranslation(['uts-uretim-list-management', 'common']);
   const user = useAuthStore((state) => state.user);
+  const theme = useUiStore((state) => state.theme);
+  const isLight = theme === 'light';
 
   const query = useQuery({
     queryKey: ['uts-uretim-list'],
@@ -32,7 +36,14 @@ export function UtsUretimListPage() {
     { key: 'urt', label: t('urt'), sortable: true },
     { key: 'skt', label: t('skt'), sortable: true },
     { key: 'utsDurum', label: t('utsDurum'), sortable: true },
-  ], [t]);
+    createDataGridEditActionsColumn<UtsUretimListItem>({
+      label: t('actions', { ns: 'common' }),
+      editTitle: t('edit', { ns: 'common' }),
+      comingSoonMessage: t('comingSoon', { ns: 'common' }),
+      isLight,
+      rowLabel: (row) => getUtsGridRowLabel(row) || String(row.chk ?? ''),
+    }),
+  ], [isLight, t]);
 
   return (
     <div className="space-y-6">

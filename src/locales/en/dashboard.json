@@ -11,4 +11,7 @@
   "createUserCardTitle": "Create User",
   "createUserCardDescription": "The user creation panel is ready with role and permission group selection.",
   "detailAction": "Details"
+  ,
+  "authCardTitle": "Identity",
+  "usersCardTitle": "Users"
 }

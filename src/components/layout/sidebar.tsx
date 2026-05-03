@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Building2, ChevronDown, ChevronLeft, ChevronRight, Factory, FileStack, LayoutDashboard, Menu, Shield, X } from 'lucide-react';
+import { Building2, ChevronDown, ChevronLeft, ChevronRight, Factory, FileStack, LayoutDashboard, Shield } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
@@ -68,7 +68,7 @@ const normalizeText = (value: string) =>
 export function Sidebar() {
   const { t } = useTranslation('common');
   const location = useLocation();
-  const { isSidebarOpen, toggleSidebar, setSidebarOpen, toggleSidebarCollapsed, searchQuery, setSearchQuery, theme, isSidebarCollapsed } = useUiStore();
+  const { isSidebarOpen, setSidebarOpen, searchQuery, setSearchQuery, theme, isSidebarCollapsed } = useUiStore();
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set(['general', 'accessManagement']));
 
   useEffect(() => {
@@ -129,31 +129,18 @@ export function Sidebar() {
           isSidebarCollapsed && 'lg:w-20',
         )}
       >
-        <div className={`relative flex h-24 items-center border-transparent px-4 after:pointer-events-none after:absolute after:inset-x-0 after:bottom-0 after:h-px after:bg-linear-to-r after:from-transparent after:via-white/10 after:to-transparent ${theme === 'light' ? 'bg-white/50' : 'bg-[#11061d]/88'} ${isSidebarCollapsed ? 'lg:justify-center' : 'justify-between'}`}>
+        <div
+          className={`relative flex h-24 items-center border-transparent px-4 after:pointer-events-none after:absolute after:inset-x-0 after:bottom-0 after:h-px after:bg-linear-to-r after:from-transparent after:via-white/10 after:to-transparent ${theme === 'light' ? 'bg-white/50' : 'bg-[#11061d]/88'} ${isSidebarCollapsed ? 'lg:justify-center' : 'justify-start'}`}
+        >
           <Link to="/" className="flex items-center gap-3">
-            <div className={`flex size-11 items-center justify-center rounded-2xl text-lg font-bold text-white flex-shrink-0 ${theme === 'light' ? 'bg-linear-to-r from-[#ff8a2a] via-[#ff5f40] to-[#ffb347]' : 'bg-linear-to-r from-[#ff2f92] via-[#ff5a63] to-[#ff7f2a]'}`}>V</div>
+            <div className={`flex size-11 items-center justify-center rounded-2xl text-lg font-bold text-white flex-shrink-0 ${theme === 'light' ? 'bg-linear-to-r from-fuchsia-600 via-pink-600 to-violet-600' : 'bg-linear-to-r from-[#ff2f92] via-[#ff5a63] to-[#ff7f2a]'}`}>V</div>
             {!isSidebarCollapsed && (
               <div>
-                <p className={`text-xs font-semibold uppercase tracking-[0.24em] ${theme === 'light' ? 'bg-linear-to-r from-[#ff8a2a] via-[#ff5f40] to-[#ffb347] bg-clip-text text-transparent' : 'bg-linear-to-r from-[#ff8ac4] to-[#ffb067] bg-clip-text text-transparent'}`}>Verii</p>
-                <p className={`text-base font-semibold ${theme === 'light' ? 'bg-linear-to-r from-[#ff8a2a] via-[#ff5f40] to-[#ffb347] bg-clip-text text-transparent' : 'bg-linear-to-r from-[#ffc4de] via-[#ff9f9f] to-[#ffc58e] bg-clip-text text-transparent'}`}>{t('utsPanel')}</p>
+                <p className={`text-xs font-semibold uppercase tracking-[0.24em] ${theme === 'light' ? 'bg-linear-to-r from-fuchsia-700 via-pink-600 to-violet-600 bg-clip-text text-transparent' : 'bg-linear-to-r from-[#ff8ac4] to-[#ffb067] bg-clip-text text-transparent'}`}>Verii</p>
+                <p className={`text-base font-semibold ${theme === 'light' ? 'bg-linear-to-r from-fuchsia-700 via-pink-600 to-violet-700 bg-clip-text text-transparent' : 'bg-linear-to-r from-[#ffc4de] via-[#ff9f9f] to-[#ffc58e] bg-clip-text text-transparent'}`}>{t('utsPanel')}</p>
               </div>
             )}
           </Link>
-          <button
-            type="button"
-            onClick={() => {
-              if (window.innerWidth < 1024) {
-                setSidebarOpen(false);
-                return;
-              }
-
-              toggleSidebarCollapsed();
-            }}
-            className={`rounded-xl p-2 ${theme === 'light' ? 'text-[#5E626D] hover:bg-[rgba(255,90,99,0.08)] hover:text-[#ff5f40]' : 'text-[#c8b5d8] hover:bg-white/6 hover:text-[#ffd5bf]'}`}
-            aria-label="Toggle sidebar"
-          >
-            <Menu className="size-5" />
-          </button>
         </div>
 
         <nav className={`custom-scrollbar flex-1 overflow-y-auto px-3 py-6`}>
@@ -173,10 +160,10 @@ export function Sidebar() {
                     'px-3 py-2',
                     hasActiveChild
                       ? theme === 'light'
-                        ? 'bg-linear-to-r from-[#ff8ac4]/12 via-[#ff5f40]/10 to-[#ff9f2a]/12'
+                        ? 'bg-linear-to-r from-fuchsia-500/12 via-pink-500/10 to-violet-500/12'
                         : 'bg-pink-500/15'
                       : theme === 'light'
-                        ? 'hover:bg-[rgba(255,90,99,0.06)]'
+                        ? 'hover:bg-fuchsia-500/[0.06]'
                         : 'hover:bg-white/5',
                   )}
                   title={isSidebarCollapsed ? t(item.title) : undefined}
@@ -186,10 +173,10 @@ export function Sidebar() {
                       'flex size-9 items-center justify-center rounded-lg',
                       hasActiveChild
                         ? theme === 'light'
-                          ? 'bg-linear-to-br from-[#ff8ac4]/18 to-[#ff9f2a]/18 text-[#ff5f40]'
+                          ? 'bg-linear-to-br from-fuchsia-500/18 to-violet-500/18 text-fuchsia-800'
                           : 'bg-pink-500/20 text-pink-300'
                         : theme === 'light'
-                          ? 'border border-[rgba(255,138,196,0.28)] bg-white/60 text-[#ff5f40]'
+                          ? 'border border-fuchsia-200/60 bg-white/60 text-fuchsia-800'
                           : 'border border-[#ff7a55]/14 bg-[#1a0d2a]/68 text-[#d7c5e5]',
                     )}
                   >
@@ -200,7 +187,9 @@ export function Sidebar() {
                       'text-sm font-semibold',
                       isSidebarCollapsed ? 'hidden' : 'flex-1',
                       hasActiveChild
-                        ? 'text-[#ff5f40]'
+                        ? theme === 'light'
+                          ? 'text-fuchsia-800'
+                          : 'text-[#ff5f40]'
                         : theme === 'light'
                           ? 'text-[#2A2C31]'
                           : 'text-[#d9c9e8]',
@@ -230,10 +219,10 @@ export function Sidebar() {
                             'flex items-center justify-between rounded-lg px-3 py-2 text-sm transition-colors',
                             location.pathname === child.href
                               ? theme === 'light'
-                                ? 'bg-linear-to-r from-[#ff8ac4]/14 via-[#ff5f40]/12 to-[#ff9f2a]/14 text-[#ff5f40] font-semibold'
+                                ? 'bg-linear-to-r from-fuchsia-500/14 via-pink-500/12 to-violet-500/14 font-semibold text-fuchsia-900'
                                 : 'bg-pink-500/15 bg-linear-to-r from-[#ff8bc7] to-[#ffb16b] bg-clip-text font-semibold text-transparent'
                               : theme === 'light'
-                                ? 'text-[#2A2C31] hover:bg-[rgba(255,90,99,0.06)] hover:text-[#ff5f40]'
+                                ? 'text-[#2A2C31] hover:bg-fuchsia-500/[0.06] hover:text-fuchsia-900'
                                   : 'text-[#cfbfde] hover:bg-white/6 hover:text-[#ffd2bb]',
                           )}
                           onClick={() => {
@@ -277,7 +266,9 @@ export function Sidebar() {
                                     : t(child.title)}
                           </span>
                           {location.pathname === child.href && (
-                            <span className="h-2 w-2 rounded-full bg-[#ff8a3d]" />
+                            <span
+                              className={`h-2 w-2 rounded-full ${theme === 'light' ? 'bg-fuchsia-500' : 'bg-[#ff8a3d]'}`}
+                            />
                           )}
                         </Link>
                       ) : (

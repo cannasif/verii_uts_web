@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { RefreshCw } from 'lucide-react';
+import { createDataGridEditActionsColumn } from '@/components/shared/data-grid-edit-actions-column';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
@@ -12,10 +13,13 @@ import { loadColumnPreferences, saveColumnPreferences } from '@/lib/column-prefe
 import { formatDate } from '@/lib/utils';
 import { searchStocks, triggerStockSync, type StockListItem } from '@/features/stocks/api/stocks-api';
 import { useAuthStore } from '@/stores/auth-store';
+import { useUiStore } from '@/stores/ui-store';
 
 export function StocksPage() {
   const { t } = useTranslation(['stock-management', 'common']);
   const user = useAuthStore((state) => state.user);
+  const theme = useUiStore((state) => state.theme);
+  const isLight = theme === 'light';
   const queryClient = useQueryClient();
   const [search, setSearch] = useState('');
   const [pageNumber, setPageNumber] = useState(1);
@@ -31,8 +35,10 @@ export function StocksPage() {
 
   useEffect(() => {
     const preferences = loadColumnPreferences('stocks-grid', user?.id, defaultColumnOrder);
-    setVisibleColumnKeys(preferences.visibleKeys);
-    setColumnOrder(preferences.order);
+    const order = preferences.order.includes('actions') ? preferences.order : [...preferences.order, 'actions'];
+    const visible = preferences.visibleKeys.includes('actions') ? preferences.visibleKeys : [...preferences.visibleKeys, 'actions'];
+    setVisibleColumnKeys(visible);
+    setColumnOrder(order);
   }, [user?.id]);
 
   useEffect(() => {
@@ -62,7 +68,14 @@ export function StocksPage() {
     { key: 'grupAdi', label: t('groupName'), sortable: true, render: (row) => row.grupAdi || '-' },
     { key: 'branchCode', label: t('branchCode'), sortable: true },
     { key: 'createdAtUtc', label: t('createdAt', { ns: 'common' }), sortable: true, render: (row) => formatDate(row.createdAtUtc), exportValue: (row) => formatDate(row.createdAtUtc) },
-  ], [t]);
+    createDataGridEditActionsColumn<StockListItem>({
+      label: t('actions', { ns: 'common' }),
+      editTitle: t('edit', { ns: 'common' }),
+      comingSoonMessage: t('comingSoon', { ns: 'common' }),
+      isLight,
+      rowLabel: (row) => row.stockName || row.erpStockCode,
+    }),
+  ], [isLight, t]);
 
   const exportRows = useMemo<Record<string, unknown>[]>(() =>
     (stocksQuery.data?.data ?? []).map((stock) => ({
@@ -102,6 +115,9 @@ export function StocksPage() {
 
       <AppDataGrid
         pageKey="stocks-grid"
+        tableSurface="glass"
+        surfaceTone="airy"
+        controlChrome="connection-glass"
         userId={user?.id}
         searchValue={search}
         onSearchValueChange={(value) => {

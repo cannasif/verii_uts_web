@@ -21,6 +21,7 @@ export function PageHeader({ title, description, action, titleClassName, descrip
             theme === 'light'
               ? 'text-[#2A2C31] text-xl font-semibold sm:text-2xl'
               : 'bg-linear-to-r from-[#ff8bc7] via-[#ff9f9f] to-[#ffb16b] bg-clip-text text-xl font-semibold text-transparent drop-shadow-[0_0_16px_rgba(255,96,135,0.22)] sm:text-2xl',
+            'font-plus-jakarta',
             titleClassName,
           )}
         >
@@ -29,7 +30,7 @@ export function PageHeader({ title, description, action, titleClassName, descrip
         <p
           className={cn(
             theme === 'light'
-              ? 'page-subtitle mt-1 text-[#5E626D] text-sm'
+              ? 'page-subtitle mt-1 text-sm text-slate-600'
               : 'page-subtitle mt-1 text-sm text-white',
             descriptionClassName,
           )}

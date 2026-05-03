@@ -2,14 +2,18 @@ import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { type DataGridColumn } from '@/components/shared/data-grid';
+import { createDataGridEditActionsColumn, getUtsGridRowLabel } from '@/components/shared/data-grid-edit-actions-column';
 import { UtsViewGrid } from '@/components/shared/uts-view-grid';
 import { PageHeader } from '@/components/ui/page-header';
 import { getAllUtsImhaList, type UtsImhaListItem } from '@/features/uts-imha-list/api/uts-imha-list-api';
 import { useAuthStore } from '@/stores/auth-store';
+import { useUiStore } from '@/stores/ui-store';
 
 export function UtsImhaListPage() {
   const { t } = useTranslation(['uts-imha-list-management', 'common']);
   const user = useAuthStore((state) => state.user);
+  const theme = useUiStore((state) => state.theme);
+  const isLight = theme === 'light';
 
   const query = useQuery({
     queryKey: ['uts-imha-list'],
@@ -39,7 +43,14 @@ export function UtsImhaListPage() {
     { key: 'straInc', label: t('straInc'), sortable: true },
     { key: 'imalIthal', label: t('imalIthal'), sortable: true },
     { key: 'grk', label: t('grk'), sortable: true },
-  ], [t]);
+    createDataGridEditActionsColumn<UtsImhaListItem>({
+      label: t('actions', { ns: 'common' }),
+      editTitle: t('edit', { ns: 'common' }),
+      comingSoonMessage: t('comingSoon', { ns: 'common' }),
+      isLight,
+      rowLabel: (row) => getUtsGridRowLabel(row) || String(row.chk ?? ''),
+    }),
+  ], [isLight, t]);
 
   return (
     <div className="space-y-6">

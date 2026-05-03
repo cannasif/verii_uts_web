@@ -20,6 +20,8 @@ export function useLoginMutation() {
         token: accessToken,
         user: meResult.data,
         permissions: permissionsResult.data,
+        branchId: payload.branchId,
+        branchName: payload.branchName,
         rememberMe,
       });
 

@@ -1,34 +1,34 @@
 {
-  "menu": "Hangfire Izleme",
-  "title": "Hangfire Izleme",
-  "description": "Arka plan gorev sagligini, basarisiz kayıtlari ve ayri bekletme kuyrugunu izleyin.",
+  "menu": "Hangfire İzleme",
+  "title": "Hangfire İzleme",
+  "description": "Arka plan görev sağlığını, başarısız kayıtları ve ayrı bekletme kuyruğunu izleyin.",
   "refresh": "Yenile",
   "stats": {
     "enqueued": "Kuyruktakiler",
-    "processing": "Calisanlar",
-    "scheduled": "Planlilar",
-    "succeeded": "Basarili",
-    "failed": "Basarisiz"
+    "processing": "Çalışanlar",
+    "scheduled": "Planlılar",
+    "succeeded": "Başarılı",
+    "failed": "Başarısız"
   },
   "failed": {
-    "title": "Basarisiz Gorevler",
-    "description": "SQL gorev log tablosuna yazilan basarisiz Hangfire kayıtlari.",
+    "title": "Başarısız Görevler",
+    "description": "SQL görev log tablosuna yazılan başarısız Hangfire kayıtları.",
     "total": "Toplam",
-    "empty": "Basarisiz gorev kaydi bulunamadı."
+    "empty": "Başarısız görev kaydı bulunamadı."
   },
   "deadLetter": {
-    "title": "Ayri Bekletme Kuyrugu",
-    "description": "Son deneme sonrasinda ayri bekletme kuyruguna dusen kritik gorevler.",
+    "title": "Ayrı Bekletme Kuyruğu",
+    "description": "Son deneme sonrasında ayrı bekletme kuyruğuna düşen kritik görevler.",
     "enqueued": "Kuyruktaki Kayıt",
-    "empty": "Ayri bekletme kuyrugunda kayıt bulunamadı."
+    "empty": "Ayrı bekletme kuyruğunda kayıt bulunamadı."
   },
   "table": {
-    "jobId": "Gorev Kimligi",
-    "jobName": "Gorev Adi",
+    "jobId": "Görev Kimliği",
+    "jobName": "Görev Adı",
     "state": "Durum",
     "time": "Zaman",
     "reason": "Neden",
-    "failedState": "Basarisiz",
+    "failedState": "Başarısız",
     "enqueuedState": "Kuyrukta"
   }
 }

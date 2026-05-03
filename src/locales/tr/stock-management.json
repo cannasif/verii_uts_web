@@ -1,15 +1,15 @@
 {
-  "title": "Stok Izleme",
-  "description": "RII_STOCK tablosundaki senkronize stok kayıtlarini izleyin ve manuel senkronizasyon baslatin.",
+  "title": "Stok İzleme",
+  "description": "RII_STOCK tablosundaki senkronize stok kayıtlarını izleyin ve manuel senkronizasyon başlatın.",
   "searchPlaceholder": "Stok kodu, stok adı veya grup ara",
   "manualSync": "Manuel Senkronizasyon",
-  "syncing": "Senkronizasyon calisiyor...",
-  "syncQueued": "Stok senkronizasyon gorevi kuyruga alindi.",
-  "syncFailed": "Stok senkronizasyon gorevi baslatilamadı.",
+  "syncing": "Senkronizasyon çalışıyor...",
+  "syncQueued": "Stok senkronizasyon görevi kuyruğa alındı.",
+  "syncFailed": "Stok senkronizasyon görevi başlatılamadı.",
   "erpStockCode": "ERP Stok Kodu",
-  "stockName": "Stok Adi",
-  "unit": "Olcu Birimi",
+  "stockName": "Stok Adı",
+  "unit": "Ölçü Birimi",
   "groupCode": "Grup Kodu",
-  "groupName": "Grup Adi",
-  "branchCode": "Sube Kodu"
+  "groupName": "Grup Adı",
+  "branchCode": "Şube Kodu"
 }

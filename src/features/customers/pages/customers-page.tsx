@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { RefreshCw } from 'lucide-react';
+import { createDataGridEditActionsColumn } from '@/components/shared/data-grid-edit-actions-column';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
@@ -12,10 +13,13 @@ import { rowsToBackendFilters } from '@/lib/advanced-filter';
 import { loadColumnPreferences, saveColumnPreferences } from '@/lib/column-preferences';
 import { formatDate } from '@/lib/utils';
 import { useAuthStore } from '@/stores/auth-store';
+import { useUiStore } from '@/stores/ui-store';
 
 export function CustomersPage() {
   const { t } = useTranslation(['customer-management', 'common']);
   const user = useAuthStore((state) => state.user);
+  const theme = useUiStore((state) => state.theme);
+  const isLight = theme === 'light';
   const queryClient = useQueryClient();
   const [search, setSearch] = useState('');
   const [pageNumber, setPageNumber] = useState(1);
@@ -25,14 +29,16 @@ export function CustomersPage() {
   const [draftFilterRows, setDraftFilterRows] = useState<FilterRow[]>([]);
   const [appliedFilterRows, setAppliedFilterRows] = useState<FilterRow[]>([]);
   const [isSyncing, setIsSyncing] = useState(false);
-  const defaultColumnOrder = ['customerCode', 'customerName', 'taxNumber', 'phone', 'city', 'branchCode', 'lastSyncDateUtc'];
+  const defaultColumnOrder = ['customerCode', 'customerName', 'taxNumber', 'phone', 'city', 'branchCode', 'lastSyncDateUtc', 'actions'];
   const [visibleColumnKeys, setVisibleColumnKeys] = useState<string[]>(defaultColumnOrder);
   const [columnOrder, setColumnOrder] = useState<string[]>(defaultColumnOrder);
 
   useEffect(() => {
     const preferences = loadColumnPreferences('customers-grid', user?.id, defaultColumnOrder);
-    setVisibleColumnKeys(preferences.visibleKeys);
-    setColumnOrder(preferences.order);
+    const order = preferences.order.includes('actions') ? preferences.order : [...preferences.order, 'actions'];
+    const visible = preferences.visibleKeys.includes('actions') ? preferences.visibleKeys : [...preferences.visibleKeys, 'actions'];
+    setVisibleColumnKeys(visible);
+    setColumnOrder(order);
   }, [user?.id]);
 
   useEffect(() => {
@@ -69,7 +75,14 @@ export function CustomersPage() {
       render: (row) => row.lastSyncDateUtc ? formatDate(row.lastSyncDateUtc) : '-',
       exportValue: (row) => row.lastSyncDateUtc ? formatDate(row.lastSyncDateUtc) : '-',
     },
-  ], [t]);
+    createDataGridEditActionsColumn<CustomerListItem>({
+      label: t('actions', { ns: 'common' }),
+      editTitle: t('edit', { ns: 'common' }),
+      comingSoonMessage: t('comingSoon', { ns: 'common' }),
+      isLight,
+      rowLabel: (row) => row.customerName || row.customerCode,
+    }),
+  ], [isLight, t]);
 
   const exportRows = useMemo<Record<string, unknown>[]>(() =>
     (customersQuery.data?.data ?? []).map((customer) => ({
@@ -113,6 +126,9 @@ export function CustomersPage() {
 
       <AppDataGrid
         pageKey="customers-grid"
+        tableSurface="glass"
+        surfaceTone="airy"
+        controlChrome="connection-glass"
         userId={user?.id}
         searchValue={search}
         onSearchValueChange={(value) => {
