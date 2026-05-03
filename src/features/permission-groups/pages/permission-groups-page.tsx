@@ -20,10 +20,14 @@ import { searchPermissionDefinitions } from '@/features/permission-definitions/a
 function renderSystemStatus(isSystem: boolean, t: (key: string, options?: Record<string, unknown>) => string, isLight: boolean) {
   if (isSystem) {
     return (
-      <span className="inline-flex items-center gap-2 rounded-full border border-fuchsia-300/70 bg-gradient-to-r from-fuchsia-500 via-pink-500 to-orange-500 px-3 py-1 text-xs font-semibold text-white shadow-[0_0_16px_rgba(233,93,132,0.18)]">
-        <LockKeyhole className="size-3.5 text-white" />
+      <span
+        className={`inline-flex max-w-full items-center gap-1 rounded-full border border-fuchsia-300/70 px-2 py-0.5 text-[11px] font-semibold leading-tight text-white shadow-[0_0_12px_rgba(233,93,132,0.14)] ${
+          isLight ? 'bg-gradient-to-r from-fuchsia-600 via-pink-600 to-violet-600' : 'bg-gradient-to-r from-fuchsia-500 via-pink-500 to-orange-500'
+        }`}
+      >
+        <LockKeyhole className="size-3 shrink-0 text-white" />
         {t('yes', { ns: 'common' })}
-        <span className="rounded-full bg-white/10 px-2 py-0.5 text-[10px] uppercase tracking-[0.18em] text-white/80">
+        <span className="rounded-full bg-white/10 px-1.5 py-px text-[9px] uppercase tracking-[0.14em] text-white/85">
           {t('systemRoleLabel', { ns: 'access-control' })}
         </span>
       </span>
@@ -32,17 +36,17 @@ function renderSystemStatus(isSystem: boolean, t: (key: string, options?: Record
 
   return (
     <span
-      className={`inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-semibold ${
+      className={`inline-flex max-w-full items-center gap-1 rounded-full border px-2 py-0.5 text-[11px] font-semibold leading-tight ${
         isLight
-          ? 'border-fuchsia-300/70 bg-fuchsia-50 text-fuchsia-700 shadow-[0_0_14px_rgba(219,39,119,0.14)]'
-          : 'border-fuchsia-300/50 bg-[#22092f]/90 text-fuchsia-200 shadow-[0_0_18px_rgba(15,23,42,0.35)]'
+          ? 'border-fuchsia-300/70 bg-fuchsia-50 text-fuchsia-700 shadow-[0_0_10px_rgba(219,39,119,0.12)]'
+          : 'border-fuchsia-300/45 bg-[#1c1428]/95 text-fuchsia-200/95 shadow-none'
       }`}
     >
-      <Pencil className={`size-3.5 ${isLight ? 'text-fuchsia-500' : 'text-fuchsia-200'}`} />
+      <Pencil className={`size-3 shrink-0 ${isLight ? 'text-fuchsia-500' : 'text-fuchsia-300/90'}`} />
       {t('no', { ns: 'common' })}
       <span
-        className={`rounded-full px-2 py-0.5 text-[10px] uppercase tracking-[0.18em] ${
-          isLight ? 'bg-fuchsia-100 text-fuchsia-700' : 'bg-[#3f0b3f] text-fuchsia-100'
+        className={`rounded-full px-1.5 py-px text-[9px] uppercase tracking-[0.14em] ${
+          isLight ? 'bg-fuchsia-100 text-fuchsia-700' : 'bg-fuchsia-950/80 text-fuchsia-100/90'
         }`}
       >
         {t('editableRoleLabel', { ns: 'access-control' })}
@@ -51,25 +55,35 @@ function renderSystemStatus(isSystem: boolean, t: (key: string, options?: Record
   );
 }
 
-function renderPermissionCount(permissionCount: number, totalPermissionCount: number) {
+function renderPermissionCount(permissionCount: number, totalPermissionCount: number, isLight: boolean) {
   const fillPercent = totalPermissionCount > 0 ? Math.min(100, (permissionCount / totalPermissionCount) * 100) : 0;
   const isHighPrivilege = totalPermissionCount > 0 && fillPercent >= 70;
 
+  const countClass = isLight
+    ? isHighPrivilege
+      ? 'bg-fuchsia-50 text-fuchsia-700 shadow-[0_0_10px_rgba(219,39,119,0.18)]'
+      : 'bg-fuchsia-50 text-fuchsia-600 shadow-[0_0_8px_rgba(219,39,119,0.1)]'
+    : isHighPrivilege
+      ? 'border border-fuchsia-500/25 bg-fuchsia-500/12 text-fuchsia-100 shadow-[0_0_12px_rgba(219,39,119,0.15)]'
+      : 'border border-white/[0.06] bg-white/[0.06] text-fuchsia-100/95';
+
+  const trackClass = isLight ? 'bg-slate-200/85' : 'bg-white/[0.08]';
+
   return (
-    <div className="flex min-w-[120px] flex-col items-start gap-1.5">
-      <span
-        className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-bold tabular-nums transition-shadow ${
-          isHighPrivilege
-            ? 'bg-fuchsia-50 text-fuchsia-700 shadow-[0_0_16px_rgba(219,39,119,0.24),0_0_28px_rgba(249,115,22,0.16)]'
-            : 'bg-fuchsia-50 text-fuchsia-600 shadow-[0_0_12px_rgba(219,39,119,0.12)]'
-        }`}
-      >
+    <div className="flex min-w-[96px] max-w-[112px] flex-col items-stretch gap-1">
+      <span className={`inline-flex w-fit items-center rounded-full px-2 py-0.5 text-[11px] font-bold tabular-nums leading-none transition-shadow ${countClass}`}>
         {permissionCount}
       </span>
-      <div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-200/80">
+      <div className={`h-1 w-full overflow-hidden rounded-full ${trackClass}`}>
         <div
           className={`h-full rounded-full transition-all duration-300 ${
-            isHighPrivilege ? 'bg-gradient-to-r from-fuchsia-500 via-pink-500 to-orange-500' : 'bg-gradient-to-r from-fuchsia-400 via-pink-400 to-orange-400'
+            isLight
+              ? isHighPrivilege
+                ? 'bg-gradient-to-r from-fuchsia-600 via-pink-600 to-violet-600'
+                : 'bg-gradient-to-r from-fuchsia-500 via-pink-500 to-rose-500'
+              : isHighPrivilege
+                ? 'bg-gradient-to-r from-fuchsia-500 via-pink-500 to-orange-500'
+                : 'bg-gradient-to-r from-fuchsia-400 via-pink-400 to-orange-400'
           }`}
           style={{ width: `${fillPercent}%` }}
         />
@@ -155,14 +169,16 @@ export function PermissionGroupsPage() {
   const [draftFilterRows, setDraftFilterRows] = useState<FilterRow[]>([]);
   const [appliedFilterRows, setAppliedFilterRows] = useState<FilterRow[]>([]);
   const [isCreatePanelOpen, setIsCreatePanelOpen] = useState(false);
-  const defaultColumnOrder = ['name', 'description', 'permissionCount', 'isSystem'];
+  const defaultColumnOrder = ['name', 'description', 'permissionCount', 'isSystem', 'actions'];
   const [visibleColumnKeys, setVisibleColumnKeys] = useState<string[]>(defaultColumnOrder);
   const [columnOrder, setColumnOrder] = useState<string[]>(defaultColumnOrder);
 
   useEffect(() => {
     const preferences = loadColumnPreferences('permission-groups-grid', user?.id, defaultColumnOrder);
-    setVisibleColumnKeys(preferences.visibleKeys);
-    setColumnOrder(preferences.order);
+    const order = preferences.order.includes('actions') ? preferences.order : [...preferences.order, 'actions'];
+    const visible = preferences.visibleKeys.includes('actions') ? preferences.visibleKeys : [...preferences.visibleKeys, 'actions'];
+    setVisibleColumnKeys(visible);
+    setColumnOrder(order);
   }, [user?.id]);
 
   useEffect(() => {
@@ -253,11 +269,11 @@ export function PermissionGroupsPage() {
           const { Icon, badgeClassName, iconClassName } = getGroupNameIcon(row.name, isLight);
 
           return (
-            <span className="inline-flex items-center gap-2">
-              <span className={`inline-flex size-7 items-center justify-center rounded-full border ${badgeClassName}`}>
-                <Icon className={`size-3.5 ${iconClassName}`} />
+            <span className="inline-flex items-center gap-1.5">
+              <span className={`inline-flex size-6 shrink-0 items-center justify-center rounded-full border ${badgeClassName}`}>
+                <Icon className={`size-3 ${iconClassName}`} />
               </span>
-              <span className={`font-semibold ${isLight ? 'text-slate-900' : 'text-slate-100'}`}>{row.name}</span>
+              <span className={`text-[13px] font-medium leading-snug ${isLight ? 'text-slate-900' : 'text-slate-100'}`}>{row.name}</span>
             </span>
           );
         },
@@ -267,8 +283,8 @@ export function PermissionGroupsPage() {
         key: 'permissionCount',
         label: t('permissionCount', { ns: 'common' }),
         sortable: true,
-        render: (row) => renderPermissionCount(row.permissionCount, totalPermissionCount),
-        className: 'min-w-[140px]',
+        render: (row) => renderPermissionCount(row.permissionCount, totalPermissionCount, isLight),
+        className: 'min-w-[108px]',
       },
       {
         key: 'isSystem',
@@ -276,36 +292,36 @@ export function PermissionGroupsPage() {
         sortable: true,
         render: (row) => renderSystemStatus(row.isSystem, t, isLight),
         exportValue: (row) => (row.isSystem ? t('yes', { ns: 'common' }) : t('no', { ns: 'common' })),
-        className: 'min-w-[220px]',
+        className: 'min-w-[168px]',
       },
       {
         key: 'actions',
-        label: t('actions', { ns: 'access-control' }),
+        label: t('actions', { ns: 'common' }),
         render: (row) => (
           <div className="flex items-center justify-end gap-1.5">
             <Button
               type="button"
               variant="ghost"
-              className="size-9 text-slate-300 hover:bg-slate-500/10 hover:text-slate-100"
+              className={`rounded-lg border transition ${isLight ? 'p-1.5 border-indigo-200/80 bg-white/70 text-indigo-700 hover:bg-indigo-50' : 'p-1 border-cyan-300/30 bg-[#1a132b]/70 text-cyan-200 hover:border-red-300/50 hover:bg-red-500/10 hover:text-white'}`}
               onClick={() => toast.info(`${row.name} - ${t('comingSoon', { ns: 'common' })}`)}
               title={t('comingSoon', { ns: 'common' })}
             >
-              <Eye className="size-4" />
+              <Eye className={isLight ? 'size-3.5' : 'size-3'} />
             </Button>
             <Button
               type="button"
               variant="ghost"
-              className="size-9 text-slate-300 hover:bg-cyan-500/10 hover:text-cyan-100"
+              className={`rounded-lg border transition ${isLight ? 'p-1.5 border-violet-200/80 bg-white/70 text-violet-700 hover:bg-violet-50' : 'p-1 border-cyan-300/30 bg-[#1a132b]/70 text-cyan-200 hover:border-red-300/50 hover:bg-red-500/10 hover:text-white'}`}
               onClick={() => toast.info(`${row.name} - ${t('comingSoon', { ns: 'common' })}`)}
-              title={t('comingSoon', { ns: 'common' })}
+              title={t('edit', { ns: 'common' })}
             >
-              <Pencil className="size-4" />
+              <Pencil className={isLight ? 'size-3.5' : 'size-3'} />
             </Button>
             {!row.isSystem && (
               <Button
                 type="button"
                 variant="ghost"
-                className="size-9 text-slate-300 hover:bg-rose-500/10 hover:text-rose-500"
+                className={`rounded-lg border transition ${isLight ? 'p-1.5 border-rose-200/80 bg-white/70 text-rose-700 hover:bg-rose-50' : 'p-1 border-fuchsia-300/30 bg-[#23163a]/70 text-fuchsia-200 hover:border-red-300/50 hover:bg-red-500/10 hover:text-white'}`}
                 disabled={row.assignedUserCount > 0 || deleteMutation.isPending}
                 onClick={() => {
                   if (row.assignedUserCount > 0) {
@@ -325,7 +341,7 @@ export function PermissionGroupsPage() {
                     : t('delete', { ns: 'access-control' })
                 }
               >
-                <Trash2 className="size-4" />
+                <Trash2 className={isLight ? 'size-3.5' : 'size-3'} />
               </Button>
             )}
           </div>
@@ -377,6 +393,9 @@ export function PermissionGroupsPage() {
 
       <AppDataGrid
         pageKey="permission-groups-grid"
+        tableSurface="glass"
+        surfaceTone="airy"
+        controlChrome="connection-glass"
         userId={user?.id}
         searchValue={search}
         onSearchValueChange={(value) => {

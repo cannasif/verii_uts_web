@@ -33,9 +33,11 @@ export function Button({ className, variant, ...props }: ButtonProps) {
         theme === 'dark' && variant === 'primary' && 'border border-white/10 bg-white/10 text-white shadow-[0_8px_20px_rgba(0,0,0,0.18)] hover:bg-white/15 hover:translate-y-0',
         theme === 'dark' && variant === 'secondary' && 'text-slate-100 shadow-[0_6px_16px_rgba(0,0,0,0.12)]',
         theme === 'dark' && variant === 'ghost' && 'bg-white/5 text-slate-100 border border-white/10 hover:bg-white/10',
-        theme === 'light' && variant === 'primary' && 'bg-linear-to-r from-[#ff3a9b] via-[#ff5f40] to-[#ff9f2a] shadow-[0_10px_22px_rgba(255,90,99,0.16)]',
+        theme === 'light' &&
+          variant === 'primary' &&
+          'bg-linear-to-r from-[#db2777] via-[#c026d3] to-[#9333ea] shadow-[0_10px_22px_rgba(147,51,234,0.14)]',
         theme === 'light' && variant === 'secondary' && 'bg-white/72 text-[#2A2C31] border border-[rgba(255,138,196,0.24)] shadow-[0_4px_12px_rgba(15,23,42,0.04)] hover:bg-white',
-        theme === 'light' && variant === 'ghost' && 'text-[#2A2C31] hover:bg-[rgba(255,90,99,0.08)]',
+        theme === 'light' && variant === 'ghost' && 'text-[#2A2C31] hover:bg-fuchsia-500/[0.08]',
         className,
       )}
       {...props}

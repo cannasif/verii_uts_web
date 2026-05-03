@@ -5,6 +5,8 @@ export interface LoginRequest {
   email: string;
   password: string;
   rememberMe?: boolean;
+  branchId?: number;
+  branchName?: string;
 }
 
 export interface RegisterRequest {

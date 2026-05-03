@@ -12,8 +12,10 @@ interface AuthState {
   token: string | null;
   user: AuthUser | null;
   permissions: string[];
+  branchId: number | null;
+  branchName: string | null;
   setToken: (token: string, rememberMe: boolean) => void;
-  setSession: (payload: { token: string; user: AuthUser; permissions: string[]; rememberMe: boolean }) => void;
+  setSession: (payload: { token: string; user: AuthUser; permissions: string[]; branchId?: number; branchName?: string; rememberMe: boolean }) => void;
   logout: () => void;
   hydrate: () => void;
   isAuthenticated: () => boolean;
@@ -40,22 +42,24 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   token: null,
   user: null,
   permissions: [],
+  branchId: null,
+  branchName: null,
   setToken: (token, rememberMe) => {
     clearSessionStorage();
     getStorage(rememberMe).setItem(TOKEN_KEY, token);
     set({ token });
   },
-  setSession: ({ token, user, permissions, rememberMe }) => {
+  setSession: ({ token, user, permissions, branchId, branchName, rememberMe }) => {
     clearSessionStorage();
     const storage = getStorage(rememberMe);
     storage.setItem(TOKEN_KEY, token);
     storage.setItem(USER_KEY, JSON.stringify(user));
     storage.setItem(PERMISSIONS_KEY, JSON.stringify(permissions));
-    set({ token, user, permissions });
+    set({ token, user, permissions, branchId: branchId || null, branchName: branchName || null });
   },
   logout: () => {
     clearSessionStorage();
-    set({ token: null, user: null, permissions: [] });
+    set({ token: null, user: null, permissions: [], branchId: null, branchName: null });
   },
   hydrate: () => {
     const token = localStorage.getItem(TOKEN_KEY) || sessionStorage.getItem(TOKEN_KEY);

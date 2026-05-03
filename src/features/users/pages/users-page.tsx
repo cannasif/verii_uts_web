@@ -105,7 +105,7 @@ export function UsersPage() {
         const initials = `${row.firstName?.[0] ?? ''}${row.lastName?.[0] ?? ''}`.toUpperCase() || 'U';
         return (
           <div className="flex items-center gap-3">
-            <div className={`flex size-9 shrink-0 items-center justify-center rounded-full border text-xs font-bold text-white ${isLight ? 'border-fuchsia-300/60 bg-linear-to-br from-fuchsia-500 via-pink-500 to-orange-500 shadow-[0_8px_18px_rgba(233,93,132,0.24)]' : 'border-fuchsia-300/45 bg-linear-to-br from-fuchsia-500 via-pink-500 to-orange-500 shadow-[0_0_14px_rgba(233,93,132,0.35)]'}`}>
+            <div className={`flex size-9 shrink-0 items-center justify-center rounded-full border text-xs font-bold text-white ${isLight ? 'border-fuchsia-300/60 bg-linear-to-br from-fuchsia-600 via-pink-600 to-violet-600 shadow-[0_8px_18px_rgba(192,38,211,0.2)]' : 'border-fuchsia-300/45 bg-linear-to-br from-fuchsia-500 via-pink-500 to-orange-500 shadow-[0_0_14px_rgba(233,93,132,0.35)]'}`}>
               {initials}
             </div>
             <span className={`font-medium ${isLight ? 'text-[#1E293B]' : 'text-slate-100'}`}>{row.firstName} {row.lastName}</span>
@@ -335,7 +335,7 @@ export function UsersPage() {
   );
 
   return (
-    <div className="space-y-8">
+    <div className="user-management-glass-scope space-y-8">
       <PageHeader
         title={t('title', { ns: 'user-management' })}
         description={t('description', { ns: 'user-management' })}
@@ -404,6 +404,9 @@ export function UsersPage() {
 
       <AppDataGrid
         pageKey="users-grid"
+        tableSurface="glass"
+        surfaceTone="airy"
+        controlChrome="connection-glass"
         userId={user?.id}
         searchValue={search}
         onSearchValueChange={(value) => {

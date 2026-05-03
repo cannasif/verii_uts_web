@@ -2,14 +2,18 @@ import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { type DataGridColumn } from '@/components/shared/data-grid';
+import { createDataGridEditActionsColumn, getUtsGridRowLabel } from '@/components/shared/data-grid-edit-actions-column';
 import { UtsViewGrid } from '@/components/shared/uts-view-grid';
 import { PageHeader } from '@/components/ui/page-header';
 import { getAllUtsAlmaList, type UtsAlmaListItem } from '@/features/uts-alma-list/api/uts-alma-list-api';
 import { useAuthStore } from '@/stores/auth-store';
+import { useUiStore } from '@/stores/ui-store';
 
 export function UtsAlmaListPage() {
   const { t } = useTranslation(['uts-alma-list-management', 'common']);
   const user = useAuthStore((state) => state.user);
+  const theme = useUiStore((state) => state.theme);
+  const isLight = theme === 'light';
 
   const query = useQuery({
     queryKey: ['uts-alma-list'],
@@ -34,7 +38,14 @@ export function UtsAlmaListPage() {
     { key: 'stokAdi', label: t('stokAdi'), sortable: true },
     { key: 'acik16', label: t('acik16'), sortable: true },
     { key: 'utsDurum', label: t('utsDurum'), sortable: true },
-  ], [t]);
+    createDataGridEditActionsColumn<UtsAlmaListItem>({
+      label: t('actions', { ns: 'common' }),
+      editTitle: t('edit', { ns: 'common' }),
+      comingSoonMessage: t('comingSoon', { ns: 'common' }),
+      isLight,
+      rowLabel: (row) => getUtsGridRowLabel(row) || String(row.chk ?? ''),
+    }),
+  ], [isLight, t]);
 
   return (
     <div className="space-y-6">

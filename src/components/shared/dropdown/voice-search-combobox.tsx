@@ -280,7 +280,7 @@ export function VoiceSearchCombobox<TValue extends Primitive = Primitive>({
               ) : null}
             </div>
             {isThresholdMode ? (
-              <div className={`mt-2 flex items-center gap-2 text-xs ${isLight ? 'text-amber-600' : 'text-amber-300'}`}>
+              <div className={`mt-2 flex items-center gap-2 text-xs ${isLight ? 'text-slate-600' : 'text-amber-300'}`}>
                 <AlertCircle className="size-3.5" />
                 <span>{t('dropdown.minCharsHint', { count: minChars })}</span>
               </div>
