@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
-import { Camera } from 'lucide-react';
+import { BriefcaseBusiness, Building2, Camera, Mail } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -10,7 +10,8 @@ import { Input } from '@/components/ui/input';
 import { PageHeader } from '@/components/ui/page-header';
 import { getMyProfile, updateMyProfile, uploadMyProfilePicture, type UpdateMyProfileRequest } from '@/features/profile/api/profile-api';
 import { useUiStore } from '@/stores/ui-store';
-import { buildAssetUrl, cn } from '@/lib/utils';
+import { useAuthStore } from '@/stores/auth-store';
+import { cn } from '@/lib/utils';
 
 /** İç paneller — kenar ve inset highlight daha düşük kontrast */
 function profileInnerGlass(isLight: boolean) {
@@ -73,9 +74,10 @@ const profileInputDark =
 export function ProfilePage() {
   const { t } = useTranslation(['user-detail-management', 'common']);
   const theme = useUiStore((state) => state.theme);
+  const authUser = useAuthStore((state) => state.user);
+  const branchName = useAuthStore((state) => state.branchName);
   const isLight = theme === 'light';
   const queryClient = useQueryClient();
-  const [localPreviewUrl, setLocalPreviewUrl] = useState<string | null>(null);
   const profileQuery = useQuery({
     queryKey: ['my-profile'],
     queryFn: getMyProfile,
@@ -117,7 +119,6 @@ export function ProfilePage() {
     onSuccess: (result) => {
       toast.success(result.message);
       queryClient.setQueryData(['my-profile'], result);
-      setLocalPreviewUrl(null);
     },
     onError: (error: Error) => {
       toast.error(error.message);
@@ -141,6 +142,12 @@ export function ProfilePage() {
           '!border-white/[0.07] !bg-[rgba(10,8,16,0.48)] !text-slate-100 !backdrop-blur-xl placeholder:!text-slate-500 focus:!border-pink-400/32 focus:!shadow-[0_0_0_1px_rgba(236,72,153,0.1)] focus:!ring-0',
         ),
   );
+  const firstName = profileQuery.data?.data.firstName ?? '';
+  const lastName = profileQuery.data?.data.lastName ?? '';
+  const email = profileQuery.data?.data.email ?? authUser?.email ?? '—';
+  const role = profileQuery.data?.data.role ?? authUser?.role ?? '—';
+  const branch = branchName ?? 'V3RII.CO';
+  const avatarLetter = (firstName.trim().charAt(0) || lastName.trim().charAt(0) || 'U').toUpperCase();
 
   return (
     <div className="profile-details-glass-scope space-y-8">
@@ -151,42 +158,50 @@ export function ProfilePage() {
       />
 
       <Card className={cn('profile-shell-card p-4 sm:p-5 lg:p-6', !isLight && 'dashboard-section-panel')}>
-        <div className={cn(profileInnerGlass(isLight), 'mb-8 flex flex-col items-center gap-5 p-6 sm:p-8')}>
+        <div className={cn(profileInnerGlass(isLight), 'mb-8 flex flex-col gap-5 p-5 sm:p-6')}>
           <ProfileGlassDecor isLight={isLight} />
-          <div
-            className={cn(
-              'relative z-10 flex size-28 items-center justify-center overflow-hidden rounded-2xl text-3xl font-black text-white shadow-[0_12px_32px_rgba(0,0,0,0.35)]',
-              isLight
-                ? 'bg-linear-to-br from-fuchsia-600 via-pink-600 to-violet-600 ring-1 ring-white/18'
-                : 'bg-linear-to-br from-[#ff2f92] via-[#ff5a63] to-[#ff7f2a] ring-1 ring-white/10',
-            )}
-          >
-            {localPreviewUrl || profileQuery.data?.data.profilePictureUrl ? (
-              <img
-                alt="profile"
-                className="h-full w-full object-cover"
-                src={localPreviewUrl ?? buildAssetUrl(profileQuery.data?.data.profilePictureUrl) ?? ''}
-              />
-            ) : (
-              `${profileQuery.data?.data.firstName?.[0] ?? ''}${profileQuery.data?.data.lastName?.[0] ?? ''}`
-            )}
+          <div className="relative z-10 flex items-start justify-between gap-4">
+            <div
+              className={cn(
+                'group relative flex size-28 shrink-0 items-center justify-center overflow-hidden rounded-2xl text-3xl font-black text-white shadow-[0_12px_32px_rgba(0,0,0,0.35)]',
+                isLight
+                  ? 'bg-linear-to-br from-fuchsia-600 via-pink-600 to-violet-600 ring-1 ring-white/18'
+                  : 'bg-linear-to-br from-[#ff2f92] via-[#ff5a63] to-[#ff7f2a] ring-1 ring-white/10',
+              )}
+            >
+              {avatarLetter}
+              <label
+                className={cn(
+                  'absolute inset-0 z-20 flex cursor-pointer flex-col items-center justify-center gap-1 bg-black/45 text-white opacity-0 transition-opacity duration-200 group-hover:opacity-100 group-focus-within:opacity-100',
+                  'md:text-xs text-[11px] font-semibold',
+                )}
+              >
+                <Camera className="size-5" strokeWidth={1.9} />
+                {t('uploadImage', { ns: 'common' })}
+                <input
+                  className="hidden"
+                  type="file"
+                  accept="image/*"
+                  onChange={(event) => {
+                    const file = event.target.files?.[0];
+                    if (file) {
+                      uploadMutation.mutate(file);
+                    }
+                  }}
+                />
+              </label>
+            </div>
+            <div className="min-w-0 flex-1 pt-1">
+              <h3 className={cn('text-3xl font-black leading-tight', isLight ? 'text-[#1f2430]' : 'text-white')}>
+                {firstName} {lastName}
+              </h3>
+              <div className={cn('mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm', isLight ? 'text-[#5E626D]' : 'text-slate-300')}>
+                <span className="inline-flex items-center gap-1.5"><Mail className="size-3.5" />{email}</span>
+                <span className="inline-flex items-center gap-1.5"><Building2 className="size-3.5" />{branch}</span>
+                <span className="inline-flex items-center gap-1.5"><BriefcaseBusiness className="size-3.5" />{role}</span>
+              </div>
+            </div>
           </div>
-          <label className={cn(uploadLabelClass, 'z-10')}>
-            <Camera className="size-4" strokeWidth={1.75} />
-            {t('uploadImage', { ns: 'common' })}
-            <input
-              className="hidden"
-              type="file"
-              accept="image/*"
-              onChange={(event) => {
-                const file = event.target.files?.[0];
-                if (file) {
-                  setLocalPreviewUrl(URL.createObjectURL(file));
-                  uploadMutation.mutate(file);
-                }
-              }}
-            />
-          </label>
         </div>
 
         <form className="grid gap-5 lg:grid-cols-2" onSubmit={handleSubmit((values) => updateMutation.mutate(values))}>
@@ -195,7 +210,11 @@ export function ProfilePage() {
             <label className={cn('relative z-10 mb-2 block text-sm font-medium', isLight ? 'text-[#5E626D]' : 'text-slate-300')}>
               {t('phone', { ns: 'common' })}
             </label>
-            <Input {...register('phoneNumber')} className={cn(isLight ? profileInputLight : profileInputDark, 'relative z-10')} />
+            <Input
+              {...register('phoneNumber')}
+              placeholder={t('profilePhonePlaceholder', { ns: 'user-detail-management' })}
+              className={cn(isLight ? profileInputLight : profileInputDark, 'relative z-10')}
+            />
           </div>
           <div className={cn(profileInnerGlass(isLight), 'p-4')}>
             <ProfileGlassTopLine isLight={isLight} />
@@ -209,14 +228,22 @@ export function ProfilePage() {
             <label className={cn('relative z-10 mb-2 block text-sm font-medium', isLight ? 'text-[#5E626D]' : 'text-slate-300')}>
               {t('department', { ns: 'common' })}
             </label>
-            <Input {...register('department')} className={cn(isLight ? profileInputLight : profileInputDark, 'relative z-10')} />
+            <Input
+              {...register('department')}
+              placeholder={t('profileDepartmentPlaceholder', { ns: 'user-detail-management' })}
+              className={cn(isLight ? profileInputLight : profileInputDark, 'relative z-10')}
+            />
           </div>
           <div className={cn(profileInnerGlass(isLight), 'lg:col-span-2', 'p-4')}>
             <ProfileGlassTopLine isLight={isLight} />
             <label className={cn('relative z-10 mb-2 block text-sm font-medium', isLight ? 'text-[#5E626D]' : 'text-slate-300')}>
               {t('bio', { ns: 'common' })}
             </label>
-            <textarea className={cn(textareaClass, 'relative z-10')} {...register('bio')} />
+            <textarea
+              className={cn(textareaClass, 'relative z-10')}
+              placeholder={t('profileBioPlaceholder', { ns: 'user-detail-management' })}
+              {...register('bio')}
+            />
           </div>
           <div className="flex justify-end lg:col-span-2">
             <Button

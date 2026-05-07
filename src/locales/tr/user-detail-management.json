@@ -4,5 +4,9 @@
   "roleInformation": "Rol Bilgisi",
   "editProfileDetails": "Profil Detayları",
   "editProfileDescription": "Profil bilgilerini düzenle ve kişisel alanları güncelle.",
-  "updateProfile": "Profili Güncelle"
+  "updateProfile": "Profili Güncelle",
+  "profilePhonePlaceholder": "Örn. +90 5XX XXX XX XX",
+  "profileJobTitlePlaceholder": "Örn. Yazılım Geliştirici, Proje Yöneticisi",
+  "profileDepartmentPlaceholder": "Örn. Bilgi İşlem, Satış, Operasyon",
+  "profileBioPlaceholder": "Kendinizi kısaca tanıtın; rolünüz, ilgi alanlarınız veya iletişim tercihiniz."
 }

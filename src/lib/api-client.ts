@@ -3,6 +3,17 @@ import i18n from '@/lib/i18n';
 import { useAuthStore } from '@/stores/auth-store';
 import { getApiBaseUrl } from '@/lib/app-config';
 
+/** Axios interceptor rejects with this so callers can read HTTP status when needed. */
+export class ApiError extends Error {
+  readonly status?: number;
+
+  constructor(message: string, status?: number) {
+    super(message);
+    this.name = 'ApiError';
+    this.status = status;
+  }
+}
+
 export const apiClient = axios.create({
   baseURL: getApiBaseUrl(),
   headers: {
@@ -45,6 +56,6 @@ apiClient.interceptors.response.use(
       }
     }
 
-    return Promise.reject(new Error(message));
+    return Promise.reject(new ApiError(message, error?.response?.status));
   },
 );

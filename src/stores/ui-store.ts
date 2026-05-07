@@ -32,6 +32,7 @@ interface UiState {
   setSidebarCollapsed: (value: boolean) => void;
   setSearchQuery: (value: string) => void;
   toggleTheme: () => void;
+  setTheme: (theme: ThemeMode) => void;
   initializeTheme: () => void;
 }
 
@@ -54,6 +55,13 @@ export const useUiStore = create<UiState>((set) => ({
       applyThemeToDocument(nextTheme);
       return { theme: nextTheme };
     }),
+  setTheme: (theme) => {
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem(THEME_STORAGE_KEY, theme);
+    }
+    applyThemeToDocument(theme);
+    set({ theme });
+  },
   initializeTheme: () => {
     const initialTheme = getStoredTheme();
     applyThemeToDocument(initialTheme);

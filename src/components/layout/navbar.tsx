@@ -55,10 +55,21 @@ export function Navbar() {
             <Menu className="size-5" />
           </button>
           <div className="relative hidden w-[280px] lg:block xl:w-[340px]">
-            <Search className={`pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 ${theme === 'light' ? 'text-[#5E626D]' : 'text-[#bba6c9]'}`} />
+            <Search
+              className={cn(
+                'pointer-events-none absolute left-4 top-1/2 z-20 size-4 -translate-y-1/2',
+                theme === 'light' ? 'text-[#5E626D]' : 'text-[#bba6c9]',
+              )}
+              aria-hidden
+            />
             <Input
               ref={searchRef}
-              className={`h-11 rounded-2xl pl-11 pr-16 ${theme === 'light' ? 'border-[rgba(255,138,196,0.32)] bg-white/80 text-[#2A2C31] placeholder:text-[#5E626D] focus:border-[#ff8ac4]/70 focus:bg-white' : 'border-white/10 bg-white/5 text-[#f4effa] backdrop-blur-xl placeholder:text-[#9f8baa] focus:border-cyan-300/35 focus:bg-white/8 focus:ring-0'} `}
+              className={cn(
+                'relative z-10 h-11 rounded-2xl pl-11 pr-16',
+                theme === 'light'
+                  ? 'border-2 border-fuchsia-500/80 ring-2 ring-fuchsia-300/45 bg-white text-[#2A2C31] placeholder:text-[#5E626D] shadow-[inset_0_1px_0_rgba(255,255,255,0.98)] focus:border-fuchsia-600 focus:ring-fuchsia-400/55 focus:bg-white focus:shadow-[0_0_0_3px_rgba(217,70,239,0.18)]'
+                  : 'border-white/10 bg-white/5 text-[#f4effa] backdrop-blur-xl placeholder:text-[#9f8baa] focus:border-cyan-300/35 focus:bg-white/8 focus:ring-0',
+              )}
               placeholder={t('menuSearch', { ns: 'common' })}
               value={searchQuery}
               onChange={(event) => {
@@ -72,7 +83,10 @@ export function Navbar() {
               <button
                 type="button"
                 onClick={() => setSearchQuery('')}
-                className={`absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 transition ${theme === 'light' ? 'text-[#5E626D] hover:bg-fuchsia-100/80 hover:text-fuchsia-700' : 'text-[#ab97ba] hover:bg-white/10 hover:text-[#ffd8c1]'}`}
+                className={cn(
+                  'absolute right-3 top-1/2 z-20 -translate-y-1/2 rounded-full p-1 transition',
+                  theme === 'light' ? 'text-[#5E626D] hover:bg-fuchsia-100/80 hover:text-fuchsia-700' : 'text-[#ab97ba] hover:bg-white/10 hover:text-[#ffd8c1]',
+                )}
               >
                 <X className="size-3.5" />
               </button>
@@ -103,17 +117,41 @@ export function Navbar() {
           <button
             type="button"
             onClick={() => setIsProfileModalOpen(true)}
-            className={`group flex min-w-0 cursor-pointer items-center gap-2 rounded-2xl border px-2.5 py-2 transition sm:gap-3 sm:px-4 sm:py-2.5 flex-row-reverse ${theme === 'light' ? 'border-[rgba(255,138,196,0.38)] bg-white/80 shadow-sm hover:bg-[rgba(255,90,99,0.06)]' : 'bg-transparent border-0 hover:bg-transparent'}`}
+            className={cn(
+              'group flex min-w-0 cursor-pointer items-center gap-2 rounded-2xl border px-2.5 py-2 transition flex-row-reverse sm:gap-3 sm:px-4 sm:py-2.5',
+              theme === 'light'
+                ? 'border-[rgba(255,138,196,0.38)] bg-white/80 shadow-sm hover:bg-[rgba(255,90,99,0.06)] sm:gap-2 sm:px-3 sm:py-1.5'
+                : 'border-0 bg-transparent hover:bg-transparent',
+            )}
           >
-            <div className={`flex size-10 shrink-0 items-center justify-center rounded-full text-sm font-bold sm:size-11 border-2 transition ${theme === 'light' ? 'border-fuchsia-500 bg-transparent text-fuchsia-800 group-hover:shadow-[0_0_20px_rgba(192,38,211,0.25)]' : 'border-orange-500 bg-transparent text-orange-400 group-hover:shadow-[0_0_20px_rgba(249,115,22,0.5)]'}`}>
+            <div
+              className={cn(
+                'flex shrink-0 items-center justify-center rounded-full border-2 font-bold transition',
+                theme === 'light'
+                  ? 'size-8 text-[11px] border-fuchsia-500 bg-transparent text-fuchsia-800 group-hover:shadow-[0_0_16px_rgba(192,38,211,0.2)] sm:size-9 sm:text-xs'
+                  : 'size-10 text-sm sm:size-11 border-orange-500 bg-transparent text-orange-400 group-hover:shadow-[0_0_20px_rgba(249,115,22,0.5)]',
+              )}
+            >
               {user?.firstName?.[0]}
               {user?.lastName?.[0]}
             </div>
             <div className="hidden min-w-0 text-left lg:block">
-              <p className={`text-sm font-semibold ${theme === 'light' ? 'text-[#2A2C31]' : 'text-white'}`}>
+              <p
+                className={cn(
+                  'font-semibold',
+                  theme === 'light' ? 'text-[11px] leading-tight text-[#2A2C31] sm:text-xs' : 'text-sm text-white',
+                )}
+              >
                 {user?.firstName} {user?.lastName}
               </p>
-              <p className={`text-xs font-semibold uppercase tracking-[0.08em] ${theme === 'light' ? 'text-[#5E626D]' : 'text-slate-400'}`}>{user?.role}</p>
+              <p
+                className={cn(
+                  'font-semibold uppercase tracking-[0.08em]',
+                  theme === 'light' ? 'text-[9px] leading-tight text-[#5E626D] sm:text-[10px]' : 'text-xs text-slate-400',
+                )}
+              >
+                {user?.role}
+              </p>
             </div>
           </button>
           </div>

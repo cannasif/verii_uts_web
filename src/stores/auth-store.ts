@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { useUiStore } from '@/stores/ui-store';
 
 interface AuthUser {
   id: number;
@@ -24,6 +25,8 @@ interface AuthState {
 const TOKEN_KEY = 'access_token';
 const USER_KEY = 'verii_uts_user';
 const PERMISSIONS_KEY = 'verii_uts_permissions';
+const BRANCH_ID_KEY = 'verii_uts_branch_id';
+const BRANCH_NAME_KEY = 'verii_uts_branch_name';
 
 function clearSessionStorage(): void {
   localStorage.removeItem(TOKEN_KEY);
@@ -32,6 +35,10 @@ function clearSessionStorage(): void {
   sessionStorage.removeItem(USER_KEY);
   localStorage.removeItem(PERMISSIONS_KEY);
   sessionStorage.removeItem(PERMISSIONS_KEY);
+  localStorage.removeItem(BRANCH_ID_KEY);
+  sessionStorage.removeItem(BRANCH_ID_KEY);
+  localStorage.removeItem(BRANCH_NAME_KEY);
+  sessionStorage.removeItem(BRANCH_NAME_KEY);
 }
 
 function getStorage(rememberMe: boolean): Storage {
@@ -55,16 +62,25 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     storage.setItem(TOKEN_KEY, token);
     storage.setItem(USER_KEY, JSON.stringify(user));
     storage.setItem(PERMISSIONS_KEY, JSON.stringify(permissions));
-    set({ token, user, permissions, branchId: branchId || null, branchName: branchName || null });
+    if (branchId != null) {
+      storage.setItem(BRANCH_ID_KEY, String(branchId));
+    }
+    if (branchName) {
+      storage.setItem(BRANCH_NAME_KEY, branchName);
+    }
+    set({ token, user, permissions, branchId: branchId ?? null, branchName: branchName ?? null });
   },
   logout: () => {
     clearSessionStorage();
+    useUiStore.getState().setTheme('dark');
     set({ token: null, user: null, permissions: [], branchId: null, branchName: null });
   },
   hydrate: () => {
     const token = localStorage.getItem(TOKEN_KEY) || sessionStorage.getItem(TOKEN_KEY);
     const rawUser = localStorage.getItem(USER_KEY) || sessionStorage.getItem(USER_KEY);
     const rawPermissions = localStorage.getItem(PERMISSIONS_KEY) || sessionStorage.getItem(PERMISSIONS_KEY);
+    const rawBranchId = localStorage.getItem(BRANCH_ID_KEY) || sessionStorage.getItem(BRANCH_ID_KEY);
+    const branchName = localStorage.getItem(BRANCH_NAME_KEY) || sessionStorage.getItem(BRANCH_NAME_KEY);
 
     if (!token || !rawUser) {
       return;
@@ -74,6 +90,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       token,
       user: JSON.parse(rawUser) as AuthUser,
       permissions: rawPermissions ? (JSON.parse(rawPermissions) as string[]) : [],
+      branchId: rawBranchId ? Number(rawBranchId) : null,
+      branchName: branchName ?? null,
     });
   },
   isAuthenticated: () => Boolean(get().token || localStorage.getItem(TOKEN_KEY) || sessionStorage.getItem(TOKEN_KEY)),

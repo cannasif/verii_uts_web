@@ -90,6 +90,7 @@
   "exportPdf": "Export to PDF",
   "visibleColumns": "Visible Columns",
   "pageSize": "Page Size",
+  "showingRange": "showing",
   "advancedFilterTitle": "Advanced Filter",
   "addFilter": "Add Filter",
   "applyFilters": "Apply Filters",
