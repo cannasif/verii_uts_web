@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Shield } from 'lucide-react';
+import { Shield, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { VoiceSearchCombobox } from '@/components/shared/dropdown/voice-search-combobox';
@@ -120,7 +120,7 @@ export function CreateUserPanel({ open, onClose }: CreateUserPanelProps) {
     <div
       className={cn(
         'fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6',
-        isLight ? 'bg-slate-900/28 backdrop-blur-sm' : 'bg-[#06030f]/58 backdrop-blur-md',
+        isLight ? 'bg-slate-950/42 backdrop-blur-[2px]' : 'bg-[#06030f]/58 backdrop-blur-md',
       )}
       role="presentation"
     >
@@ -128,7 +128,7 @@ export function CreateUserPanel({ open, onClose }: CreateUserPanelProps) {
         className={cn(
           'custom-scrollbar relative isolate w-full max-w-2xl overflow-y-auto rounded-[18px] p-5 sm:p-7 max-h-[92vh]',
           isLight
-            ? 'border border-slate-200/22 bg-white/52 shadow-[0_20px_56px_rgba(15,23,42,0.09),inset_0_1px_0_rgba(255,255,255,0.34)] backdrop-blur-xl'
+            ? 'border border-slate-200/85 bg-white shadow-[0_24px_64px_rgba(15,23,42,0.18)]'
             : 'dashboard-section-panel border border-white/[0.06] shadow-[0_28px_72px_rgba(0,0,0,0.42)] backdrop-blur-xl',
         )}
       >
@@ -147,12 +147,15 @@ export function CreateUserPanel({ open, onClose }: CreateUserPanelProps) {
           <Button
             variant="ghost"
             className={cn(
-              'shrink-0 rounded-xl',
-              isLight ? 'text-slate-600 hover:bg-slate-100' : 'text-slate-300 hover:bg-white/[0.06] hover:text-white',
+              'size-9 shrink-0 rounded-xl p-0',
+              isLight
+                ? '!border-white/80 !bg-transparent !text-slate-500 hover:!bg-rose-100 hover:!text-rose-700'
+                : '!border-white/35 !bg-transparent !text-slate-300 hover:!bg-rose-500/20 hover:!text-rose-300',
             )}
             onClick={onClose}
+            aria-label={t('close', { ns: 'common' })}
           >
-            {t('close', { ns: 'common' })}
+            <X className="size-4" />
           </Button>
         </div>
 
@@ -234,7 +237,7 @@ export function CreateUserPanel({ open, onClose }: CreateUserPanelProps) {
                     className={cn(
                       'flex items-start gap-3 rounded-xl border px-4 py-3 backdrop-blur-md transition-colors',
                       isLight
-                        ? 'border-slate-300/35 bg-white/70 hover:border-fuchsia-300/40'
+                        ? 'border-slate-200 bg-white hover:border-fuchsia-300/45'
                         : 'border-white/[0.06] bg-[rgba(14,12,22,0.42)] hover:border-pink-400/22',
                     )}
                   >

@@ -4,5 +4,9 @@
   "roleInformation": "Role Information",
   "editProfileDetails": "Profile Details",
   "editProfileDescription": "Edit profile information and update personal fields.",
-  "updateProfile": "Update Profile"
+  "updateProfile": "Update Profile",
+  "profilePhonePlaceholder": "e.g. +1 555 123 4567",
+  "profileJobTitlePlaceholder": "e.g. Software Engineer, Project Manager",
+  "profileDepartmentPlaceholder": "e.g. IT, Sales, Operations",
+  "profileBioPlaceholder": "A short introduction: your role, interests, or how colleagues can reach you."
 }

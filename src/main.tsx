@@ -29,7 +29,7 @@ void loadConfig()
           <QueryClientProvider client={queryClient}>
             <BrowserRouter>
               <App />
-              <Toaster position="top-right" richColors />
+              <Toaster position="bottom-right" richColors />
             </BrowserRouter>
           </QueryClientProvider>
         </I18nextProvider>

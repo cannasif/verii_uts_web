@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useMemo, useRef, useState, type MouseEvent as ReactMouseEvent, type ReactNode } from 'react';
 import {
   ArrowDown,
   ArrowUp,
@@ -215,6 +215,10 @@ export function AppDataGrid<TRow>({
   const [exportOpen, setExportOpen] = useState(false);
   const [draggedColumnKey, setDraggedColumnKey] = useState<string | null>(null);
   const [dragOverColumnKey, setDragOverColumnKey] = useState<string | null>(null);
+  const [isTableScrollDragging, setIsTableScrollDragging] = useState(false);
+  const tableScrollRef = useRef<HTMLDivElement | null>(null);
+  const tableDragStartXRef = useRef(0);
+  const tableDragStartScrollLeftRef = useRef(0);
 
   const filtersRef = useOutsideClose<HTMLDivElement>(() => setFiltersOpen(false));
   const columnsRef = useOutsideClose<HTMLDivElement>(() => setColumnsOpen(false));
@@ -283,6 +287,38 @@ export function AppDataGrid<TRow>({
     lt: '<',
     lte: '<=',
   };
+  const handleTableMouseDown = (event: ReactMouseEvent<HTMLDivElement>) => {
+    const target = event.target as HTMLElement;
+    if (target.closest('button, a, input, select, textarea, [role="button"]')) return;
+
+    const container = tableScrollRef.current;
+    if (!container || container.scrollWidth <= container.clientWidth) return;
+
+    setIsTableScrollDragging(true);
+    tableDragStartXRef.current = event.clientX;
+    tableDragStartScrollLeftRef.current = container.scrollLeft;
+  };
+
+  const handleTableMouseMove = (event: ReactMouseEvent<HTMLDivElement>) => {
+    if (!isTableScrollDragging) return;
+    const container = tableScrollRef.current;
+    if (!container) return;
+
+    const deltaX = event.clientX - tableDragStartXRef.current;
+    container.scrollLeft = tableDragStartScrollLeftRef.current - deltaX;
+    event.preventDefault();
+  };
+
+  const stopTableScrollDragging = () => {
+    if (!isTableScrollDragging) return;
+    setIsTableScrollDragging(false);
+  };
+  const totalPages = Math.max(pagination?.totalPages ?? 1, 1);
+  const currentPage = pagination?.pageNumber ?? 1;
+  const pageSize = pagination?.pageSize ?? 0;
+  const totalCount = pagination?.totalCount ?? 0;
+  const rangeStart = totalCount === 0 ? 0 : (currentPage - 1) * pageSize + 1;
+  const rangeEnd = totalCount === 0 ? 0 : Math.min(currentPage * pageSize, totalCount);
 
   return (
     <Card
@@ -949,8 +985,12 @@ export function AppDataGrid<TRow>({
           )}
         </div>
 
-        <div className={cn(
+        <div
+          ref={tableScrollRef}
+          className={cn(
           'relative z-0 hidden min-w-0 w-full overflow-x-auto border backdrop-blur-2xl md:block',
+          'cursor-grab',
+          isTableScrollDragging && 'cursor-grabbing select-none',
           isLight
             ? cn(
                 'rounded-[1.75rem] border-slate-200/70 bg-white/95 shadow-[0_12px_30px_rgba(15,23,42,0.08)]',
@@ -967,11 +1007,16 @@ export function AppDataGrid<TRow>({
                     ? 'rounded-2xl border border-white/[0.045] bg-[rgba(8,6,14,0.28)] shadow-[0_10px_32px_rgba(0,0,0,0.22)] backdrop-blur-[18px]'
                     : 'rounded-2xl border border-white/[0.07] bg-[rgba(14,12,22,0.35)] shadow-[0_8px_28px_rgba(0,0,0,0.22),inset_0_1px_0_rgba(255,255,255,0.04)]'),
               ),
-        )}>
+          )}
+          onMouseDown={handleTableMouseDown}
+          onMouseMove={handleTableMouseMove}
+          onMouseUp={stopTableScrollDragging}
+          onMouseLeave={stopTableScrollDragging}
+        >
           <table
             className={cn(
               'min-w-full text-left',
-              isLight ? 'text-sm' : airyDark ? (compactRows ? 'text-[12px] leading-tight' : 'text-[12.5px] leading-snug') : compactRows ? 'text-[12.5px] leading-snug' : 'text-[13px]',
+              isLight ? 'text-[12.5px] leading-tight' : airyDark ? (compactRows ? 'text-[11px] leading-tight' : 'text-[12px] leading-tight') : compactRows ? 'text-[12px] leading-tight' : 'text-[12px] leading-tight',
             )}
           >
             <thead className={cn(
@@ -1023,7 +1068,7 @@ export function AppDataGrid<TRow>({
                     />
                   </th>
                 ) : null}
-                {visibleColumns.map((column) => {
+                {visibleColumns.map((column, columnIndex) => {
                   const isActiveSort = sortBy === column.key;
                   const isDragging = draggedColumnKey === column.key;
                   const isDropTarget = dragOverColumnKey === column.key && draggedColumnKey !== column.key;
@@ -1037,6 +1082,13 @@ export function AppDataGrid<TRow>({
                         glassDark && !airyDark && (compactRows ? 'px-4 py-2.5 text-[11px]' : 'px-4 py-3.5 text-[11px]'),
                         airyDark && (compactRows ? 'px-3 py-1.5 text-[11px]' : 'px-3.5 py-2.5 text-[11px]'),
                         glassLight && (compactRows ? 'px-4 py-2.5 text-[11px]' : 'px-4 py-3.5 text-[11px]'),
+                        columnIndex > 0 && 'border-l',
+                        columnIndex > 0 &&
+                          (isLight
+                            ? 'border-slate-200/65'
+                            : glassDark
+                              ? (airyDark ? 'border-white/[0.06]' : 'border-[#2d2438]/72')
+                              : 'border-white/8'),
                         isDragging && 'opacity-60',
                         isDropTarget &&
                           (glassDark ? (airyDark ? 'bg-pink-500/8' : 'bg-pink-500/12') : isLight ? 'bg-sky-50/80' : 'bg-white/8'),
@@ -1104,7 +1156,7 @@ export function AppDataGrid<TRow>({
                           }}
                           onClick={() => onSort(column.key)}
                         >
-                          <span>{column.label}</span>
+                          <span className="whitespace-nowrap">{column.label}</span>
                           {isActiveSort ? (
                             sortDirection === 'asc' ? (
                               <ArrowUp className={cn('transition-transform duration-200 group-hover:-translate-y-0.5', airyDark ? 'size-3.5' : 'size-4')} />
@@ -1148,7 +1200,7 @@ export function AppDataGrid<TRow>({
                             setDragOverColumnKey(null);
                           }}
                         >
-                          {column.label}
+                          <span className="whitespace-nowrap">{column.label}</span>
                         </span>
                       )}
                     </th>
@@ -1241,7 +1293,7 @@ export function AppDataGrid<TRow>({
                           />
                         </td>
                       ) : null}
-                      {visibleColumns.map((column) => (
+                      {visibleColumns.map((column, columnIndex) => (
                         <td key={`${rowId}-${column.key}`} className={cn(
                           isLight
                             ? cn('transition-colors duration-200', compactRows ? 'px-4 py-2' : 'px-4 py-3')
@@ -1249,6 +1301,14 @@ export function AppDataGrid<TRow>({
                           glassDark && !airyDark && (compactRows ? 'px-4 py-2.5' : 'px-4 py-3.5'),
                           airyDark && (compactRows ? 'px-3 py-1.5' : 'px-3.5 py-2.5'),
                           glassLight && (compactRows ? 'px-4 py-2.5' : 'px-4 py-3.5'),
+                          'whitespace-nowrap',
+                          columnIndex > 0 && 'border-l',
+                          columnIndex > 0 &&
+                            (isLight
+                              ? 'border-slate-200/55'
+                              : glassDark
+                                ? (airyDark ? 'border-white/[0.05]' : 'border-[#2d2438]/58')
+                                : 'border-white/8'),
                           isLight ? 'text-slate-700 group-hover:text-slate-800' : 'text-slate-200 group-hover:text-slate-100',
                           column.className,
                         )}>
@@ -1297,14 +1357,7 @@ export function AppDataGrid<TRow>({
               isLight ? 'text-slate-600' : connectionGlassChrome ? 'text-slate-500' : 'text-slate-300',
             )}
           >
-            <span>
-              {t('totalRecords')}:{' '}
-              <span className={cn('font-semibold', isLight ? 'text-slate-900' : connectionGlassChrome ? 'text-slate-200' : 'text-sky-100')}>
-                {pagination.totalCount}
-              </span>
-            </span>
             <div className="flex items-center gap-2">
-              <span>{t('pageSize')}</span>
               <select
                 className={cn(
                   'h-8 rounded-lg border px-2.5 text-xs outline-none backdrop-blur-xl',
@@ -1323,6 +1376,9 @@ export function AppDataGrid<TRow>({
                   </option>
                 ))}
               </select>
+              <span>
+                {rangeStart}-{rangeEnd} / {totalCount} {t('showingRange')}
+              </span>
             </div>
           </div>
 
@@ -1351,7 +1407,7 @@ export function AppDataGrid<TRow>({
                   ? 'border-white/[0.08] bg-[rgba(10,8,16,0.48)] text-slate-200 shadow-[0_2px_12px_rgba(0,0,0,0.16)] backdrop-blur-md'
                   : 'border-white/14 bg-[#120b1f]/58 text-sky-100 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]',
             )}>
-              {pagination.pageNumber} / {Math.max(pagination.totalPages, 1)}
+              {pagination.pageNumber}/{totalPages}
             </div>
             <Button
               type="button"

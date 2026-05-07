@@ -152,6 +152,13 @@ export function DashboardPage() {
               <UserRound className="size-4" strokeWidth={1.75} />
             </div>
           </div>
+          <div
+            className={cn(
+              'mt-2.5 h-px w-full bg-linear-to-r',
+              isLight ? 'from-transparent via-slate-200/90 to-transparent' : 'from-transparent via-white/18 to-transparent',
+            )}
+            aria-hidden
+          />
           <p className={`mt-3 text-2xl font-semibold tracking-tight ${isLight ? 'text-[#1A1A1A]' : 'text-white'}`}>
             {user?.firstName} {user?.lastName}
           </p>
@@ -165,6 +172,13 @@ export function DashboardPage() {
               <ShieldCheck className="size-4" strokeWidth={1.75} />
             </div>
           </div>
+          <div
+            className={cn(
+              'mt-2.5 h-px w-full bg-linear-to-r',
+              isLight ? 'from-transparent via-slate-200/90 to-transparent' : 'from-transparent via-white/18 to-transparent',
+            )}
+            aria-hidden
+          />
           <p className={`mt-3 text-2xl font-semibold tracking-tight ${isLight ? 'text-[#1A1A1A]' : 'text-white'}`}>{user?.role}</p>
         </Card>
         <Card className={`relative p-4 transition-all duration-300 ${isLight ? 'bg-white/64 hover:bg-[rgba(255,90,99,0.06)]' : darkStatCardClass}`}>
@@ -176,6 +190,13 @@ export function DashboardPage() {
               <KeyRound className="size-4" strokeWidth={1.75} />
             </div>
           </div>
+          <div
+            className={cn(
+              'mt-2.5 h-px w-full bg-linear-to-r',
+              isLight ? 'from-transparent via-slate-200/90 to-transparent' : 'from-transparent via-white/18 to-transparent',
+            )}
+            aria-hidden
+          />
           <p className={`mt-3 text-2xl font-semibold tracking-tight ${isLight ? 'text-black' : 'text-white'}`}>{permissions.length}</p>
         </Card>
         <Card className={`relative p-4 transition-all duration-300 ${isLight ? 'bg-white/64 hover:bg-[rgba(255,90,99,0.06)]' : darkStatCardClass}`}>
@@ -187,6 +208,13 @@ export function DashboardPage() {
               <Activity className="size-4" strokeWidth={1.75} />
             </div>
           </div>
+          <div
+            className={cn(
+              'mt-2.5 h-px w-full bg-linear-to-r',
+              isLight ? 'from-transparent via-slate-200/90 to-transparent' : 'from-transparent via-white/18 to-transparent',
+            )}
+            aria-hidden
+          />
           <p className={`mt-3 text-2xl font-semibold tracking-tight ${isLight ? 'text-black' : 'text-white'}`}>{t('connected', { ns: 'dashboard' })}</p>
         </Card>
       </div>

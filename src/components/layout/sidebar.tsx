@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Building2, ChevronDown, ChevronLeft, ChevronRight, Factory, FileStack, LayoutDashboard, Shield } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation } from 'react-router-dom';
+import { logoLuminanceMaskStyle } from '@/lib/logo-luminance-mask';
 import { cn } from '@/lib/utils';
 import { useUiStore } from '@/stores/ui-store';
 
@@ -124,21 +125,56 @@ export function Sidebar() {
       )}
       <aside
         className={cn(
-          `fixed left-0 top-0 z-40 flex h-screen max-w-[88vw] flex-col overflow-hidden border-transparent shadow-2xl backdrop-blur-xl transition-all duration-300 after:pointer-events-none after:absolute after:inset-y-0 after:right-0 after:w-px after:bg-linear-to-b after:from-transparent after:via-white/10 after:to-transparent ${theme === 'light' ? 'bg-white/95 shadow-purple-500/5' : 'bg-[#11061d]/90'}`,
+          'fixed left-0 top-0 z-40 flex h-screen max-w-[88vw] flex-col overflow-hidden border-transparent shadow-2xl backdrop-blur-xl transition-all duration-300 after:pointer-events-none after:absolute after:inset-y-0 after:right-0 after:w-px after:bg-linear-to-b after:from-transparent after:via-white/10 after:to-transparent',
+          theme === 'light'
+            ? 'bg-white/95 shadow-purple-500/5 lg:border lg:border-slate-200/70 lg:shadow-[0_12px_40px_rgba(15,23,42,0.08)] lg:after:via-slate-200/35'
+            : 'bg-[#11061d]/90',
           isSidebarOpen ? 'w-[18rem] translate-x-0' : '-translate-x-full lg:translate-x-0',
           isSidebarCollapsed && 'lg:w-20',
         )}
       >
         <div
-          className={`relative flex h-24 items-center border-transparent px-4 after:pointer-events-none after:absolute after:inset-x-0 after:bottom-0 after:h-px after:bg-linear-to-r after:from-transparent after:via-white/10 after:to-transparent ${theme === 'light' ? 'bg-white/50' : 'bg-[#11061d]/88'} ${isSidebarCollapsed ? 'lg:justify-center' : 'justify-start'}`}
+          className={`relative flex h-32 items-center border-transparent px-3 after:pointer-events-none after:absolute after:inset-x-0 after:bottom-0 after:h-px after:bg-linear-to-r after:from-transparent after:via-white/10 after:to-transparent ${theme === 'light' ? 'bg-white/50' : 'bg-[#11061d]/88'} ${isSidebarCollapsed ? 'lg:justify-center' : 'justify-start'}`}
         >
-          <Link to="/" className="flex items-center gap-3">
-            <div className={`flex size-11 items-center justify-center rounded-2xl text-lg font-bold text-white flex-shrink-0 ${theme === 'light' ? 'bg-linear-to-r from-fuchsia-600 via-pink-600 to-violet-600' : 'bg-linear-to-r from-[#ff2f92] via-[#ff5a63] to-[#ff7f2a]'}`}>V</div>
-            {!isSidebarCollapsed && (
-              <div>
-                <p className={`text-xs font-semibold uppercase tracking-[0.24em] ${theme === 'light' ? 'bg-linear-to-r from-fuchsia-700 via-pink-600 to-violet-600 bg-clip-text text-transparent' : 'bg-linear-to-r from-[#ff8ac4] to-[#ffb067] bg-clip-text text-transparent'}`}>Verii</p>
-                <p className={`text-base font-semibold ${theme === 'light' ? 'bg-linear-to-r from-fuchsia-700 via-pink-600 to-violet-700 bg-clip-text text-transparent' : 'bg-linear-to-r from-[#ffc4de] via-[#ff9f9f] to-[#ffc58e] bg-clip-text text-transparent'}`}>{t('utsPanel')}</p>
-              </div>
+          <Link to="/" className="relative flex w-full items-center justify-center" aria-label="V3RII UTS">
+            {theme === 'light' ? (
+              <>
+                <div
+                  aria-hidden
+                  className={cn(
+                    'bg-linear-to-r from-fuchsia-600 via-pink-500 to-orange-400',
+                    isSidebarCollapsed ? 'invisible absolute h-28 w-full max-w-none origin-center scale-[1.9]' : 'h-28 w-full max-w-full',
+                  )}
+                  style={logoLuminanceMaskStyle('/v3rii-logo.png')}
+                />
+                <div
+                  aria-hidden
+                  className={cn(
+                    'bg-linear-to-br from-fuchsia-600 via-pink-500 to-orange-400',
+                    !isSidebarCollapsed ? 'invisible absolute' : 'h-28 w-full max-w-none origin-center scale-[1.9]',
+                  )}
+                  style={logoLuminanceMaskStyle('/v3-logo-collapsed.png')}
+                />
+              </>
+            ) : (
+              <>
+                <img
+                  src="/v3rii-logo.png"
+                  alt=""
+                  className={cn(
+                    'object-contain mix-blend-screen',
+                    isSidebarCollapsed ? 'invisible absolute pointer-events-none' : 'h-28 w-full max-w-full',
+                  )}
+                />
+                <img
+                  src="/v3-logo-collapsed.png"
+                  alt=""
+                  className={cn(
+                    'object-contain mix-blend-screen',
+                    isSidebarCollapsed ? 'h-28 w-full max-w-none scale-[1.9]' : 'invisible absolute pointer-events-none',
+                  )}
+                />
+              </>
             )}
           </Link>
         </div>
@@ -155,7 +191,7 @@ export function Sidebar() {
                   type="button"
                   onClick={() => toggleGroup(item.title)}
                   className={cn(
-                    'flex w-full items-center rounded-xl transition-colors',
+                    'flex w-full items-center rounded-xl text-left transition-colors',
                     isSidebarCollapsed ? 'lg:justify-center' : 'gap-3',
                     'px-3 py-2',
                     hasActiveChild
@@ -184,7 +220,7 @@ export function Sidebar() {
                   </div>
                   <span
                     className={cn(
-                      'text-sm font-semibold',
+                      'text-left text-sm font-semibold',
                       isSidebarCollapsed ? 'hidden' : 'flex-1',
                       hasActiveChild
                         ? theme === 'light'
