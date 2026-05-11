@@ -2,7 +2,7 @@ import type { CSSProperties } from 'react';
 
 /** PNG’deki siyah zemini kesmek için (beyaz arayüzde koyu kutu olmadan) */
 export function logoLuminanceMaskStyle(assetPath: string): CSSProperties {
-  return {
+  const style = {
     WebkitMaskImage: `url(${assetPath})`,
     maskImage: `url(${assetPath})`,
     WebkitMaskSize: 'contain',
@@ -14,4 +14,5 @@ export function logoLuminanceMaskStyle(assetPath: string): CSSProperties {
     WebkitMaskMode: 'luminance',
     maskMode: 'luminance',
   };
+  return style as CSSProperties;
 }
