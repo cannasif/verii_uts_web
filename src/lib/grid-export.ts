@@ -81,6 +81,10 @@ function fallbackExportPdf(params: GridExportParams) {
   const html = `<!doctype html><html><head><meta charset="utf-8" /><title>${escapeHtml(params.fileName)}</title><style>body{font-family:Arial,sans-serif;padding:16px;}table{width:100%;border-collapse:collapse;}th,td{border:1px solid #d8dee8;padding:6px;text-align:left;font-size:12px;}th{background:#f8fafc;}</style></head><body><h2>${escapeHtml(params.fileName)}</h2><table><thead><tr>${headers}</tr></thead><tbody>${body}</tbody></table></body></html>`;
   const popup = window.open('', '_blank', 'noopener,noreferrer,width=1100,height=760');
   if (!popup) return;
+  if (!popup) {
+    alert('Popup blocked. Please allow popups for this site to export to PDF.');
+    return;
+  }
   popup.document.open();
   popup.document.write(html);
   popup.document.close();
