@@ -396,15 +396,15 @@ button:disabled {
   color: #A0A0A0;
 }
 
-/* Login kart — ref. çerçeve: ince highlight + geniş yumuşak derin gölge */
+/* Login kart — CRM login ile aynı çerçeve */
 [data-theme='dark'] .login-auth-card.cyber-card {
-  border-radius: 30px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: #1a0a1f;
+  border-radius: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(20, 10, 30, 0.7);
   box-shadow:
-    0 0 15px rgba(255, 255, 255, 0.07),
-    0 20px 50px rgba(0, 0, 0, 0.7);
-  backdrop-filter: none;
+    0 20px 40px rgba(0, 0, 0, 0.4),
+    inset 0 0 20px rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(24px);
 }
 
 [data-theme='light'] .login-auth-card.cyber-card {

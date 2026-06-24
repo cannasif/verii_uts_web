@@ -19,7 +19,7 @@ import {
   X,
   MessageCircle,
 } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -30,6 +30,7 @@ import { useLoginMutation } from '@/features/auth/hooks/use-login-mutation';
 import { AuthBackground } from '@/features/auth/components/auth-background';
 import i18n from '@/lib/i18n';
 import { logoLuminanceMaskStyle } from '@/lib/logo-luminance-mask';
+import { getDevLoginDefaultValues } from '@/lib/dev-login-defaults';
 import { cn } from '@/lib/utils';
 import { useUiStore } from '@/stores/ui-store';
 
@@ -66,7 +67,6 @@ function LoginPageForm() {
   const navigate = useNavigate();
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated());
   const setTheme = useUiStore((state) => state.setTheme);
-  const theme = useUiStore((state) => state.theme);
   const loginMutation = useLoginMutation();
   const [showAnimation, setShowAnimation] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -83,12 +83,7 @@ function LoginPageForm() {
   } = useForm<LoginForm>({
     resolver: zodResolver(schema),
     mode: 'onChange',
-    defaultValues: {
-      branchId: '',
-      email: '',
-      password: '',
-      rememberMe: false,
-    },
+    defaultValues: getDevLoginDefaultValues(),
   });
 
   const selectedBranchId = watch('branchId');
@@ -204,27 +199,19 @@ function LoginPageForm() {
       </div>
 
       <div className="relative z-10 flex min-h-[calc(100vh-4rem)] flex-col items-center justify-center">
-        <Card className="login-auth-card cyber-card flex w-full max-w-lg flex-col rounded-[30px] p-8 sm:min-h-[620px] sm:px-10 sm:py-9">
-          <div className="relative text-center">
-            <div className="flex justify-center pt-1">
-              {theme === 'light' ? (
-                <div
-                  role="img"
-                  aria-label="V3RII UTS"
-                  className="h-32 w-full max-w-full bg-linear-to-r from-fuchsia-600 via-pink-500 to-orange-400 sm:h-36 sm:scale-110"
-                  style={logoLuminanceMaskStyle('/v3rii-logo.png')}
-                />
-              ) : (
-                <img
-                  src="/v3rii-logo.png"
-                  alt="V3RII UTS"
-                  className="h-auto w-full max-w-full object-contain mix-blend-screen sm:scale-110"
-                />
-              )}
+        <Card className="login-auth-card flex w-full max-w-md flex-col rounded-3xl p-8 sm:px-10 sm:py-9">
+          <div className="relative mb-8 text-center">
+            <div className="flex justify-center">
+              <div
+                role="img"
+                aria-label="V3RII UTS"
+                className="mx-auto h-32 w-80 bg-linear-to-r from-fuchsia-600 via-pink-500 to-orange-400 sm:h-36 sm:w-96"
+                style={logoLuminanceMaskStyle('/v3rii-logo.png')}
+              />
             </div>
 
             {/* Main Title */}
-            <h2 className="mt-3 text-sm font-semibold uppercase tracking-[0.15em] text-slate-300">
+            <h2 className="mt-2 text-xs font-medium uppercase tracking-[0.15em] text-slate-400">
               {t('loginMainTitle', { ns: 'auth' })}
             </h2>
           </div>
@@ -377,9 +364,11 @@ function LoginPageForm() {
 
         <div className="mt-8 flex w-full max-w-2xl flex-col items-center gap-6 px-4 text-center">
           <p className="text-[0.8rem] uppercase tracking-[0.38em] text-slate-300/80 sm:text-sm">
-            &quot;İŞİNİZİ TAHMİNLERLE DEĞİL,{' '}
-            <span className="font-semibold text-[#ff9b45]">V3RII</span>
-            &#39;YLE YÖNETİN.&quot;
+            <Trans
+              i18nKey="loginSlogan"
+              ns="auth"
+              components={{ 1: <span className="font-semibold text-[#ff9b45]" /> }}
+            />
           </p>
 
           <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-5">
@@ -432,7 +421,7 @@ function LoginPageForm() {
                 key={item.label}
                 href={item.href}
                 aria-label={item.label}
-                className={`flex h-14 w-14 cursor-pointer items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-200 transition-all duration-200 hover:-translate-y-0.5 ${item.hover}`}
+                className={`flex h-14 w-14 cursor-pointer items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-200 transition-all duration-300 ease-out hover:scale-105 hover:-translate-y-0.5 ${item.hover}`}
               >
                 {item.icon}
               </a>
